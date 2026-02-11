@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useRef } from 'react';
 
 /**
@@ -13,17 +15,51 @@ export interface FluidBackgroundProps {
   /** Glow size parameter (controls splat radius) */
   glowSize?: number;
 }
+
+// Global script loading state
+let globalScriptLoaded = false;
+let globalScriptPromise: Promise<void> | null = null;
+const loadFluidScript = (): Promise<void> => {
+  if (globalScriptLoaded) {
+    return Promise.resolve();
+  }
+  if (globalScriptPromise) {
+    return globalScriptPromise;
+  }
+  globalScriptPromise = new Promise((resolve, reject) => {
+    const existingScript = document.querySelector('script[src="https://drive.groove.design/tico/fluid-sim.js"]');
+    if (existingScript) {
+      globalScriptLoaded = true;
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://drive.groove.design/tico/fluid-sim.js';
+    script.async = true;
+    script.onload = () => {
+      globalScriptLoaded = true;
+      resolve();
+    };
+    script.onerror = () => {
+      globalScriptPromise = null;
+      reject(new Error('Failed to load fluid-sim.js'));
+    };
+    document.body.appendChild(script);
+  });
+  return globalScriptPromise;
+};
 export const FluidBackground: React.FC<FluidBackgroundProps> = ({
-  colorHex = '#1b6ce5',
+  colorHex = '#41ae96',
   glowSize = 0.1125
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scriptLoadedRef = useRef(false);
+  const configIdRef = useRef<string>(`fluid-${Math.random().toString(36).substr(2, 9)}`);
   useEffect(() => {
-    // Configure the fluid simulation
-    (window as any).customFluidConfig = {
+    const configId = configIdRef.current;
+
+    // Configure the fluid simulation for this instance
+    (window as any)[configId] = {
       GUI: false,
-      // Set to true for debugging
       SIM_RESOLUTION: 32,
       DYE_RESOLUTION: 512,
       CAPTURE_RESOLUTION: 512,
@@ -57,21 +93,15 @@ export const FluidBackground: React.FC<FluidBackgroundProps> = ({
       COLOR_RANGE: [colorHex, colorHex]
     };
 
-    // Load the fluid simulation script if not already loaded
-    if (!scriptLoadedRef.current) {
-      const script = document.createElement('script');
-      script.src = 'https://drive.groove.design/tico/fluid-sim.js';
-      script.async = true;
-      document.body.appendChild(script);
-      scriptLoadedRef.current = true;
-      return () => {
-        // Cleanup: remove script on unmount
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-        scriptLoadedRef.current = false;
-      };
-    }
+    // Set as global config temporarily for initialization
+    (window as any).customFluidConfig = (window as any)[configId];
+
+    // Load the fluid simulation script
+    loadFluidScript().catch(console.error);
+    return () => {
+      // Cleanup
+      delete (window as any)[configId];
+    };
   }, [colorHex, glowSize]);
   return <div ref={containerRef} className="glow-background w-full h-full" style={{
     display: 'flex',
@@ -80,24 +110,24 @@ export const FluidBackground: React.FC<FluidBackgroundProps> = ({
     left: 0,
     width: '100%',
     height: '100%',
-    pointerEvents: 'none',
+    pointerEvents: 'auto',
     zIndex: 0
   }} data-color-hex={colorHex} data-glow-size={glowSize}>
-      <style>
-        {`
-          .glow-background canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            display: block;
-            border-radius: inherit;
-          }
-        `}
-      </style>
-    </div>;
+    <style>
+      {`
+        .glow-background canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 0;
+          display: block;
+          border-radius: inherit;
+        }
+      `}
+    </style>
+  </div>;
 };
 export default FluidBackground;

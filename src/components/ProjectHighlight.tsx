@@ -20,7 +20,7 @@ const testimonials: Testimonial[] = [{
   author: "Alex Rivera",
   role: "CEO, GrowthLabs",
   rating: 5.0,
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
+  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/3e3e1091-f8e8-4022-a02a-fa37a35c59a5_320w.jpg",
   rotation: -10,
   delay: 0.1
 }, {
@@ -29,7 +29,7 @@ const testimonials: Testimonial[] = [{
   author: "Nina Patel",
   role: "Director, PixelCraft",
   rating: 5.0,
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
+  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/e7074207-4b47-49d2-b86b-6ca1abd5d849_320w.jpg",
   rotation: -6,
   delay: 0.2
 }, {
@@ -38,7 +38,7 @@ const testimonials: Testimonial[] = [{
   author: "Marcus Webb",
   role: "VP Product, Velocity",
   rating: 5.0,
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
+  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/986db8ed-1c5d-42fb-8c1d-4b3716d2e317_320w.jpg",
   rotation: 0,
   delay: 0.3
 }];

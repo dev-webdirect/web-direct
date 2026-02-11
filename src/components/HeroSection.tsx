@@ -1,159 +1,296 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { FluidBackground } from "./FluidBackground";
-import { GradientOverlay } from "./GradientOverlay";
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { cn } from '../lib/utils';
+import { FluidBackground } from './FluidBackground';
+import { CTAButtonGroup } from './CTAButtonGroup';
+
+// Helper for brand logos placeholders
+const BrandLogo = ({ className }: { className?: string }) => (
+  <div
+    className={cn(
+      "h-8 w-24 bg-white/10 rounded-md backdrop-blur-sm border border-white/5",
+      className
+    )}
+  />
+);
 
 export const HeroSection = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [displayedText, setDisplayedText] = useState('');
-  
-  const words = ['verkopen', 'converteren', 'groeiën', 'opvallen'];
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
 
+  // Mouse position tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring animation for mouse follower
+  const springConfig = { damping: 25, stiffness: 150 };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  // Parallax effects for background elements
+  const y1 = useTransform(scrollY, [0, 500], [0, 100]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  // Rotating words state
+  const rotatingWords = [
+    'Converteren.',
+    'Overtuigen.',
+    'Verkopen.',
+    'Groeien.',
+    'Schalen.',
+    'Presteren.',
+    'Domineren.'
+  ];
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isMouseInside, setIsMouseInside] = useState(false);
+
+  // Mouse move handler
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        mouseX.set(e.clientX - rect.left);
+        mouseY.set(e.clientY - rect.top);
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    const handleMouseEnter = () => setIsMouseInside(true);
+    const handleMouseLeave = () => setIsMouseInside(false);
 
-  useEffect(() => {
-    const currentWord = words[currentWordIndex];
-    
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        if (currentCharIndex < currentWord.length) {
-          setDisplayedText(currentWord.substring(0, currentCharIndex + 1));
-          setCurrentCharIndex(currentCharIndex + 1);
-        } else {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        if (currentCharIndex > 0) {
-          setDisplayedText(currentWord.substring(0, currentCharIndex - 1));
-          setCurrentCharIndex(currentCharIndex - 1);
-        } else {
-          setIsDeleting(false);
-          setCurrentWordIndex((prev) => (prev + 1) % words.length);
-        }
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseenter', handleMouseEnter);
+      container.addEventListener('mouseleave', handleMouseLeave);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('mousemove', handleMouseMove);
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mouseleave', handleMouseLeave);
       }
-    }, isDeleting ? 50 : 100);
+    };
+  }, [mouseX, mouseY]);
 
-    return () => clearTimeout(timeout);
-  }, [currentCharIndex, currentWordIndex, isDeleting, words]);
+  // Typing animation effect
+  useEffect(() => {
+    const currentWord = rotatingWords[currentWordIndex];
+    const typingSpeed = isDeleting ? 30 : 60;
+    const pauseBeforeDelete = 1500;
+    const pauseBeforeType = 300;
+    let timeout: NodeJS.Timeout;
+
+    if (!isDeleting && displayedText === currentWord) {
+      // Pause before starting to delete
+      timeout = setTimeout(() => setIsDeleting(true), pauseBeforeDelete);
+    } else if (isDeleting && displayedText === '') {
+      // Move to next word and start typing
+      setIsDeleting(false);
+      setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
+    } else {
+      // Type or delete one character
+      timeout = setTimeout(() => {
+        setDisplayedText((prev) => {
+          if (isDeleting) {
+            return currentWord.substring(0, prev.length - 1);
+          } else {
+            return currentWord.substring(0, prev.length + 1);
+          }
+        });
+      }, typingSpeed);
+    }
+
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [displayedText, isDeleting, currentWordIndex, rotatingWords]);
 
   return (
-    <section className="min-h-[90vh] px-4 sm:px-6 lg:px-12 relative overflow-hidden flex items-center justify-center pb-8 sm:pb-12 pt-24 sm:pt-28 md:pt-32 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#1a0f2e] dark:from-[#0f0a1f] dark:via-[#1a0f2e] dark:to-[#0f0a1f] z-20">
-        {/* Fluid Background with Purple Theme */}
+    <section
+      ref={containerRef}
+      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0f0a1f] py-20 px-6 lg:px-12"
+    >
+      {/* Dynamic Glow Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Main Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
+
+        {/* Fluid Background */}
         <FluidBackground colorHex="#6a49ff" glowSize={0.15} />
-        <GradientOverlay />
+
+        {/* Animated Orbs for additional depth */}
+        <motion.div
+          style={{ y: y2 }}
+          className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full opacity-20 blur-[150px]"
+          animate={{
+            scale: [1, 1.1, 1],
+            x: [0, -30, 0]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          initial={{
+            background: 'radial-gradient(circle, #41ae96 0%, transparent 70%)'
+          }}
+        />
+
+        {/* Overlay mesh/grid pattern */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(15, 10, 31, 0) 60%, rgba(15, 10, 31, 1) 100%)'
+          }}
+        />
+      </div>
+
+      {/* Mouse Follower Glow - On top of background */}
+      <motion.div
+        className="absolute z-[5] pointer-events-none"
+        style={{
+          x: smoothMouseX,
+          y: smoothMouseY,
+          translateX: '-50%',
+          translateY: '-50%',
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isMouseInside ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Main glow */}
+        <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-[#6a49ff]/30 via-[#6a49ff]/10 to-transparent blur-[100px]" />
         
-        {/* Animated Background - Keeping cursor wave */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-          {/* Dynamic Wave Following Cursor */}
-          <motion.div className="absolute w-[800px] h-[800px] rounded-full opacity-30" style={{
-          background: 'radial-gradient(circle, rgba(106, 73, 255, 0.4) 0%, rgba(88, 57, 230, 0.2) 30%, transparent 70%)',
-          filter: 'blur(60px)'
-        }} animate={{
-          x: mousePosition.x - 400,
-          y: mousePosition.y - 400
-        }} transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 200,
-          mass: 0.5
-        }} />
-        </div>
+        {/* Secondary glow for more depth */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gradient-radial from-[#a78bfa]/20 via-[#a78bfa]/5 to-transparent blur-[80px]"
+          animate={{
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Center highlight */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/10 to-transparent blur-[40px]" />
+      </motion.div>
 
-        <div className="max-w-7xl mx-auto relative z-30 w-full flex items-center justify-center">
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }} className="text-center max-w-5xl mx-auto px-4">
-            {/* Badge */}
-            <div className="mb-6">
-              <span className="inline-block px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#6a49ff]/10 text-[#a78bfa] border border-[#6a49ff]/20">100% CUSTOM WEBSITES</span>
-            </div>
+      {/* Content Container */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center">
+        {/* Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+        >
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#6a49ff]/10 text-[#a78bfa] border border-[#6a49ff]/20 backdrop-blur-md">
+            <span className="mr-2 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#6a49ff] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6a49ff]"></span>
+            </span>
+            100% Custom Websites
+          </span>
+        </motion.div>
 
-            {/* Main Heading */}
-            <h1 className="font-bold text-[2.25rem] min-[400px]:text-[2.75rem] sm:text-[3.25rem] md:text-[3.9rem] lg:text-[4.5rem] xl:text-[5.2rem] text-white mb-8 sm:mb-10 leading-[1.1] tracking-tight w-full max-w-[min(1000px,100%)]">
-              Websites die gemaakt zijn om te{' '}
-              <span className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#5839e6] font-serif">
-                {displayedText}
-                <span className="animate-pulse">|</span>
-              </span>
-            </h1>
+        {/* Main Heading */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-8 leading-[1.05] tracking-tight"
+        >
+          Websites die gemaakt zijn om te{' '}
+          <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+            {displayedText}
+            <span className="animate-pulse inline-block ml-1 text-white opacity-50 italic font-serif text-[0.7em]">
+              |
+            </span>
+          </span>
+        </motion.h1>
 
-            {/* Subtitle */}
-            <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed mb-12 max-w-3xl mx-auto font-light">We combineren strategie, design en technologie om ambitieuze merken te helpen opvallen en krachtige digitale ervaringen te creëren die écht impact maken.</p>
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed mb-12 font-light"
+        >
+          We combineren strategie, design en technologie om ambitieuze merken te
+          helpen opvallen en krachtige digitale ervaringen te creëren die écht
+          impact maken.
+        </motion.p>
 
-            {/* CTA Buttons */}
-            <div className="flex items-center justify-center gap-3 sm:gap-5 mb-6 sm:mb-8 flex-wrap">
-              <motion.a href="#preview" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-6 py-3.5 sm:px-10 sm:py-5 rounded-full hover:shadow-2xl hover:shadow-[#6a49ff]/20 font-semibold text-sm sm:text-base active:scale-95 active:shadow-sm hover:from-[#5839e6] hover:to-[#6a49ff]" whileHover={{
-              rotate: [0, -5, 5, -5, 5, 0],
-              transition: {
-                duration: 0.5,
-                ease: "easeInOut"
-              }
-            }}>
-                Vraag GRATIS webdesign aan.
-              </motion.a>
-              <a href="#services" className="inline-flex items-center gap-2 text-white px-6 py-3.5 sm:px-10 sm:py-5 rounded-full hover:bg-white/10 transition-all font-semibold text-sm sm:text-base border border-white/30 active:scale-95 hover:border-white/50 backdrop-blur-sm">Bekijk websites. </a>
-            </div>
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <CTAButtonGroup
+            primaryText="Vraag GRATIS webdesign aan."
+            secondaryText="Bekijk websites."
+          />
+        </motion.div>
 
-            {/* Trusted By Section */}
-            <div className="mt-12">
-              <p className="text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4 sm:mb-8">VERTROUWD DOOR 100+ MERKEN</p>
-              <div className="flex items-center justify-center gap-6 sm:gap-12 flex-wrap opacity-50 grayscale">
-                {/* Placeholder logo spaces */}
-                <div className="h-8 w-24 bg-white/20 rounded"></div>
-                <div className="h-8 w-24 bg-white/20 rounded"></div>
-                <div className="h-8 w-24 bg-white/20 rounded"></div>
-                <div className="h-8 w-24 bg-white/20 rounded"></div>
-              </div>
+        {/* Social Proof */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="w-full flex flex-col items-center mt-16"
+        >
+          <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-10">
+            VERTROUWD DOOR 100+ MERKEN
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+            <BrandLogo />
+            <BrandLogo />
+            <BrandLogo />
+            <BrandLogo />
+          </div>
+        </motion.div>
 
-              {/* Scroll Indicator */}
-              <motion.div className="mt-12 flex flex-col items-center gap-2" initial={{
-              opacity: 0,
-              y: -10
-            }} animate={{
-              opacity: 1,
-              y: 0
-            }} transition={{
-              delay: 1,
-              duration: 0.6
-            }}>
-                <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">SCROLL OM TE ONTDEKKEN</p>
-                <motion.div animate={{
-                y: [0, 8, 0]
-              }} transition={{
+        {/* Scroll Indicator */}
+        <motion.div
+          style={{ opacity }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="mt-20 flex flex-col items-center gap-3 cursor-pointer"
+        >
+          <p className="text-[10px] text-gray-500 font-medium uppercase tracking-[0.15em]">
+            SCROLL OM TE ONTDEKKEN
+          </p>
+          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex items-start justify-center p-1.5">
+            <motion.div
+              animate={{ y: [0, 15, 0] }}
+              transition={{
                 duration: 1.5,
                 repeat: Infinity,
                 ease: "easeInOut"
-              }} className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-                  <motion.div className="w-1.5 h-1.5 bg-white rounded-full" animate={{
-                  y: [0, 12, 0]
-                }} transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }} />
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+              }}
+              className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_#fff]"
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Decorative bottom border */}
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    </section>
   );
 };

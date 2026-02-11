@@ -95,7 +95,7 @@ export const BrandStatementText = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   let flatIndex = 0;
-  return <div ref={containerRef} className="relative w-full min-h-[80vh] selection:bg-white/10" style={{
+  return <div ref={containerRef} className="relative w-full selection:bg-white/10" style={{
     fontFamily: "'Geist', sans-serif",
     backgroundColor: '#05080c'
   }}>
@@ -103,13 +103,9 @@ export const BrandStatementText = () => {
       __html: FONTS_CSS
     }} />
       
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-4" style={{
-      height: "1000px"
-    }}>
-        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 md:gap-6 lg:gap-8" style={{
-        translate: "0.5px -203.22px"
-      }}>
-          {allLines.map((line, lineIndex) => <div key={`line-${lineIndex}`} className="flex flex-wrap justify-center items-center gap-x-2 md:gap-x-4 lg:gap-x-5">
+      <div className="sticky top-0 flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-28 lg:py-32 min-h-[50vh] md:min-h-[60vh]">
+        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-1 sm:gap-2 md:gap-3 lg:gap-4">
+          {allLines.map((line, lineIndex) => <div key={`line-${lineIndex}`} className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-3 lg:gap-x-4">
               {line.map((word, wordIndex) => {
             const currentIndex = flatIndex++;
             const style = wordStyles[currentIndex] || {
@@ -120,14 +116,13 @@ export const BrandStatementText = () => {
               opacity: style.opacity / 100,
               filter: `blur(${style.blur}px)`,
               fontWeight: word.isAlt ? 400 : 500,
-              fontSize: 'clamp(2rem, 8vw, 4rem)',
-              lineHeight: '1.1',
+              fontSize: 'clamp(1.5rem, 6vw, 4rem)',
+              lineHeight: '1.15',
               letterSpacing: '-0.04em',
               color: word.isAlt ? '#41ae96' : '#ffffff',
               fontFamily: word.isAlt ? "'Georgia', serif" : "'Geist', sans-serif",
               fontStyle: word.isAlt ? 'italic' : 'normal',
-              transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
-              paddingTop: '0'
+              transition: 'opacity 0.1s ease-out, filter 0.1s ease-out'
             }} className="inline-block m-0 text-center whitespace-nowrap">
                     {word.text}
                   </h2>;

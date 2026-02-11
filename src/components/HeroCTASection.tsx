@@ -1,8 +1,10 @@
-'use client';
+"use client";
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { GradientOverlay } from './GradientOverlay';
 interface HeroCTASectionProps {
   label?: string;
   title?: string;
@@ -28,7 +30,7 @@ export const HeroCTASection = ({
   bookingCtaText = "Book a free call"
 }: HeroCTASectionProps) => {
   // @return
-  return <section className="relative w-full min-h-[408px] flex items-center justify-center bg-background rounded-2xl overflow-hidden p-5 md:p-10 font-sans">
+  return <section className="relative w-full min-h-[408px] flex items-center justify-center bg-card rounded-2xl overflow-hidden p-5 md:p-10 font-sans">
       {/* Background Container */}
       <div className="relative w-full max-w-[960px] min-h-[368px] flex flex-col md:flex-row items-center justify-between gap-12 bg-secondary rounded-lg p-8 md:p-12 overflow-hidden z-10 border border-border">
         
@@ -36,6 +38,9 @@ export const HeroCTASection = ({
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-lg opacity-5">
           <img src="https://framerusercontent.com/images/4RGuWhw5VjbAJbMonewftyJZ4c.jpg?width=1000&height=400" alt="Background" className="w-full h-full object-cover" />
         </div>
+
+        {/* Gradient Overlay */}
+        <GradientOverlay />
 
         {/* Decorative Vectors */}
         <div className="absolute top-[-440px] left-[220px] w-[520px] h-[520px] rounded-full opacity-10 pointer-events-none">
@@ -64,9 +69,7 @@ export const HeroCTASection = ({
             <span className="text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase">
               {label}
             </span>
-            <h2 className="text-[40px] md:text-[52px] font-medium leading-[1.1] md:leading-[1.2] tracking-[-1.6px] text-foreground balance">
-              {title}
-            </h2>
+            <h2 className="text-[40px] md:text-[52px] font-medium leading-[1.1] md:leading-[1.2] tracking-[-1.6px] text-foreground balance">Klaar om jouw project te starten?</h2>
           </div>
           
           <button className="relative px-[22px] py-[10px] h-[40px] flex items-center justify-center bg-primary text-primary-foreground rounded-lg text-base font-medium transition-all hover:bg-primary/90 cursor-pointer hover:scale-[1.02]">
@@ -91,9 +94,7 @@ export const HeroCTASection = ({
                 <div className="absolute inset-0 bg-primary rounded-full opacity-30 animate-ping" />
                 <div className="absolute inset-0 bg-primary rounded-full" />
               </div>
-              <span className="text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase">
-                {teamMemberRole}
-              </span>
+              <span className="text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase">Beschikbaar voor 4 nieuwe projecten deze maand. </span>
             </div>
 
             {/* Profile Section */}

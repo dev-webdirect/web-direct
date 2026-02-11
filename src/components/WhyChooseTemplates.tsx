@@ -1,9 +1,7 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Palette, Smartphone, Zap, Database, Layout, PenTool, LifeBuoy } from 'lucide-react';
-import { FluidBackground } from './FluidBackground';
-import { GradientOverlay } from './GradientOverlay';
 
 /**
  * Interface for individual feature item data
@@ -19,36 +17,36 @@ interface FeatureItem {
  */
 const DEFAULT_FEATURES: FeatureItem[] = [{
   icon: <Palette className="w-8 h-8" />,
-  title: "Premium design",
-  description: "Professionally designed templates with clean layouts and clear visual hierarchy."
+  title: "Conversion-first design",
+  description: "Wij ontwerpen websites die gemaakt zijn om klanten binnen te halen, niet om alleen \u201Cmooi\u201D te zijn."
 }, {
   icon: <Smartphone className="w-8 h-8" />,
-  title: "Perfectly responsive",
-  description: "Templates designed to work seamlessly across all screen sizes."
+  title: "100% maatwerk in code",
+  description: "Alles wordt custom gebouwd in React en Next.js. Geen builders, geen templates, geen beperkingen."
 }, {
   icon: <Zap className="w-8 h-8" />,
-  title: "Seamless animations",
-  description: "Subtle motion that adds polish without hurting clarity or performance."
+  title: "Supersnelle performance",
+  description: "Snelle laadtijden zorgen voor betere SEO, meer vertrouwen en hogere conversie."
 }, {
   icon: <Database className="w-8 h-8" />,
-  title: "CMS-ready structure",
-  description: "Templates built with CMS support for scalable content management."
+  title: "Gebouwd om te schalen",
+  description: "Nieuwe pagina\u2019s, campagnes of funnels toevoegen zonder dat je website opnieuw gebouwd moet worden."
 }, {
   icon: <Zap className="w-8 h-8" />,
-  title: "Built for speed",
-  description: "Optimized templates focused on fast loading and smooth performance."
+  title: "SEO-ready structuur",
+  description: "Technische SEO zit standaard ingebouwd. Schone code, sterke structuur en goede indexatie in Google."
 }, {
   icon: <Layout className="w-8 h-8" />,
-  title: "Flexible structure",
-  description: "Section-based design so you can reuse blocks and build the exact layout you need."
+  title: "Premium uitstraling, zonder agency prijzen",
+  description: "Door onze AI-gedreven workflow leveren we high-end kwaliteit sneller en vaak goedkoper dan traditionele bureaus."
 }, {
   icon: <PenTool className="w-8 h-8" />,
-  title: "Easy to customize",
-  description: "Organized styles and components so edits stay simple even for non-technical users."
+  title: "Perfect op mobiel",
+  description: "Mobile-first design zodat je site op elk scherm strak, snel en professioneel aanvoelt."
 }, {
   icon: <LifeBuoy className="w-8 h-8" />,
-  title: "Dedicated support",
-  description: "Well-documented templates with helpful support when you need assistance."
+  title: "Support en optimalisatie",
+  description: "Geen \u201Cwebsite opleveren en klaar\u201D. We blijven betrokken en optimaliseren waar nodig."
 }];
 
 /**
@@ -99,9 +97,6 @@ export const WhyChooseTemplates = () => {
 
   // @return
   return <section className="relative min-h-screen w-full py-24 px-6 md:px-12 lg:px-24 overflow-hidden bg-[#0f0a1f]">
-      {/* Fluid Background with Purple Theme - matching WebDirect Hero */}
-      <FluidBackground colorHex="#6a49ff" glowSize={0.15} />
-      <GradientOverlay />
       
       {/* Animated Background - Cursor wave effect matching WebDirect */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
@@ -134,11 +129,14 @@ export const WhyChooseTemplates = () => {
         duration: 0.6
       }} className="text-center mb-20 max-w-2xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white">
-            Why choose our templates
+            Waarom bedrijven kiezen voor <span className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif" style={{
+            marginTop: "50px",
+            height: "0px",
+            translate: "-0.1px 7px",
+            fontSize: "60px"
+          }}>WebDirect.</span>
           </h2>
-          <p className="text-gray-300 text-lg leading-relaxed">
-            Built with the same care we apply to real client projects. Designed to help you launch faster without compromising quality.
-          </p>
+          <p className="text-gray-300 text-lg leading-relaxed">Wij bouwen conversion-first websites in code. Geen wordpress of Webflow templates. Sneller, krachtiger en schaalbaar zonder beperkingen.</p>
         </motion.div>
 
         {/* Features Grid */}

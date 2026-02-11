@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { FloatingNavbar } from '../components/FloatingNavbar';  
+import { WebDirectHeader } from '../components/WebDirectHeader';  
 import { ImageGalleryCarousel } from '../components/ImageGalleryCarousel';
 import { ensureLightMode } from '../lib/utils';
 import { Footer } from '../components/Footer';
@@ -9,9 +9,9 @@ import { BrandStatementText } from '../components/BrandStatementText';
 import { TestimonialCarousel } from '../components/TestimonialCarousel';
 import {FAQSection} from '../components/FAQSection';
 import { WhyChooseTemplates } from '../components/WhyChooseTemplates';
-import { HeroCTASection } from '../components/HeroCTASection';
 import { ProjectHighlight } from '../components/ProjectHighlight';
 import { FeedbucketWidget } from '../components/FeedbucketWidget';
+import { HeroCTASection } from '../components/HeroCTASection';
 
 export default function Home() {
   ensureLightMode();
@@ -19,10 +19,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#fafafa] dark:bg-[#0f0a1f] text-[#30294e] dark:text-[#e0e0e0] font-sans transition-colors duration-300">
       {/* Navbar */}
-      <FeedbucketWidget/>
-      <FloatingNavbar />
+      <WebDirectHeader/>
       {/* Hero Section */}
-      <div id="hero" className="relative z-20">
+      <div id="hero" className="relative z-20 pt-32">
         <HeroSection />
       </div>
       {/* Image Gallery Section */}
@@ -41,9 +40,8 @@ export default function Home() {
       <div id="testimonials">
         <TestimonialCarousel />
       </div>
-      <div id="cta">
-        <HeroCTASection label="Let's Build Something Great" title="Ready to start your next project?" ctaText="Get started" teamMemberName="Team" teamMemberRole="Available for project" bookingTitle="Quick 15-minute call" bookingSubtitle="Pick a time that works for you." bookingCtaText="Book a free call" />
-      </div>
+      <HeroCTASection />
+      
       <Footer />
     </div>
   );

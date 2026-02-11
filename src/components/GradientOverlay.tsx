@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -23,7 +25,7 @@ export const GradientOverlay = () => {
   }} transition={{
     duration: 0.8,
     ease: "easeOut"
-  }} className="absolute top-0 left-0 w-full h-full pointer-events-none select-none z-1 overflow-hidden min-h-[100vh] sm:min-h-[924px]" style={{
+  }} className="absolute top-0 left-0 w-full h-full pointer-events-none select-none z-[1] overflow-hidden min-h-[100vh] sm:min-h-[924px]" style={{
     backgroundImage: 'linear-gradient(rgba(4, 4, 4, 0) 55%, rgb(0, 0, 0) 100%)',
     backgroundPosition: '0% 0%',
     backgroundRepeat: 'repeat',
