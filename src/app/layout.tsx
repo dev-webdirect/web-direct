@@ -47,13 +47,7 @@ export const metadata: Metadata = {
     ],
     type: "website",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Webdirect | Websites die gemaakt zijn om te",
-    description: "Short description for Twitter card",
-    images: ["/images/seo-preview.png"],
-    creator: "@webdirect",
-  },
+  
   robots: {
     index: true,
     follow: true,
@@ -88,7 +82,7 @@ export default function RootLayout({
         {children}
         <Script
           src="https://cdn.feedbucket.app/assets/feedbucket.js"
-          data-feedbucket="sqMqNVirqR6juWiSLFBg"
+          data-feedbucket={process.env.NEXT_PUBLIC_FEEDBUCKET_KEY}
           strategy="afterInteractive"
         />
       </body>
