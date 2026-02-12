@@ -71,10 +71,17 @@ export const metadata: Metadata = {
     canonical: process.env.NEXT_PUBLIC_SITE_URL,
   },
   icons: {
-    icon: "/images/webdirect-Symbol.svg",
-    shortcut: "/images/webdirect-Symbol.svg",
-    apple: "/images/webdirect-Symbol.svg",
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
   },
+  manifest: '/site.webmanifest',
   other: {
     "geo.region": "NL",
   },
