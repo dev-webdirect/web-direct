@@ -34,9 +34,10 @@ export const HeroCTASection = ({
   const goToBooking = () => router.push('/booking');
 
   // @return
-  return <section className="relative w-full min-h-[408px] flex items-center justify-center bg-card rounded-2xl overflow-hidden p-5 md:p-10 font-sans">
-      {/* Background Container */}
-      <div className="relative w-full max-w-[960px] min-h-[368px] flex flex-col md:flex-row items-center justify-between gap-12 bg-secondary rounded-lg p-8 md:p-12 overflow-hidden z-10 border border-border">
+  return (
+    <section className="relative w-full min-h-auto flex items-center justify-center bg-card rounded-2xl overflow-hidden pt-0 pb-13 font-sans">
+      {/* Background Container — centered */}
+      <div className="relative w-full max-w-[960px] min-h-auto mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 bg-secondary rounded-lg p-6 md:p-12 overflow-hidden z-10 border border-border">
         
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-lg opacity-5">
@@ -68,8 +69,8 @@ export const HeroCTASection = ({
         </motion.div>
 
         {/* Left Content */}
-        <div className="relative flex flex-col items-start gap-8 max-w-[450px] z-10">
-          <div className="flex flex-col gap-2.5">
+        <div className="relative flex flex-col items-center text-center gap-8 max-w-[450px] z-10">
+          <div className="flex flex-col items-center gap-2.5">
             <span className="text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase">
               {label}
             </span>
@@ -132,5 +133,6 @@ export const HeroCTASection = ({
           </div>
         </motion.div>
       </div>
-    </section>;
+    </section>
+  );
 };

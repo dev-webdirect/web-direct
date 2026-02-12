@@ -69,12 +69,15 @@ export const BrandStatementText = () => {
       const containerHeight = containerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Calculate scroll progress (0 to 1)
-      const scrollProgress = Math.max(0, Math.min(1, -rect.top / (containerHeight - viewportHeight)));
+      // Calculate scroll progress (0 to 1) - starts earlier with offset
+      const scrollStart = viewportHeight * 0.1; // Start when section is 30% into view
+      const scrollProgress = Math.max(0, Math.min(1, (-rect.top + scrollStart) / (containerHeight - viewportHeight + scrollStart)));
+      
       const newStyles = words.map((_, index) => {
         // Each word starts animating at its position in the sequence
+        // Increased range for slower animation (was +3, now +6)
         const start = index / totalWords;
-        const end = Math.min((index + 3) / totalWords, 1);
+        const end = Math.min((index + 8) / totalWords, 1);
 
         // Calculate the progress for this specific word
         const wordProgress = Math.max(0, Math.min(1, (scrollProgress - start) / (end - start)));
@@ -94,7 +97,7 @@ export const BrandStatementText = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   let flatIndex = 0;
-  return <div ref={containerRef} className="relative w-full md:min-h-[200vh] min-h-[110vh] selection:bg-white/10" style={{
+  return <div ref={containerRef} className="relative w-full md:min-h-[200vh] min-h-[150vh] selection:bg-white/10" style={{
     fontFamily: "'Geist', sans-serif",
     backgroundColor: '#05080c'
   }}>
@@ -125,7 +128,7 @@ export const BrandStatementText = () => {
               WebkitTextFillColor: word.isAlt ? 'transparent' : undefined,
               fontFamily: word.isAlt ? "'Georgia', serif" : "'Geist', sans-serif",
               fontStyle: word.isAlt ? 'italic' : 'normal',
-              transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
+              transition: 'opacity 0.15s ease-out, filter 0.15s ease-out',
               paddingTop: '0'
             }} className="inline-block m-0 text-center whitespace-nowrap">
                     {word.text}

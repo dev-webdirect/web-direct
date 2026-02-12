@@ -51,7 +51,7 @@ export const Footer = () => {
           {/* Subscribe Section */}
           <div className="flex flex-col gap-5 max-w-[560px]">
             <div>
-                <Image src="/images/logo-white.svg" alt="WebDirect" width={150} height={10} />
+                <Image src="/images/logo-white.svg" alt="WebDirect" width={250} height={10} />
               </div>
             <p className="text-lg leading-relaxed text-white/80">Bij WebDirect ontwerpen we digitale ervaringen die boeien, verbinden en inspireren.</p>
             

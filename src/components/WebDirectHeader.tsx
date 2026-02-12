@@ -2,13 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Sun, Moon, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
-interface WebDirectHeaderProps {
-  theme?: 'light' | 'dark';
-  toggleTheme?: () => void;
-}
+interface WebDirectHeaderProps {}
 
 interface NavLink {
   name: string;
@@ -29,14 +26,12 @@ const smoothTransition = {
 };
 
 // @component: WebDirectHeader
-export const WebDirectHeader = ({
-  theme = 'light',
-  toggleTheme,
-}: WebDirectHeaderProps) => {
+export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   // Ensure component is mounted (for theme)
   useEffect(() => {
@@ -68,8 +63,7 @@ export const WebDirectHeader = ({
     initial: { y: 0, rotate: 0 },
     hover: { y: -2, rotate: 0 },
   };
-  const isLightTheme = theme === 'light';
-  const logoSrc = isLightTheme ? '/images/logo.svg' : '/images/logo-white.svg';
+  const logoSrc = '/images/logo-white.svg';
 
   // Prevent flash of unstyled content
   if (!mounted) {
@@ -104,11 +98,7 @@ export const WebDirectHeader = ({
         >
           <div className="relative w-full">
             <motion.div
-              className={`flex items-center justify-between w-full backdrop-blur-sm shadow-lg overflow-hidden ${
-                isLightTheme
-                  ? 'bg-white/95 border border-gray-200'
-                  : 'bg-[#1a1227]/95 border border-gray-800'
-              }`}
+              className="flex items-center justify-between w-full backdrop-blur-sm shadow-lg overflow-hidden bg-[#1a1227]/95 border border-gray-800"
               initial={false}
               animate={{
                 height: isScrolled ? 56 : 72,
@@ -153,11 +143,7 @@ export const WebDirectHeader = ({
                       <a
                         key={link.name}
                         href={link.href}
-                        className={`transition-all font-medium text-sm ${
-                          isLightTheme
-                            ? 'text-gray-600 hover:text-[#6a49ff]'
-                            : 'text-white/80 hover:text-[#a78bfa]'
-                        }`}
+                        className="transition-all font-medium text-sm text-white/80 hover:text-[#a78bfa]"
                       >
                         {link.name}
                       </a>
@@ -180,17 +166,13 @@ export const WebDirectHeader = ({
                   >
                     <div className="relative w-[30px] h-[30px] flex items-center justify-center">
                       <motion.div
-                        className={`absolute top-[11px] left-[5px] w-5 h-[1.5px] ${
-                          isLightTheme ? 'bg-[#30294e]' : 'bg-white'
-                        }`}
+                        className="absolute top-[11px] left-[5px] w-5 h-[1.5px] bg-white"
                         variants={topBarVariants}
                         animate={isHovered ? 'hover' : 'initial'}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                       <motion.div
-                        className={`absolute bottom-[11px] left-[5px] w-5 h-[1.5px] ${
-                          isLightTheme ? 'bg-[#30294e]' : 'bg-white'
-                        }`}
+                        className="absolute bottom-[11px] left-[5px] w-5 h-[1.5px] bg-white"
                         variants={bottomBarVariants}
                         animate={isHovered ? 'hover' : 'initial'}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -202,34 +184,18 @@ export const WebDirectHeader = ({
 
               {/* Right Actions */}
               <div className="flex items-center gap-2 flex-shrink-0">
-                {/* Theme Toggle */}
-                {toggleTheme && (
-                  <motion.button
-                    onClick={toggleTheme}
-                    className={`p-2 rounded-full transition-colors ${
-                      isLightTheme
-                        ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    aria-label="Toggle theme"
-                  >
-                    {theme === 'dark' ? (
-                      <Sun className="w-4 h-4" />
-                    ) : (
-                      <Moon className="w-4 h-4" />
-                    )}
-                  </motion.button>
-                )}
-
                 {/* CTA Button — hidden on mobile when not scrolled, always visible when scrolled */}
                 <motion.button
                   className="hidden sm:inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-[#6a49ff] text-white rounded-full hover:shadow-lg transition-shadow font-medium hover:bg-[#5839e6] whitespace-nowrap text-sm group"
-                  whileHover={{
-                    rotate: [0, -2, 2, -2, 2, 0],
-                    transition: { duration: 0.4, ease: 'easeInOut' },
+                  animate={{
+                    rotate: isButtonHovered ? [0, -2, 2, -2, 2, 0] : 0,
                   }}
+                  transition={{
+                    duration: 0.4,
+                    ease: 'easeInOut',
+                  }}
+                  onMouseEnter={() => setIsButtonHovered(true)}
+                  onMouseLeave={() => setIsButtonHovered(false)}
                 >
                   <span className="hidden sm:inline">Get Started</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -237,11 +203,7 @@ export const WebDirectHeader = ({
 
                 {/* Hamburger — open/close mobile list */}
                 <motion.button
-                  className={`md:hidden inline-flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
-                    isLightTheme
-                      ? 'text-gray-600 hover:bg-gray-100'
-                      : 'text-white hover:bg-white/10'
-                  }`}
+                  className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-full transition-colors text-white hover:bg-white/10"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   whileTap={{ scale: 0.9 }}
                   aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -265,33 +227,19 @@ export const WebDirectHeader = ({
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div
-                    className={`w-full rounded-xl backdrop-blur-sm shadow-lg overflow-hidden ${
-                      isLightTheme
-                        ? 'bg-white/95 border border-gray-200'
-                        : 'bg-[#1a1227]/95 border border-gray-800'
-                    }`}
-                  >
+                  <div className="w-full rounded-xl backdrop-blur-sm shadow-lg overflow-hidden bg-[#1a1227]/95 border border-gray-800">
                     <nav className="flex flex-col p-3">
                       {NAV_LINKS.map((link) => (
                         <a
                           key={link.name}
                           href={link.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className={`flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm ${
-                            isLightTheme
-                              ? 'text-gray-700 hover:text-[#6a49ff] hover:bg-gray-50'
-                              : 'text-white/90 hover:text-[#a78bfa] hover:bg-white/5'
-                          }`}
+                          className="flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm text-white/90 hover:text-[#a78bfa] hover:bg-white/5"
                         >
                           {link.name}
                         </a>
                       ))}
-                      <div
-                        className={`mt-2 pt-2 border-t ${
-                          isLightTheme ? 'border-gray-200' : 'border-white/10'
-                        }`}
-                      >
+                      <div className="mt-2 pt-2 border-t border-white/10">
                         <motion.button
                           className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#6a49ff] text-white rounded-lg hover:bg-[#5839e6] transition-colors font-medium text-sm group"
                           whileTap={{ scale: 0.95 }}

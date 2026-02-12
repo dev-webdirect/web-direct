@@ -266,9 +266,9 @@ export const TestimonialCarousel = () => {
   };
 
   return (
-    <section className="relative w-full min-h-[80vh] lg:min-h-screen flex flex-col items-center justify-center bg-card py-10 sm:py-12 md:py-16 px-4 overflow-hidden">
+    <section className="relative w-full min-h-[70vh] lg:min-h-screen flex flex-col items-center justify-center bg-card  px-4 overflow-hidden">
       {/* Header Container */}
-      <div className="flex flex-col items-center gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12 max-w-[700px] text-center px-2">
+      <div className="flex flex-col items-center gap-3 sm:gap-4 max-w-[700px] text-center px-2">
         <div className="flex items-center gap-2 px-3 py-1.5">
           <img src="https://framerusercontent.com/images/F8wan4JxRuiIlSJe5tqI0wnJhM.svg" alt="Decoratie Links" className="w-1.5 h-2.5 opacity-60" />
           <span className="text-[11px] sm:text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase font-sans">Reviews</span>
