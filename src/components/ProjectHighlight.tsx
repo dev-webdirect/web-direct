@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { Quote, Star } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { GradientOverlay } from './GradientOverlay';
@@ -117,8 +116,8 @@ export const ProjectHighlight = () => {
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-border">
-                          <Image src={testimonial.avatar} alt={testimonial.author} fill className="object-cover" sizes="32px" loading="lazy" />
+                        <div className="h-8 w-8 rounded-full overflow-hidden border border-border">
+                          <img src={testimonial.avatar} alt={testimonial.author} className="h-full w-full object-cover" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-xs font-semibold text-foreground">

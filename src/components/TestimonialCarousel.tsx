@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 
 /**
@@ -271,9 +270,9 @@ export const TestimonialCarousel = () => {
       {/* Header Container */}
       <div className="flex flex-col items-center gap-3 sm:gap-4 mb-8 sm:mb-10 md:mb-12 max-w-[700px] text-center px-2">
         <div className="flex items-center gap-2 px-3 py-1.5">
-          <Image src="https://framerusercontent.com/images/F8wan4JxRuiIlSJe5tqI0wnJhM.svg" alt="" width={6} height={10} className="opacity-60" />
+          <img src="https://framerusercontent.com/images/F8wan4JxRuiIlSJe5tqI0wnJhM.svg" alt="Decoratie Links" className="w-1.5 h-2.5 opacity-60" />
           <span className="text-[11px] sm:text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase font-sans">Reviews</span>
-          <Image src="https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg" alt="" width={6} height={10} className="opacity-60" />
+          <img src="https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg" alt="Decoratie Rechts" className="w-1.5 h-2.5 opacity-60" />
         </div>
         <h2 className="text-2xl sm:text-[36px] md:text-[42px] lg:text-[52px] font-medium text-card-foreground leading-[1.2] tracking-tight font-sans">
           Wat{' '}
@@ -335,8 +334,8 @@ export const TestimonialCarousel = () => {
 
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto pt-3 sm:pt-4 gap-3 sm:gap-0">
                         <div className="flex items-center gap-2.5 sm:gap-3">
-                          <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-accent shadow-sm overflow-hidden flex-shrink-0">
-                            <Image src={testimonial.avatar} alt={testimonial.author} fill className="object-cover" sizes="44px" loading="lazy" />
+                          <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-accent shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src={testimonial.avatar} alt={testimonial.author} className="w-full h-full object-cover" />
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-sm sm:text-base font-medium font-sans">
                             <span className="text-foreground">{testimonial.author}</span>

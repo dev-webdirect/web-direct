@@ -110,7 +110,7 @@ export const BookingHeroSection = () => {
   }] as any[];
 
   // @return
-  return <section className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#0f0a1f] py-6 lg:py-8 px-4 lg:px-8">
+  return <section className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0f0a1f] py-6 lg:py-8 px-4 lg:px-8">
       {/* Dynamic Glow Background - matching HeroSection aesthetic */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Main Gradient Background */}
@@ -139,8 +139,8 @@ export const BookingHeroSection = () => {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full h-full">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center h-full">
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
           
           {/* Left Column - Copy & Benefits */}
           <motion.div initial={{

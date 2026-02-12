@@ -1,38 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 import { WebDirectHeader } from '../components/WebDirectHeader';
+import { ImageGalleryCarousel } from '../components/ImageGalleryCarousel';
+import { Footer } from '../components/Footer';
 import { HeroSection } from '../components/HeroSection';
-
-const ImageGalleryCarousel = dynamic(
-  () => import('../components/ImageGalleryCarousel').then((m) => ({ default: m.ImageGalleryCarousel })),
-  { ssr: true }
-);
-const BrandStatementText = dynamic(
-  () => import('../components/BrandStatementText').then((m) => ({ default: m.BrandStatementText })),
-  { ssr: true }
-);
-const WhyChooseTemplates = dynamic(
-  () => import('../components/WhyChooseTemplates').then((m) => ({ default: m.WhyChooseTemplates })),
-  { ssr: true }
-);
-const ProjectHighlight = dynamic(
-  () => import('../components/ProjectHighlight').then((m) => ({ default: m.ProjectHighlight })),
-  { ssr: true }
-);
-const TestimonialCarousel = dynamic(
-  () => import('../components/TestimonialCarousel').then((m) => ({ default: m.TestimonialCarousel })),
-  { ssr: true }
-);
-const HeroCTASection = dynamic(
-  () => import('../components/HeroCTASection').then((m) => ({ default: m.HeroCTASection })),
-  { ssr: true }
-);
-const Footer = dynamic(
-  () => import('../components/Footer').then((m) => ({ default: m.Footer })),
-  { ssr: true }
-);
+import { BrandStatementText } from '../components/BrandStatementText';
+import { TestimonialCarousel } from '../components/TestimonialCarousel';
+import { FAQSection } from '../components/FAQSection';
+import { WhyChooseTemplates } from '../components/WhyChooseTemplates';
+import { ProjectHighlight } from '../components/ProjectHighlight';
+import { FeedbucketWidget } from '../components/FeedbucketWidget';
+import { HeroCTASection } from '../components/HeroCTASection';
+import FluidBackground from '../components/FluidBackground';
 
 export default function Home() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -57,6 +38,8 @@ export default function Home() {
 
   return (
     <div className="m-0 min-h-screen bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
+      {/* Sticky Navbar - stays at top on scroll */}
+     <div className="bg-[#0f0a1f]"></div> 
       <WebDirectHeader theme={theme} toggleTheme={toggleTheme} />
       
       {/* Hero Section */}

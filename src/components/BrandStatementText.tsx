@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 // Google Fonts imports for the component
 const FONTS_CSS = `
@@ -17,27 +17,26 @@ const wordsLine1: WordData[] = [{
 }, {
   text: "conversion-first",
   isAlt: true
+}, {
+  text: "oplossingen"
 }];
 const wordsLine2: WordData[] = [{
-  text: "oplossingen"
-}, {
   text: "die"
 }, {
   text: "merken",
   isAlt: true
 }, {
   text: "helpen"
-}];
-const wordsLine3: WordData[] = [{
+}, {
   text: "opvallen",
   isAlt: true
 }, {
   text: "en"
-}, {
+}];
+const wordsLine3: WordData[] = [{
   text: "groeien",
   isAlt: true
-}];
-const wordsLine4: WordData[] = [{
+}, {
   text: "in"
 }, {
   text: "het"
@@ -48,7 +47,7 @@ const wordsLine4: WordData[] = [{
   text: "tijdperk.",
   isAlt: true
 }];
-const allLines = [wordsLine1, wordsLine2, wordsLine3, wordsLine4];
+const allLines = [wordsLine1, wordsLine2, wordsLine3];
 
 // @component: BrandStatementText
 export const BrandStatementText = () => {
@@ -70,8 +69,8 @@ export const BrandStatementText = () => {
       const containerHeight = containerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Calculate scroll progress (0 to 1) - adjusted to start earlier
-      const scrollProgress = Math.max(0, Math.min(1, (viewportHeight - rect.top) / (containerHeight + viewportHeight * 0.5)));
+      // Calculate scroll progress (0 to 1)
+      const scrollProgress = Math.max(0, Math.min(1, -rect.top / (containerHeight - viewportHeight)));
       const newStyles = words.map((_, index) => {
         // Each word starts animating at its position in the sequence
         const start = index / totalWords;
@@ -95,7 +94,7 @@ export const BrandStatementText = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   let flatIndex = 0;
-  return <div ref={containerRef} className="relative w-full selection:bg-white/10" style={{
+  return <div ref={containerRef} className="relative w-full md:min-h-[200vh] min-h-[110vh] selection:bg-white/10" style={{
     fontFamily: "'Geist', sans-serif",
     backgroundColor: '#05080c'
   }}>
@@ -103,9 +102,9 @@ export const BrandStatementText = () => {
       __html: FONTS_CSS
     }} />
       
-      <div className="sticky top-0 flex items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-28 lg:py-32 min-h-[50vh] md:min-h-[60vh]">
-        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-1 sm:gap-2 md:gap-3 lg:gap-4">
-          {allLines.map((line, lineIndex) => <div key={`line-${lineIndex}`} className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-3 lg:gap-x-4">
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden md:px-4 px-2">
+        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 md:gap-6 lg:gap-8">
+          {allLines.map((line, lineIndex) => <div key={`line-${lineIndex}`} className="flex flex-wrap justify-center items-center gap-x-2 md:gap-x-4 lg:gap-x-5">
               {line.map((word, wordIndex) => {
             const currentIndex = flatIndex++;
             const style = wordStyles[currentIndex] || {
@@ -116,13 +115,18 @@ export const BrandStatementText = () => {
               opacity: style.opacity / 100,
               filter: `blur(${style.blur}px)`,
               fontWeight: word.isAlt ? 400 : 500,
-              fontSize: 'clamp(1.5rem, 6vw, 4rem)',
-              lineHeight: '1.15',
+              fontSize: 'clamp(2rem, 8vw, 4rem)',
+              lineHeight: '1.1',
               letterSpacing: '-0.04em',
-              color: word.isAlt ? '#41ae96' : '#ffffff',
+              color: word.isAlt ? 'transparent' : '#ffffff',
+              background: word.isAlt ? 'linear-gradient(135deg, #41ae96 0%, #2dd4bf 50%, #34d399 100%)' : 'none',
+              backgroundClip: word.isAlt ? 'text' : undefined,
+              WebkitBackgroundClip: word.isAlt ? 'text' : undefined,
+              WebkitTextFillColor: word.isAlt ? 'transparent' : undefined,
               fontFamily: word.isAlt ? "'Georgia', serif" : "'Geist', sans-serif",
               fontStyle: word.isAlt ? 'italic' : 'normal',
-              transition: 'opacity 0.1s ease-out, filter 0.1s ease-out'
+              transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
+              paddingTop: '0'
             }} className="inline-block m-0 text-center whitespace-nowrap">
                     {word.text}
                   </h2>;

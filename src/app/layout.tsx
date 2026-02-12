@@ -25,16 +25,16 @@ const geistMono = Geist_Mono({
    - title: browser tab
    - description: SEO & social previews
 ---------------------------------*/
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.webdirect.nl";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
   title: {
-    default: "WebDirect | Webdesign Bureau Nederland – Professionele Websites",
+    default: "WebDirect | Webdesign Bureau Nederland — Professionele Websites",
     template: "%s | WebDirect",
   },
   description:
-    "WebDirect is een Nederlands webdesign bureau. Wij maken professionele, op maat gemaakte websites die converteren en verkopen. Vraag een gratis webdesign aan.",
+    "WebDirect is een webdesign bureau in Nederland. Wij ontwerpen professionele websites die converteren, overtuigen en verkopen. Vraag een gratis webdesign aan.",
   keywords: [
     "webdesign bureau Nederland",
     "website laten maken",
@@ -43,15 +43,14 @@ export const metadata: Metadata = {
     "custom website",
     "webdesign",
     "website ontwerp",
-    "websites die converteren",
   ],
-  authors: [{ name: "WebDirect", url: siteUrl }],
+  authors: [{ name: "WebDirect", url: process.env.NEXT_PUBLIC_SITE_URL }],
   creator: "WebDirect",
   openGraph: {
-    title: "WebDirect | Webdesign Bureau Nederland – Professionele Websites",
+    title: "WebDirect | Webdesign Bureau Nederland — Professionele Websites",
     description:
-      "Professionele websites op maat voor Nederlandse bedrijven. Strategie, design en technologie voor websites die écht converteren.",
-    url: siteUrl,
+      "Webdesign bureau in Nederland. Professionele websites die converteren en verkopen. Strategie, design en technologie voor ambitieuze merken.",
+    url: process.env.NEXT_PUBLIC_SITE_URL,
     siteName: "WebDirect",
     locale: "nl_NL",
     type: "website",
@@ -60,26 +59,24 @@ export const metadata: Metadata = {
         url: "/images/seo-preview.png",
         width: 1200,
         height: 630,
-        alt: "WebDirect – Webdesign bureau Nederland",
+        alt: "WebDirect — Webdesign bureau Nederland",
       },
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "WebDirect | Webdesign Bureau Nederland",
-    description: "Professionele websites op maat. Vraag gratis webdesign aan.",
   },
   robots: {
     index: true,
     follow: true,
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: process.env.NEXT_PUBLIC_SITE_URL,
   },
   icons: {
     icon: "/images/webdirect-Symbol.svg",
     shortcut: "/images/webdirect-Symbol.svg",
     apple: "/images/webdirect-Symbol.svg",
+  },
+  other: {
+    "geo.region": "NL",
   },
 };
 
@@ -108,7 +105,7 @@ export default function RootLayout({
         <Script
           src="https://cdn.feedbucket.app/assets/feedbucket.js"
           data-feedbucket={process.env.NEXT_PUBLIC_FEEDBUCKET_KEY}
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </body>
     </html>

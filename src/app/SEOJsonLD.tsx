@@ -1,87 +1,71 @@
 // ----------------------------
 // SEOJsonLD Component
-// Adds JSON-LD structured data for search engines (Google rich results).
-// Tailored for WebDirect – webdesign bureau Nederland.
+// JSON-LD structured data for search engines (Netherlands web design agency).
+// No Google Translate — site is in Dutch only.
 // ----------------------------
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.webdirect.nl";
+const SITE_URL =
+  typeof process.env.NEXT_PUBLIC_SITE_URL === "string"
+    ? process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")
+    : "https://www.webdirect.nl";
 
 export function SEOJsonLD() {
-  const webSite = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "WebDirect",
-    alternateName: "WebDirect Webdesign",
-    url: siteUrl,
-    description:
-      "WebDirect is een Nederlands webdesign bureau. Wij maken professionele, op maat gemaakte websites die converteren en verkopen.",
-    inLanguage: "nl-NL",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: { "@type": "EntryPoint", url: `${siteUrl}/#services` },
-      "query-input": "required name=search_term_string",
-    },
-  };
-
   const organization = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": `${siteUrl}/#organization`,
     name: "WebDirect",
-    url: siteUrl,
-    logo: { "@type": "ImageObject", url: `${siteUrl}/images/logo.svg` },
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/webdirect-Symbol.svg`,
     description:
-      "Nederlands webdesign bureau gespecialiseerd in professionele websites op maat. Strategie, design en technologie voor merken die willen groeien.",
+      "WebDirect is een webdesign bureau in Nederland. Wij ontwerpen professionele websites die converteren, overtuigen en verkopen.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "NL",
     },
-    areaServed: { "@type": "Country", name: "Netherlands" },
-    knowsLanguage: "nl",
-    sameAs: [],
+    areaServed: {
+      "@type": "Country",
+      name: "Nederland",
+    },
+  };
+
+  const webSite = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "WebDirect",
+    url: SITE_URL,
+    description:
+      "Webdesign bureau Nederland. Professionele websites die converteren en verkopen. Vraag gratis webdesign aan.",
+    inLanguage: "nl-NL",
+    publisher: {
+      "@type": "Organization",
+      name: "WebDirect",
+      url: SITE_URL,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
   };
 
   const professionalService = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "@id": `${siteUrl}/#service`,
-    name: "WebDirect – Webdesign Bureau",
-    url: siteUrl,
+    name: "WebDirect — Webdesign Bureau",
+    url: SITE_URL,
     description:
-      "Webdesign en website ontwikkeling voor Nederlandse bedrijven. Custom websites die converteren, overtuigen en verkopen.",
-    areaServed: { "@type": "Country", name: "Netherlands" },
+      "Webdesign en website ontwikkeling in Nederland. Custom websites voor bedrijven die willen groeien en verkopen.",
+    areaServed: { "@type": "Country", name: "Nederland" },
     serviceType: "Webdesign",
-    provider: { "@id": `${siteUrl}/#organization` },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Webdesign diensten",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Professioneel webdesign" },
-        },
-        {
-          "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Custom website ontwikkeling" },
-        },
-      ],
-    },
+    provider: { "@type": "Organization", name: "WebDirect" },
   };
 
+  const jsonLd = [organization, webSite, professionalService];
+
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalService) }}
-      />
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
   );
 }

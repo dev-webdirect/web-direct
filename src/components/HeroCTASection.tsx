@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { Calendar, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { GradientOverlay } from './GradientOverlay';
@@ -41,14 +40,7 @@ export const HeroCTASection = ({
         
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-lg opacity-5">
-          <Image
-            src="https://framerusercontent.com/images/4RGuWhw5VjbAJbMonewftyJZ4c.jpg?width=1000&height=400"
-            alt=""
-            width={1000}
-            height={400}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          <img src="https://framerusercontent.com/images/4RGuWhw5VjbAJbMonewftyJZ4c.jpg?width=1000&height=400" alt="Background" className="w-full h-full object-cover" />
         </div>
 
         {/* Gradient Overlay */}
@@ -114,8 +106,8 @@ export const HeroCTASection = ({
 
             {/* Profile Section */}
             <div className="flex items-center gap-2">
-              <div className="relative w-[50px] h-[50px] rounded-full overflow-hidden ring-2 ring-border">
-                <Image src={teamMemberAvatar} alt="Team Member" fill className="object-cover" sizes="50px" loading="lazy" />
+              <div className="w-[50px] h-[50px] rounded-full overflow-hidden ring-2 ring-border">
+                <img src={teamMemberAvatar} alt="Team Member" className="w-full h-full object-cover" />
               </div>
               <div className="text-muted-foreground text-[20px] font-medium tracking-[-0.6px]">+</div>
               <div className="w-[50px] h-[50px] rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-base font-medium ring-2 ring-border">
@@ -132,9 +124,9 @@ export const HeroCTASection = ({
             {/* Action Button */}
             <button
               onClick={goToBooking}
-              className="w-full flex items-center justify-center gap-2 px-[18px] py-[8px] h-[32px] bg-secondary text-secondary-foreground rounded-lg text-sm font-medium transition-all hover:bg-secondary/90 hover:scale-[1.02] cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-3 md:px-6 md:py-3.5 min-h-[44px] sm:min-h-[40px] bg-secondary text-secondary-foreground rounded-lg text-xs sm:text-sm md:text-base font-medium transition-all hover:bg-secondary/90 hover:scale-[1.02] cursor-pointer"
             >
-              Boek je GRATIS meeting!
+              <span className="text-center">Boek je GRATIS meeting!</span>
             </button>
 
           </div>
