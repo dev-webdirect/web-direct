@@ -141,6 +141,8 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    margin: 0;
+    padding: 0;
   }
   html {
     scroll-behavior: smooth;
@@ -159,7 +161,9 @@
     overscroll-behavior-x: none;
   }
   body {
-    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    color: var(--foreground);
     font-family: var(--font-body);
     min-height: 100vh;
     overflow-x: hidden;

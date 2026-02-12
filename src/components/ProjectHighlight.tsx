@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Quote, Star } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { GradientOverlay } from './GradientOverlay';
@@ -20,7 +21,7 @@ const testimonials: Testimonial[] = [{
   author: "Alex Rivera",
   role: "CEO, GrowthLabs",
   rating: 5.0,
-  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/3e3e1091-f8e8-4022-a02a-fa37a35c59a5_320w.jpg",
+  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
   rotation: -10,
   delay: 0.1
 }, {
@@ -29,7 +30,7 @@ const testimonials: Testimonial[] = [{
   author: "Nina Patel",
   role: "Director, PixelCraft",
   rating: 5.0,
-  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/e7074207-4b47-49d2-b86b-6ca1abd5d849_320w.jpg",
+  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
   rotation: -6,
   delay: 0.2
 }, {
@@ -38,7 +39,7 @@ const testimonials: Testimonial[] = [{
   author: "Marcus Webb",
   role: "VP Product, Velocity",
   rating: 5.0,
-  avatar: "https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/986db8ed-1c5d-42fb-8c1d-4b3716d2e317_320w.jpg",
+  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
   rotation: 0,
   delay: 0.3
 }];
@@ -116,8 +117,8 @@ export const ProjectHighlight = () => {
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full overflow-hidden border border-border">
-                          <img src={testimonial.avatar} alt={testimonial.author} className="h-full w-full object-cover" />
+                        <div className="relative h-8 w-8 rounded-full overflow-hidden border border-border">
+                          <Image src={testimonial.avatar} alt={testimonial.author} fill className="object-cover" sizes="32px" loading="lazy" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-xs font-semibold text-foreground">

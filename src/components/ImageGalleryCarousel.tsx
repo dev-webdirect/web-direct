@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Layout } from 'lucide-react';
 interface GalleryImage {
   id: string;
@@ -67,7 +68,15 @@ const TickerRow = ({
         borderRadius: reverse ? '16px 16px 0px 0px' : '0px 0px 16px 16px'
       }}>
             <div className="w-full h-full rounded-lg overflow-hidden relative">
-              <img src={`${img.url}?width=480&height=360`} alt="Gallery content" className="w-full h-full object-cover" loading="lazy" />
+              <Image
+                src={`${img.url}?width=480&height=360`}
+                alt="Gallery"
+                width={480}
+                height={360}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                sizes="(max-width: 768px) 90vw, 390px"
+              />
             </div>
           </div>)}
       </motion.div>

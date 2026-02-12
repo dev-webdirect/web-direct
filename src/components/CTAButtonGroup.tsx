@@ -7,6 +7,8 @@ import { cn } from '../lib/utils';
 interface CTAButtonGroupProps {
   primaryText?: string;
   secondaryText?: string;
+  primaryHref?: string;
+  secondaryHref?: string;
   className?: string;
 }
 
@@ -14,14 +16,18 @@ interface CTAButtonGroupProps {
 export const CTAButtonGroup = ({
   primaryText = "Vraag GRATIS webdesign aan.",
   secondaryText = "Bekijk websites.",
+  primaryHref = "#",
+  secondaryHref = "#",
   className
 }: CTAButtonGroupProps) => {
   return (
     <div className={cn("flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 px-4 py-4 sm:p-6 md:p-8 w-full", className)}>
       {/* Primary Action Button */}
       <motion.a
-        href="#"
-        onClick={(e) => e.preventDefault()}
+        href={primaryHref}
+        onClick={(e) => {
+          if (primaryHref === '#') e.preventDefault();
+        }}
         initial={{
           scale: 1
         }}
@@ -50,8 +56,10 @@ export const CTAButtonGroup = ({
 
       {/* Secondary Action Button */}
       <motion.a
-        href="#"
-        onClick={(e) => e.preventDefault()}
+        href={secondaryHref}
+        onClick={(e) => {
+          if (secondaryHref === '#') e.preventDefault();
+        }}
         whileHover={{
           scale: 1.05,
           backgroundColor: "rgba(0, 0, 0, 0.05)",
