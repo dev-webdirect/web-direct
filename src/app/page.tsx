@@ -10,6 +10,9 @@ import { FAQSection } from '../components/FAQSection';
 import { WhyChooseTemplates } from '../components/WhyChooseTemplates';
 import { ProjectHighlight } from '../components/ProjectHighlight';
 import { HeroCTASection } from '../components/HeroCTASection';
+import { WorkShowcase } from '../components/WorkShowcase';
+import { FeatureGridSection } from '../components/FeatureGridSection';
+import { BookingFaqSection } from '../components/BookingFaqSection';
 
 export default function Home() {
   return (
@@ -35,13 +38,19 @@ export default function Home() {
         <WhyChooseTemplates />
       </div>
       
-      
+      <div id="work">
+        <WorkShowcase />
+      </div>
+      <div id="features">
+        <FeatureGridSection />
+      </div>
       
       <div id="testimonials">
         <TestimonialCarousel />
       </div>
-      <div >
-      <HeroCTASection />
+      
+      <div>
+        <BookingFaqSection />
       </div>
       <Footer />
     </div>

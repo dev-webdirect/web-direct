@@ -1,0 +1,21 @@
+diff --git a/node_modules/webgl-fluid/dist/webgl-fluid.mjs b/node_modules/webgl-fluid/dist/webgl-fluid.mjs
+index 5b24431..66f2bfd 100644
+--- a/node_modules/webgl-fluid/dist/webgl-fluid.mjs
++++ b/node_modules/webgl-fluid/dist/webgl-fluid.mjs
+@@ -1737,6 +1737,16 @@ function ft(V, _) {
+     return s > 1 && (o /= s), o;
+   }
+   function tt() {
++    if (_.CUSTOM_COLOR && _.COLOR_RANGE && _.COLOR_RANGE.length) {
++      const hex = String(_.COLOR_RANGE[0]).replace(/^#/, "");
++      const m = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
++      if (m) {
++        const r = parseInt(m[1], 16) / 255 * 0.15;
++        const g = parseInt(m[2], 16) / 255 * 0.15;
++        const b = parseInt(m[3], 16) / 255 * 0.15;
++        return { r, g, b };
++      }
++    }
+     const o = st(Math.random(), 1, 1);
+     return o.r *= 0.15, o.g *= 0.15, o.b *= 0.15, o;
+   }

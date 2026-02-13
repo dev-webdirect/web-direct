@@ -1,11 +1,9 @@
-'use client';
-
-import Link from 'next/link';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Twitter, Dribbble, Check, Send, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 
+// Helper for social links with enhanced styling
 const SocialLink = ({
   href,
   icon: Icon,
@@ -19,7 +17,7 @@ const SocialLink = ({
 }} whileTap={{
   scale: 0.95
 }}>
-    <Icon className="md:w-5 md:h-5 w-4 h-4 relative z-10" />
+    <Icon className="w-5 h-5 relative z-10" />
     <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#41AE96]/0 to-[#41AE96]/0 group-hover:from-[#41AE96]/10 group-hover:to-[#6A49FF]/10 transition-all duration-300" />
     <span className="sr-only">{label}</span>
   </motion.a>;
@@ -58,8 +56,7 @@ const ContactItem = ({
       <span className="text-sm text-white/80">{value}</span>
     </div>
   </div>;
-
-interface FooterProps {
+export interface DragoFooterProps {
   brandName?: string;
   brandDescription?: string;
   location?: string;
@@ -70,7 +67,8 @@ interface FooterProps {
   successMessage?: string;
 }
 
-export const Footer = ({
+// @component: DragoFooter
+export const DragoFooter = ({
   brandName = "WebDirect",
   brandDescription = "Bij WebDirect ontwerpen we digitale ervaringen die boeien, verbinden en inspireren. Van moderne websites tot innovatieve applicaties.",
   location = "Amsterdam, Nederland",
@@ -79,8 +77,7 @@ export const Footer = ({
   newsletterPlaceholder = "Jouw e-mailadres",
   newsletterButtonText = "Inschrijven",
   successMessage = "Bedankt voor het inschrijven op onze nieuwsbrief!"
-}: FooterProps) => {
-  
+}: DragoFooterProps) => {
   const [emailInput, setEmailInput] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const handleSubmit = (e: React.FormEvent) => {
@@ -95,65 +92,21 @@ export const Footer = ({
     }, 1500);
   };
 
-  return (
-    <footer className="relative bg-[#0f0a1f] text-white overflow-hidden">
-      {/* Background gradient (matches site sections) */}
-      <div
-        className="absolute inset-0 bg-[#0f0a1f]"
-        aria-hidden="true"
-      />
+  // @return
+  return <footer className="relative w-full bg-background text-white overflow-hidden font-sans py-12 px-6 md:px-12 lg:px-24">
+      {/* Card Container */}
+      <div className="relative max-w-[1580px] mx-auto bg-[#2a1f4d] rounded-3xl shadow-2xl overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#41AE96]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#6A49FF]/5 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1f1640]/50" />
+        </div>
 
-      {/* Arc with Curved Gradient Shadow */}
-      <div className="absolute top-0 left-0 right-0 h-30 overflow-hidden pointer-events-none">
-        <svg
-          className="absolute top-0 left-0 w-full h-full"
-          viewBox="0 0 1200 160"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            {/* Gradient for the shadow glow */}
-            <linearGradient id="arcShadowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#6a49ff" stopOpacity="0.55" />
-              <stop offset="45%" stopColor="#a78bfa" stopOpacity="0.6" />
-              <stop offset="75%" stopColor="#41AE96" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#6a49ff" stopOpacity="0.55" />
-            </linearGradient>
-            
-            {/* Blur filter for the glow effect */}
-            <filter id="glowFilter" x="-30%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur1" />
-              <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur2" />
-              <feMerge>
-                <feMergeNode in="blur2" />
-                <feMergeNode in="blur1" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-          
-          {/* Gradient shadow glow - curved path */}
-          <path
-            d="M 0 140 Q 600 -20 1200 140"
-            fill="none"
-            stroke="url(#arcShadowGradient)"
-            strokeWidth="50"
-            strokeLinecap="round"
-            filter="url(#glowFilter)"
-          />
-          
-          {/* Dark arc shape on top */}
-          <path
-            d="M 0 160 Q 600 0 1200 160 L 1200 160 L 0 160 Z"
-            fill="#0f0a1f"
-          />
-        </svg>
-      </div>
-
-      {/* Content Container */}
-      <div className="relative bg-[#0f0a1f] w-full mx-auto px-8 py-18 mt-30">
+        {/* Main content */}
+        <div className="relative px-6 md:px-12 lg:px-24 pt-24 pb-12">
           {/* Top section with CTA and links */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mt-0 ">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-20">
             {/* Brand & Newsletter Section */}
             <div className="lg:col-span-5 flex flex-col gap-8">
               {/* Logo/Brand */}
@@ -165,16 +118,10 @@ export const Footer = ({
               y: 0
             }} viewport={{
               once: true
-            }} className="flex flex-col gap-6 items-center lg:items-start">
-                <div className="flex lg:justify-start gap-3">
-                  <img
-                    src="/images/logo-white.svg"
-                    alt="WebDirect logo"
-                    className="h-18 w-auto"
-                    loading="lazy"
-                  />
-                  
-                </div>
+            }} className="flex flex-col gap-6">
+                <h3 className="text-4xl font-bold bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+                  {brandName}
+                </h3>
                 <p className="text-base leading-relaxed text-white/70 max-w-md">
                   {brandDescription}
                 </p>
@@ -222,13 +169,17 @@ export const Footer = ({
               </div>
 
               {/* Contact info */}
-              
+              <div className="flex flex-col gap-4 pt-6">
+                <ContactItem icon={MapPin} label="Locatie" value={location} />
+                <ContactItem icon={Phone} label="Telefoon" value={phone} />
+                <ContactItem icon={Mail} label="Email" value={email} />
+              </div>
             </div>
 
             {/* Navigation Links Section */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 place-items-center sm:place-items-start text-center sm:text-left">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
               {/* Column 1 */}
-              <div className="flex flex-col gap-5 items-center sm:items-start">
+              <div className="flex flex-col gap-5">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
                   Navigatie
                 </h4>
@@ -240,7 +191,7 @@ export const Footer = ({
               </div>
 
               {/* Column 2 */}
-              <div className="flex flex-col gap-5 items-center sm:items-start">
+              <div className="flex flex-col gap-5">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
                   Diensten
                 </h4>
@@ -252,7 +203,7 @@ export const Footer = ({
               </div>
 
               {/* Column 3 */}
-              <div className="flex flex-col gap-5 items-center sm:items-start">
+              <div className="flex flex-col gap-5">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
                   Resources
                 </h4>
@@ -266,20 +217,13 @@ export const Footer = ({
           </div>
 
           {/* Divider */}
-          <div className="relative h-px my-10">
+          <div className="relative h-px mb-10">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </div>
 
           {/* Bottom Section */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             {/* Copyright */}
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-wider text-white/40 mr-2">Volg ons</span>
-              <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
-              <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
-              <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
-              <SocialLink href="https://dribbble.com" icon={Dribbble} label="Dribbble" />
-            </div>
             <div className="flex flex-col sm:flex-row items-center gap-3 text-white/40 text-sm">
               <span>© 2026 WebDirect</span>
               <span className="hidden sm:inline">•</span>
@@ -297,11 +241,20 @@ export const Footer = ({
             </div>
 
             {/* Social Links */}
-            
+            <div className="flex items-center gap-3">
+              <span className="text-xs uppercase tracking-wider text-white/40 mr-2">Volg ons</span>
+              <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
+              <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
+              <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
+              <SocialLink href="https://dribbble.com" icon={Dribbble} label="Dribbble" />
+            </div>
           </div>
 
-          
+          {/* Decorative bottom accent */}
+          <div className="mt-10 flex justify-center">
+            <div className="h-1 w-32 rounded-full bg-gradient-to-r from-[#41AE96] via-[#6A49FF] to-[#41AE96] opacity-50" />
+          </div>
         </div>
-    </footer>
-  );
-}
+      </div>
+    </footer>;
+};

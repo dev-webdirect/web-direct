@@ -16,7 +16,8 @@ const BrandLogo = ({ className }: { className?: string }) => (
 );
 
 export const HeroSection = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const { scrollY } = useScroll();
 
   // Mouse position tracking
@@ -62,7 +63,7 @@ export const HeroSection = () => {
     const handleMouseEnter = () => setIsMouseInside(true);
     const handleMouseLeave = () => setIsMouseInside(false);
 
-    const container = containerRef.current;
+    const container = mouseEventTarget || containerRef.current;
     if (container) {
       container.addEventListener('mousemove', handleMouseMove);
       container.addEventListener('mouseenter', handleMouseEnter);
@@ -76,7 +77,7 @@ export const HeroSection = () => {
         container.removeEventListener('mouseleave', handleMouseLeave);
       }
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, mouseEventTarget]);
 
   // Typing animation effect
   useEffect(() => {
@@ -113,7 +114,10 @@ export const HeroSection = () => {
 
   return (
     <section
-      ref={containerRef}
+      ref={(el) => {
+        (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
+        setMouseEventTarget(el);
+      }}
       className="relative min-h-screen w-full flex flex-col overflow-hidden px-4 lg:px-8"
     >
         {/* Dynamic Glow Background */}
@@ -121,8 +125,8 @@ export const HeroSection = () => {
           {/* Main Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
           
-          {/* Fluid Background */}
-          <FluidBackground colorHex="#6a49ff" glowSize={0.15} />
+          {/* Fluid Background - pass mouseEventTarget so fluid receives mouse events (background has pointer-events: none) */}
+          <FluidBackground colorHex="#41ae96" glowSize={0.15} mouseEventTarget={mouseEventTarget} />
 
           {/* Animated Orbs for additional depth */}
           <motion.div

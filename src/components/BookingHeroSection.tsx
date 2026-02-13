@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, CheckCircle2, Clock, TrendingUp, Zap, ArrowRight, Users, Award } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -71,6 +71,8 @@ const TrustBadge = ({
 
 // @component: BookingHeroSection
 export const BookingHeroSection = () => {
+  const containerRef = useRef<HTMLElement>(null);
+  const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const [hoveredSlot, setHoveredSlot] = useState<number | null>(null);
   const steps = [{
     title: 'Strategy Call',
@@ -110,14 +112,20 @@ export const BookingHeroSection = () => {
   }] as any[];
 
   // @return
-  return <section className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0f0a1f] py-6 lg:py-8 px-4 lg:px-8">
+  return <section
+    ref={(el) => {
+      (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
+      setMouseEventTarget(el);
+    }}
+    className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0f0a1f] py-6 lg:py-8 px-4 lg:px-8"
+  >
       {/* Dynamic Glow Background - matching HeroSection aesthetic */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Main Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
         
-        {/* Fluid Background with primary color */}
-        <FluidBackground colorHex="#6a49ff" glowSize={0.15} />
+        {/* Fluid Background with primary color - pass mouseEventTarget so fluid receives mouse events */}
+        <FluidBackground colorHex="#41ae96" glowSize={0.15} mouseEventTarget={mouseEventTarget} />
         
         {/* Animated Secondary Orb */}
         <motion.div className="absolute top-[10%] right-[-5%] w-[600px] h-[600px] rounded-full opacity-15 blur-[120px]" animate={{

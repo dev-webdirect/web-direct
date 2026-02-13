@@ -1,390 +1,264 @@
-'use client';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-
-/**
- * Interface for Testimonial data
- */
-interface Testimonial {
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, useAnimationControls } from 'framer-motion';
+type Review = {
   id: string;
-  quote: string;
-  author: string;
-  role: string;
+  name: string;
+  tag: string;
   avatar: string;
-  rating: number;
-}
-const TESTIMONIALS: Testimonial[] = [{
+  description: string;
+};
+const DEFAULT_REVIEWS: Review[] = [{
   id: '1',
-  quote: "Samenwerken met dit team was moeiteloos. Ze begrepen onze merkvisie en veranderden het in een digitale ervaring die echt weergeeft wie we zijn.",
-  author: "Emma de Vries",
-  role: "Marketing Directeur",
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
-  rating: 5
+  name: 'Sophie van der Berg',
+  tag: '@sophievdb',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e04901043aafb86c5e54_avatar-1.webp',
+  description: 'Professioneel, kundig en leuk om mee te werken. Maakte complexe dingen simpel.'
 }, {
   id: '2',
-  quote: "Ze vertaalden onze ideeën naar een strakke, moderne digitale aanwezigheid die precies goed aanvoelt voor ons merk.",
-  author: "Liam Jansen",
-  role: "Directeur",
-  avatar: "https://framerusercontent.com/images/bphS41hVtvFCNiuHkZkxk8imJk.jpg",
-  rating: 5
+  name: 'Emma de Vries',
+  tag: '@emmadv',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e049c05be95b316bf51a_avatar-4.webp',
+  description: 'Een game-changer voor onze startup. Zorgde voor zowel strategie als uitvoering.'
 }, {
   id: '3',
-  quote: "Het team begreep onmiddellijk wat we nodig hadden en leverde een naadloze ervaring die alle verwachtingen overtrof.",
-  author: "Sophie van der Berg",
-  role: "Data Science Consultant",
-  avatar: "https://framerusercontent.com/images/CYC5VQ0ZcK8uEE5jBbm51FTJq0.jpg",
-  rating: 5
+  name: 'Chris Jansen',
+  tag: '@chrisjansen',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e0491f3bd4d420313a10_avatar-2.webp',
+  description: 'Regelde alles van UX tot backend zonder een probleem.'
 }, {
   id: '4',
-  quote: "Hun proces verliep soepel, collaboratief en ongelooflijk intuïtief — het eindresultaat weerspiegelt onze identiteit perfect.",
-  author: "Daan Bakker",
-  role: "Oprichter",
-  avatar: "https://framerusercontent.com/images/prGsWNLXwFL3SoKDU2EYWYhZ2k.jpg",
-  rating: 5
+  name: 'Lars Bakker',
+  tag: '@larsbakker',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e04a535eb43129cb2323_avatar-10.webp',
+  description: 'Een game-changer voor ons bedrijf. Bracht strategie en uitvoering samen.'
 }, {
   id: '5',
-  quote: "Van concept tot uitvoering, ze begrepen onze doelen en creëerden een digitale ervaring die uniek van ons is.",
-  author: "Fleur Vermeulen",
-  role: "Manager",
-  avatar: "https://framerusercontent.com/images/P0sSNnMlhW7adaGkZFmKHL828bY.jpg",
-  rating: 5
+  name: 'Lisa Peters',
+  tag: '@lisapeters',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e04a3d6c7d58cf1f8e33_avatar-9.webp',
+  description: 'Alles staat nu op één plek en de ervaring is ongelooflijk soepel.'
 }, {
   id: '6',
-  quote: "Ze maakten alles eenvoudig en efficiënt, en veranderden onze merkvisie in een gepolijst product dat onze online aanwezigheid verheft.",
-  author: "Lucas Visser",
-  role: "CEO",
-  avatar: "https://framerusercontent.com/images/5O8P63EQwkFO1m5OTR4jsw7hI8.jpg",
-  rating: 5
+  name: 'Tom Visser',
+  tag: '@tomvisser',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e04a24089b4bd5496ac3_avatar-11.webp',
+  description: 'Als je op zoek bent naar een design dat er geweldig uitziet en nog beter presteert.'
 }, {
   id: '7',
-  quote: "De samenwerking was geweldig. Ze luisterden naar onze wensen en creëerden precies wat we voor ogen hadden, en meer nog.",
-  author: "Anna Mulder",
-  role: "Brand Strateeg",
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
-  rating: 5
+  name: 'Anna Mulder',
+  tag: '@annamulder',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e0495de73bd388c22a39_avatar-5.webp',
+  description: 'We voelden ons gehoord bij elke stap en het eindproduct overtrof de verwachtingen.'
 }, {
   id: '8',
-  quote: "Hun aandacht voor detail en begrip van ons merk resulteerde in een digitaal platform dat we met trots presenteren.",
-  author: "Sem de Jong",
-  role: "Creative Director",
-  avatar: "https://framerusercontent.com/images/bphS41hVtvFCNiuHkZkxk8imJk.jpg",
-  rating: 5
-}, {
-  id: '9',
-  quote: "Professioneel, creatief en betrouwbaar. Ze overtroffen onze verwachtingen en leverde op tijd en binnen budget.",
-  author: "Julia Hendriks",
-  role: "Projectmanager",
-  avatar: "https://framerusercontent.com/images/CYC5VQ0ZcK8uEE5jBbm51FTJq0.jpg",
-  rating: 5
-}, {
-  id: '10',
-  quote: "Het was een plezier om met dit team te werken. Ze zijn niet alleen vakkundig, maar ook echt gepassioneerd over wat ze doen.",
-  author: "Tim Peters",
-  role: "Product Owner",
-  avatar: "https://framerusercontent.com/images/prGsWNLXwFL3SoKDU2EYWYhZ2k.jpg",
-  rating: 5
-}, {
-  id: '11',
-  quote: "Ze gaven ons merk een fris en modern uiterlijk zonder de kern van wie we zijn te verliezen. Fantastisch werk!",
-  author: "Mila Koster",
-  role: "Brand Manager",
-  avatar: "https://framerusercontent.com/images/P0sSNnMlhW7adaGkZFmKHL828bY.jpg",
-  rating: 5
-}, {
-  id: '12',
-  quote: "Hun creatieve aanpak en technische expertise zorgden voor een eindproduct dat zowel mooi als functioneel is.",
-  author: "Bram Smit",
-  role: "CTO",
-  avatar: "https://framerusercontent.com/images/5O8P63EQwkFO1m5OTR4jsw7hI8.jpg",
-  rating: 5
-}, {
-  id: '13',
-  quote: "Een uitstekende ervaring van begin tot eind. Hun professionaliteit en creativiteit maakten het verschil.",
-  author: "Lisa de Groot",
-  role: "Eigenaar",
-  avatar: "https://framerusercontent.com/images/Wu0ngxjedkJ31EstGJABQBoafk.jpg",
-  rating: 5
-}, {
-  id: '14',
-  quote: "Ze wisten precies hoe ze onze visie tot leven moesten brengen. Het resultaat is boven verwachting.",
-  author: "Jasper Vliet",
-  role: "Hoofd Marketing",
-  avatar: "https://framerusercontent.com/images/bphS41hVtvFCNiuHkZkxk8imJk.jpg",
-  rating: 5
-}, {
-  id: '15',
-  quote: "Geen enkele vraag was te veel. Ze werkten nauw met ons samen om precies te leveren wat we zochten.",
-  author: "Nina Bosch",
-  role: "Zaakvoerder",
-  avatar: "https://framerusercontent.com/images/CYC5VQ0ZcK8uEE5jBbm51FTJq0.jpg",
-  rating: 5
-}, {
-  id: '16',
-  quote: "Het eindproduct is niet alleen visueel aantrekkelijk, maar ook functioneel en gebruiksvriendelijk. Top team!",
-  author: "Max van Dijk",
-  role: "Ondernemer",
-  avatar: "https://framerusercontent.com/images/prGsWNLXwFL3SoKDU2EYWYhZ2k.jpg",
-  rating: 5
-}, {
-  id: '17',
-  quote: "Ze overtroffen al onze verwachtingen met een product dat onze merkidentiteit perfect vastlegt.",
-  author: "Eva Martens",
-  role: "Communication Manager",
-  avatar: "https://framerusercontent.com/images/P0sSNnMlhW7adaGkZFmKHL828bY.jpg",
-  rating: 5
-}, {
-  id: '18',
-  quote: "Innovatief, betrouwbaar en vakkundig. Samenwerken met dit team was een waar genoegen.",
-  author: "Ruben Koning",
-  role: "Directeur Strategie",
-  avatar: "https://framerusercontent.com/images/5O8P63EQwkFO1m5OTR4jsw7hI8.jpg",
-  rating: 5
+  name: 'Daan Smit',
+  tag: '@daansmit',
+  avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e049dce75b5793bd5727_avatar-7.webp',
+  description: 'De website die ze bouwden verhoogde ons conversiepercentage in de eerste maand.'
 }];
-
-/** Returns responsive card width and visible card count based on screen width */
-function useResponsiveCard() {
-  const [cardWidth, setCardWidth] = useState(630);
-  const [visibleCards, setVisibleCards] = useState(2);
-  const [gap, setGap] = useState(24);
-
-  useEffect(() => {
-    const update = () => {
-      const w = window.innerWidth;
-      if (w < 480) {
-        // Very small mobile
-        setCardWidth(w - 48);
-        setVisibleCards(1);
-        setGap(12);
-      } else if (w < 640) {
-        // Mobile
-        setCardWidth(w - 64);
-        setVisibleCards(1);
-        setGap(16);
-      } else if (w < 1024) {
-        // Tablet
-        setCardWidth(Math.min(480, w - 80));
-        setVisibleCards(1);
-        setGap(20);
-      } else if (w < 1280) {
-        // Small desktop
-        setCardWidth(520);
-        setVisibleCards(2);
-        setGap(24);
-      } else {
-        // Large desktop
-        setCardWidth(630);
-        setVisibleCards(2);
-        setGap(24);
-      }
-    };
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  return { cardWidth, visibleCards, gap };
-}
-
-export const TestimonialCarousel = () => {
-  // Create infinite loop by tripling the testimonials
-  const infiniteTestimonials = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
-  const totalOriginal = TESTIMONIALS.length;
-
-  const { cardWidth, visibleCards, gap } = useResponsiveCard();
-
-  // Start in the middle set
-  const [currentIndex, setCurrentIndex] = useState(totalOriginal + 2);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const nextSlide = useCallback(() => {
-    setIsTransitioning(true);
-    setCurrentIndex(prev => prev + 1);
-  }, []);
-  const prevSlide = useCallback(() => {
-    setIsTransitioning(true);
-    setCurrentIndex(prev => prev - 1);
-  }, []);
-
-  // Handle infinite loop reset
-  useEffect(() => {
-    if (!isTransitioning) return;
-    const timer = setTimeout(() => {
-      setIsTransitioning(false);
-
-      // Reset to middle set when reaching boundaries
-      if (currentIndex >= totalOriginal * 2) {
-        setCurrentIndex(currentIndex - totalOriginal);
-      } else if (currentIndex < totalOriginal) {
-        setCurrentIndex(currentIndex + totalOriginal);
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [currentIndex, isTransitioning, totalOriginal]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prevSlide();
-      if (e.key === 'ArrowRight') nextSlide();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide]);
-
-  // Touch/swipe support
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-  const handleTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    const threshold = 50;
-    if (diff > threshold) nextSlide();
-    else if (diff < -threshold) prevSlide();
-  };
-
-  // Calculate the scroll offset
-  const scrollX = currentIndex * (cardWidth + gap);
-
-  // Calculate centering offset: position so focused cards are centered
-  const totalFocusWidth = visibleCards * cardWidth + (visibleCards - 1) * gap;
-  const centerOffset = `calc(50% - ${totalFocusWidth / 2}px)`;
-
-  // Helper function to determine if a card should be in focus
-  const isCardInFocus = (index: number) => {
-    if (visibleCards === 1) {
-      return index === currentIndex;
-    }
-    return index === currentIndex || index === currentIndex + 1;
-  };
-
-  return (
-    <section className="relative w-full min-h-[70vh] lg:min-h-screen flex flex-col items-center justify-center bg-card  px-4 overflow-hidden">
-      {/* Header Container */}
-      <div className="flex flex-col items-center gap-3 sm:gap-4 max-w-[700px] text-center px-2">
-        <div className="flex items-center gap-2 px-3 py-1.5">
-          <img src="https://framerusercontent.com/images/F8wan4JxRuiIlSJe5tqI0wnJhM.svg" alt="Decoratie Links" className="w-1.5 h-2.5 opacity-60" />
-          <span className="text-[11px] sm:text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase font-sans">Reviews</span>
-          <img src="https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg" alt="Decoratie Rechts" className="w-1.5 h-2.5 opacity-60" />
+const ReviewCard = ({
+  review,
+  onHoverStart,
+  onHoverEnd
+}: {
+  review: Review;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+}) => <div className="flex flex-row items-start gap-5 bg-[#4626c9]/20 w-[450px] min-w-[450px] h-[146px] rounded-[10px] p-[30px] border border-[#6A49FF]/30 shadow-lg select-none backdrop-blur-sm cursor-pointer transition-all hover:border-[#6A49FF]/50 hover:shadow-xl hover:bg-[#4626c9]/30" onMouseEnter={onHoverStart} onMouseLeave={onHoverEnd}>
+    <img src={review.avatar} loading="lazy" alt={`${review.name}'s Avatar`} className="w-[50px] h-[50px] min-w-[50px] rounded-full object-cover border-[0.8px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.3)]" />
+    <div className="flex flex-col gap-[10px] flex-1 min-w-0">
+      <div className="flex flex-row justify-between items-center w-full">
+        <div className="flex flex-row items-center gap-[10px] overflow-hidden">
+          <span className="text-white text-[14px] font-medium truncate">{review.name}</span>
+          <span className="text-[#666] text-[26px] leading-none mb-3">.</span>
+          <span className="text-[#adadad] text-[14px] truncate">{review.tag}</span>
         </div>
-        <h2 className="text-2xl sm:text-[36px] md:text-[42px] lg:text-[52px] font-medium text-card-foreground leading-[1.2] tracking-tight font-sans">
-          Wat{' '}
-          <span
-            className="italic font-serif text-[#6A49FF] text-3xl sm:text-[40px] md:text-[48px] lg:text-[58px]"
-          >
-            klanten
-          </span>{' '}
-          zeggen
-        </h2>
       </div>
+      <p className="text-[#adadad] text-[16px] leading-[1.4] m-0 line-clamp-2 overflow-hidden text-ellipsis">
+        {review.description}
+      </p>
+    </div>
+  </div>;
+const ReviewPopup = ({
+  review,
+  position
+}: {
+  review: Review;
+  position: {
+    x: number;
+    y: number;
+  };
+}) => <div className="fixed z-[9999] pointer-events-none" style={{
+  left: `${position.x}px`,
+  top: `${position.y}px`,
+  transform: 'translate(-50%, 0) translateY(20px)'
+}}>
+    <div className="bg-[#4626c9]/95 backdrop-blur-md rounded-[12px] p-6 border border-[#6A49FF]/50 shadow-2xl max-w-[500px] min-w-[400px]">
+      <div className="flex flex-row items-start gap-4 mb-4">
+        <img src={review.avatar} loading="lazy" alt={`${review.name}'s Avatar`} className="w-[60px] h-[60px] min-w-[60px] rounded-full object-cover border-[1px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.4)]" />
+        <div className="flex flex-col gap-1 flex-1">
+          <div className="flex flex-row items-center gap-2">
+            <span className="text-white text-[16px] font-semibold">{review.name}</span>
+            <span className="text-[#666] text-[24px] leading-none mb-2">.</span>
+            <span className="text-[#adadad] text-[14px]">{review.tag}</span>
+          </div>
+        </div>
+      </div>
+      <p className="text-white text-[16px] leading-[1.6] m-0">
+        {review.description}
+      </p>
+    </div>
+  </div>;
 
-      {/* Carousel Container */}
-      <div
-        className="relative w-full mb-6 sm:mb-8"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div ref={containerRef} className="overflow-hidden">
-          <motion.div
-            className="flex"
-            animate={{ x: -scrollX }}
-            transition={isTransitioning ? {
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            } : {
-              duration: 0
-            }}
-            style={{
-              gap: `${gap}px`,
-              paddingLeft: centerOffset,
-              paddingRight: centerOffset,
-            }}
-          >
-            {infiniteTestimonials.map((testimonial, index) => {
-              const inFocus = isCardInFocus(index);
-              return (
-                <motion.div
-                  key={`${testimonial.id}-${index}`}
-                  className="flex-shrink-0"
-                  style={{ width: `${cardWidth}px` }}
-                  animate={{
-                    filter: inFocus ? 'blur(0px)' : 'blur(4px)',
-                    opacity: inFocus ? 1 : 0.6,
-                    scale: inFocus ? 1 : 0.95,
-                  }}
-                  transition={{
-                    duration: 0.3,
-                    ease: "easeOut",
-                  }}
-                >
-                  <div className="bg-background border border-border/20 p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl shadow-lg h-full">
-                    <div className="bg-background rounded-lg p-4 sm:p-6 md:p-8 flex flex-col gap-4 sm:gap-5 md:gap-6 min-h-[220px] sm:min-h-[260px] md:min-h-[320px]">
-                      <p className="text-base sm:text-lg md:text-xl lg:text-[22px] font-medium text-foreground leading-[1.3] sm:leading-[1.2] tracking-[-0.4px] sm:tracking-[-0.6px] font-sans">
-                        {testimonial.quote}
-                      </p>
+// @component: ReviewMarquee
+export const TestimonialCarousel= () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const controls1 = useAnimationControls();
+  const controls2 = useAnimationControls();
+  const [hoveredReview, setHoveredReview] = useState<Review | null>(null);
+  const [mousePosition, setMousePosition] = useState({
+    x: 0,
+    y: 0
+  });
+  const [isPaused, setIsPaused] = useState(false);
+  const hidePopupTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentX1 = useRef(0);
+  const currentX2 = useRef(0);
+  const animationStartTime1 = useRef(0);
+  const animationStartTime2 = useRef(0);
 
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-auto pt-3 sm:pt-4 gap-3 sm:gap-0">
-                        <div className="flex items-center gap-2.5 sm:gap-3">
-                          <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-accent shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
-                            <img src={testimonial.avatar} alt={testimonial.author} className="w-full h-full object-cover" />
-                          </div>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 text-sm sm:text-base font-medium font-sans">
-                            <span className="text-foreground">{testimonial.author}</span>
-                            <span className="hidden sm:inline text-muted-foreground">&mdash;</span>
-                            <span className="text-muted-foreground text-xs sm:text-sm">{testimonial.role}</span>
-                          </div>
-                        </div>
+  // Duplicating for seamless scrolling
+  const firstRow = [...DEFAULT_REVIEWS.slice(0, 4), ...DEFAULT_REVIEWS.slice(0, 4)];
+  const secondRow = [...DEFAULT_REVIEWS.slice(4), ...DEFAULT_REVIEWS.slice(4)];
+  useEffect(() => {
+    const startAnimations = async () => {
+      animationStartTime1.current = Date.now();
+      animationStartTime2.current = Date.now();
 
-                        <div className="flex gap-0.5 sm:gap-1 ml-[46px] sm:ml-0">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-foreground text-foreground" />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+      // Row 1: Leftward movement
+      controls1.start({
+        x: ['0%', '-50%'],
+        transition: {
+          duration: 30,
+          ease: 'linear',
+          repeat: Infinity
+        }
+      });
+
+      // Row 2: Rightward movement
+      controls2.start({
+        x: ['-50%', '0%'],
+        transition: {
+          duration: 30,
+          ease: 'linear',
+          repeat: Infinity
+        }
+      });
+    };
+    startAnimations();
+  }, [controls1, controls2]);
+
+  useEffect(() => () => {
+    if (hidePopupTimeout.current) clearTimeout(hidePopupTimeout.current);
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY
+    });
+  };
+  const handleHoverStart = (review: Review) => {
+    if (hidePopupTimeout.current) {
+      clearTimeout(hidePopupTimeout.current);
+      hidePopupTimeout.current = null;
+    }
+    setHoveredReview(review);
+    setIsPaused(true);
+
+    // Calculate current position based on elapsed time
+    const elapsed1 = (Date.now() - animationStartTime1.current) % 30000;
+    const elapsed2 = (Date.now() - animationStartTime2.current) % 30000;
+    const progress1 = elapsed1 / 30000;
+    const progress2 = elapsed2 / 30000;
+    currentX1.current = -progress1 * 50;
+    currentX2.current = -50 + progress2 * 50;
+    controls1.stop();
+    controls2.stop();
+  };
+  const handleHoverEnd = () => {
+    // Delay hiding so popup stays visible briefly when mouse moves off card
+    hidePopupTimeout.current = setTimeout(() => {
+      setHoveredReview(null);
+      hidePopupTimeout.current = null;
+    }, 150);
+    setIsPaused(false);
+
+    // Calculate remaining distance and time for smooth continuation
+    const remainingDistance1 = -50 - currentX1.current;
+    const remainingDistance2 = 0 - currentX2.current;
+    const totalDistance = 50;
+    const remainingTime1 = Math.abs(remainingDistance1) / totalDistance * 30;
+    const remainingTime2 = Math.abs(remainingDistance2) / totalDistance * 30;
+
+    // Update start times to match resumed animation
+    animationStartTime1.current = Date.now() - currentX1.current / -50 * 30000;
+    animationStartTime2.current = Date.now() - (currentX2.current + 50) / 50 * 30000;
+
+    // Resume animations from exact current position
+    controls1.start({
+      x: [`${currentX1.current}%`, '-50%'],
+      transition: {
+        duration: remainingTime1,
+        ease: 'linear',
+        repeat: Infinity,
+        repeatType: 'loop',
+        repeatDelay: 0
+      }
+    });
+    controls2.start({
+      x: [`${currentX2.current}%`, '0%'],
+      transition: {
+        duration: remainingTime2,
+        ease: 'linear',
+        repeat: Infinity,
+        repeatType: 'loop',
+        repeatDelay: 0
+      }
+    });
+  };
+
+  // @return
+  return <div className="relative w-full overflow-hidden py-10 bg-[hsl(252deg_31.91%_9.22%)] min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
+      <div className="flex flex-col gap-5 w-full relative">
+        {/* Blur overlays for fading edges */}
+        <div className="absolute top-0 bottom-0 left-0 w-[200px] z-10 pointer-events-none bg-gradient-to-r from-[hsl(252deg_31.91%_9.22%)] to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[200px] z-10 pointer-events-none bg-gradient-to-l from-[hsl(252deg_31.91%_9.22%)] to-transparent" />
+
+        {/* Row 1 - Moving Left */}
+        <div className="flex overflow-hidden">
+          <motion.div animate={controls1} className="flex gap-5 whitespace-nowrap" style={{
+          width: 'max-content'
+        }}>
+            {firstRow.map((review, idx) => <ReviewCard key={`row1-${review.id}-${idx}`} review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />)}
+          </motion.div>
+        </div>
+
+        {/* Row 2 - Moving Right */}
+        <div className="flex overflow-hidden">
+          <motion.div animate={controls2} className="flex gap-5 whitespace-nowrap" style={{
+          width: 'max-content'
+        }}>
+            {secondRow.map((review, idx) => <ReviewCard key={`row2-${review.id}-${idx}`} review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />)}
           </motion.div>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="flex justify-center gap-3 mb-6 sm:mb-8">
-        <button
-          onClick={prevSlide}
-          className="flex items-center justify-center w-10 h-10 bg-background rounded-lg border border-border/20 hover:bg-accent active:scale-95 transition-all shadow-sm group"
-          aria-label="Vorige getuigenissen"
-        >
-          <ChevronLeft className="w-5 h-5 text-foreground group-hover:-translate-x-0.5 transition-transform" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="flex items-center justify-center w-10 h-10 bg-background rounded-lg border border-border/20 hover:bg-accent active:scale-95 transition-all shadow-sm group"
-          aria-label="Volgende getuigenissen"
-        >
-          <ChevronRight className="w-5 h-5 text-foreground group-hover:translate-x-0.5 transition-transform" />
-        </button>
-      </div>
-
-      {/* Decorative Divider Line */}
-      <div className="w-full max-w-[1060px] h-[1px] px-4">
-        <div className="flex w-full h-full relative">
-          <div className="flex-1 bg-border" />
-          <div className="flex-1 bg-border" />
-          <div className="absolute inset-0 bg-gradient-to-r from-card via-transparent to-card opacity-80" />
-        </div>
-      </div>
-    </section>
-  );
+      {/* Review Popup - render via Portal to body to avoid overflow/transform clipping */}
+      {typeof document !== 'undefined' && hoveredReview && createPortal(
+        <ReviewPopup review={hoveredReview} position={mousePosition} />,
+        document.body
+      )}
+    </div>;
 };

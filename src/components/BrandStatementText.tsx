@@ -2,10 +2,6 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
-// Google Fonts imports for the component
-const FONTS_CSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap');
-`;
 type WordData = {
   text: string;
   isAlt?: boolean;
@@ -66,18 +62,20 @@ export const BrandStatementText = () => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const containerHeight = containerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
 
-      // Calculate scroll progress (0 to 1) - starts earlier with offset
-      const scrollStart = viewportHeight * 0.1; // Start when section is 30% into view
-      const scrollProgress = Math.max(0, Math.min(1, (-rect.top + scrollStart) / (containerHeight - viewportHeight + scrollStart)));
+      // Calculate scroll progress (0 to 1)
+      // Animation starts when section is 80% into viewport
+      // Animation completes when section reaches 20% from top
+      const scrollStart = viewportHeight * 0.8;
+      const scrollEnd = viewportHeight * 0.2;
+      const scrollProgress = Math.max(0, Math.min(1, (viewportHeight - rect.top - scrollEnd) / (scrollStart - scrollEnd)));
       
       const newStyles = words.map((_, index) => {
         // Each word starts animating at its position in the sequence
-        // Increased range for slower animation (was +3, now +6)
+        // Reduced range for faster sequential animation
         const start = index / totalWords;
-        const end = Math.min((index + 8) / totalWords, 1);
+        const end = Math.min((index + 4) / totalWords, 1);
 
         // Calculate the progress for this specific word
         const wordProgress = Math.max(0, Math.min(1, (scrollProgress - start) / (end - start)));
@@ -97,45 +95,56 @@ export const BrandStatementText = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   let flatIndex = 0;
-  return <div ref={containerRef} className="relative w-full md:min-h-[200vh] min-h-[150vh] selection:bg-white/10" style={{
-    fontFamily: "'Geist', sans-serif",
-    backgroundColor: '#05080c'
-  }}>
-      <style dangerouslySetInnerHTML={{
-      __html: FONTS_CSS
-    }} />
-      
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden md:px-4 px-2">
-        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 md:gap-6 lg:gap-8">
-          {allLines.map((line, lineIndex) => <div key={`line-${lineIndex}`} className="flex flex-wrap justify-center items-center gap-x-2 md:gap-x-4 lg:gap-x-5">
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full md:min-h-[120vh] min-h-[150vh] selection:bg-[#6a49ff]/20"
+    >
+      {/* Background (match site vibe) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[#0f0a1f]/40" aria-hidden="true" />
+
+      {/* Ambient glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-[#6a49ff]/20 blur-[120px]" />
+        <div className="absolute -bottom-40 right-1/4 w-[520px] h-[520px] rounded-full bg-[#41AE96]/15 blur-[120px]" />
+      </div>
+
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
+        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-1 md:gap-2 lg:gap-3">
+          {allLines.map((line, lineIndex) => (
+            <div
+              key={`line-${lineIndex}`}
+              className="flex flex-wrap justify-center items-center gap-x-2 md:gap-x-4 lg:gap-x-5"
+            >
               {line.map((word, wordIndex) => {
-            const currentIndex = flatIndex++;
-            const style = wordStyles[currentIndex] || {
-              opacity: 0,
-              blur: 10
-            };
-            return <h2 key={`${lineIndex}-${wordIndex}`} style={{
-              opacity: style.opacity / 100,
-              filter: `blur(${style.blur}px)`,
-              fontWeight: word.isAlt ? 400 : 500,
-              fontSize: 'clamp(2rem, 8vw, 4rem)',
-              lineHeight: '1.1',
-              letterSpacing: '-0.04em',
-              color: word.isAlt ? 'transparent' : '#ffffff',
-              background: word.isAlt ? 'linear-gradient(135deg, #41ae96 0%, #2dd4bf 50%, #34d399 100%)' : 'none',
-              backgroundClip: word.isAlt ? 'text' : undefined,
-              WebkitBackgroundClip: word.isAlt ? 'text' : undefined,
-              WebkitTextFillColor: word.isAlt ? 'transparent' : undefined,
-              fontFamily: word.isAlt ? "'Georgia', serif" : "'Geist', sans-serif",
-              fontStyle: word.isAlt ? 'italic' : 'normal',
-              transition: 'opacity 0.15s ease-out, filter 0.15s ease-out',
-              paddingTop: '0'
-            }} className="inline-block m-0 text-center whitespace-nowrap">
+                const currentIndex = flatIndex++;
+                const style = wordStyles[currentIndex] || { opacity: 0, blur: 10 };
+
+                return (
+                  <span
+                    key={`${lineIndex}-${wordIndex}`}
+                    style={{
+                      opacity: style.opacity / 100,
+                      filter: `blur(${style.blur}px)`,
+                    }}
+                    className={[
+                      'inline-block m-0 whitespace-nowrap',
+                      'text-[clamp(2rem,8vw,4rem)] leading-[1.1] tracking-[-0.04em]',
+                      'transition-[opacity,filter] duration-150 ease-out',
+                      word.isAlt
+                        ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] via-[#a78bfa] to-[#41AE96]'
+                        : 'font-medium text-white',
+                    ].join(' ')}
+                  >
                     {word.text}
-                  </h2>;
-          })}
-            </div>)}
+                  </span>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
