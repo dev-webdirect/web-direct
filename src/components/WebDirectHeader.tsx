@@ -112,18 +112,17 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
               <motion.div
                 className="flex items-center gap-2 sm:gap-3 flex-shrink-0"
                 animate={{
-                  // Use CSS values so Motion can animate reliably across rem-based gaps
-                  gap: isScrolled ? '0.5rem' : '0.75rem',
+                  gap: isScrolled ? 8 : 12,
                 }}
                 transition={smoothTransition}
               >
-                <div className="relative w-[120px] h-[36px] sm:w-[140px] sm:h-[42px]">
+                <div>
                   <Image
                     src={logoSrc}
                     alt="WebDirect"
-                    fill
-                    sizes="(max-width: 640px) 120px, 140px"
-                    className="object-contain"
+                    width={130}
+                    height={10}
+                    loading="eager"
                     priority
                   />
                 </div>
@@ -144,7 +143,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                       <a
                         key={link.name}
                         href={link.href}
-                        className="inline-flex items-center min-h-[44px] min-w-[44px] py-2 px-3 -my-1 transition-all font-medium text-sm text-white/90 hover:text-[#a78bfa]"
+                        className="transition-all font-medium text-sm text-white/80 hover:text-[#a78bfa]"
                       >
                         {link.name}
                       </a>
@@ -187,7 +186,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
               <div className="flex items-center gap-2 flex-shrink-0">
                 {/* CTA Button — hidden on mobile when not scrolled, always visible when scrolled */}
                 <motion.button
-                  className="hidden sm:inline-flex items-center gap-2 min-h-[44px] px-4 sm:px-6 py-2 sm:py-2.5 bg-[#6a49ff] text-white rounded-full hover:shadow-lg transition-shadow font-medium hover:bg-[#5839e6] whitespace-nowrap text-sm group"
+                  className="hidden sm:inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-[#6a49ff] text-white rounded-full hover:shadow-lg transition-shadow font-medium hover:bg-[#5839e6] whitespace-nowrap text-sm group"
                   animate={{
                     rotate: isButtonHovered ? [0, -2, 2, -2, 2, 0] : 0,
                   }}
@@ -204,7 +203,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
 
                 {/* Hamburger — open/close mobile list */}
                 <motion.button
-                  className="md:hidden inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full transition-colors text-white hover:bg-white/10"
+                  className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-full transition-colors text-white hover:bg-white/10"
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   whileTap={{ scale: 0.9 }}
                   aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -235,7 +234,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                           key={link.name}
                           href={link.href}
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center min-h-[44px] px-4 py-3 rounded-lg transition-colors font-medium text-sm text-white/90 hover:text-[#a78bfa] hover:bg-white/5"
+                          className="flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm text-white/90 hover:text-[#a78bfa] hover:bg-white/5"
                         >
                           {link.name}
                         </a>

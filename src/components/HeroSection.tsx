@@ -114,10 +114,8 @@ export const HeroSection = () => {
     };
   }, [mouseX, mouseY, mouseEventTarget, shouldAnimate]);
 
-  // Typing animation effect
+  // Typing animation effect (same on mobile and desktop)
   useEffect(() => {
-    if (!shouldAnimate) return;
-
     const currentWord = rotatingWords[currentWordIndex];
     const typingSpeed = isDeleting ? 30 : 60;
     const pauseBeforeDelete = 1500;
@@ -147,17 +145,9 @@ export const HeroSection = () => {
     return () => {
       if (timeout) clearTimeout(timeout);
     };
-  }, [displayedText, isDeleting, currentWordIndex, rotatingWords, shouldAnimate]);
+  }, [displayedText, isDeleting, currentWordIndex, rotatingWords]);
 
-  // On mobile, keep a stable (non-typing) word.
-  useEffect(() => {
-    if (shouldAnimate) return;
-    setDisplayedText(rotatingWords[0]);
-    setIsDeleting(false);
-    setCurrentWordIndex(0);
-    setIsMouseInside(false);
-  }, [shouldAnimate]);
-
+  
   return (
     <section
       ref={(el) => {
