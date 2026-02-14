@@ -46,9 +46,11 @@ export default function Home() {
           <div id="work">
             <WorkShowcase />
           </div>
+          {/*}
           <div id="features">
             <FeatureGridSection />
           </div>
+          */}
           <div id="testimonials">
             <TestimonialCarousel />
           </div>

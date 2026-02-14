@@ -360,8 +360,8 @@ export const BookingFaqSection = () => {
           delay: 0.1
         }} className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
             Alles wat je moet{' '}
-            <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
-              weten
+            <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+              weten.
             </span>
           </motion.h2>
 

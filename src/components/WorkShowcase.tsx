@@ -75,7 +75,8 @@ export const WorkShowcase = () => {
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Header Section */}
         <div className="w-full max-w-[900px] mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <motion.h2 initial={{
+          
+          {/*<motion.h2 initial={{
           opacity: 0,
           y: 20
         }} whileInView={{
@@ -83,7 +84,25 @@ export const WorkShowcase = () => {
           y: 0
         }} transition={{
           duration: 0.6
-        }} className="text-white text-3xl md:text-4xl font-medium leading-tight text-center sm:text-left w-full sm:w-auto">Onze projecten.</motion.h2>
+        }} className="text-white text-3xl md:text-4xl font-medium leading-tight text-center sm:text-left w-full sm:w-auto">Onze 
+        <span className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif"> projecten.</span></motion.h2>
+        */}
+        <motion.h2 initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.1
+        }} className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+            Onze{' '}
+            <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+            projecten.
+            </span>
+          </motion.h2>
+
 
           <div className="flex gap-3 sm:gap-4 w-full sm:w-auto justify-center sm:justify-end">
             <button onClick={() => paginate(-1)} className="group w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-[#121212] hover:bg-[#1a1a1a] text-white rounded-lg sm:rounded-xl transition-all duration-300 border border-white/5 active:scale-90" aria-label="Previous Project">
@@ -130,7 +149,7 @@ export const WorkShowcase = () => {
                 duration: 0.4
               }
             }} className="absolute w-full max-w-[900px] h-full flex flex-col items-center z-10 px-0">
-                <div className="group relative w-full bg-[#30294E] p-2 sm:p-2.5 rounded-2xl cursor-pointer overflow-hidden border border-white/5 shadow-2xl transition-colors duration-500 hover:border-white/10">
+                <div className="group relative w-full bg-[#0f0a1f] p-2 sm:p-2.5 rounded-2xl cursor-pointer overflow-hidden border border-white/5 shadow-2xl transition-colors duration-500 hover:border-white/10">
                   {/* Image Container */}
                   <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl">
                     <Image
