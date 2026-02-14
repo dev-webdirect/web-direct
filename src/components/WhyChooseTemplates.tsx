@@ -67,19 +67,19 @@ export const WhyChooseTemplates = () => {
       <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <motion.h2 initial={{
+        <motion.h2 initial={{
           opacity: 0,
           y: 20
-        }} whileInView={{
+        }} animate={{
           opacity: 1,
           y: 0
-        }} viewport={{
-          once: true
-        }} className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white">
+        }} transition={{
+          duration: 0.6,
+          delay: 0.1
+        }} className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
             Waarom bedrijven kiezen voor{' '}
-            <span className="italic font-serif font-medium bg-gradient-to-r from-[#6a49ff] via-[#5839e6] to-[#41ae96] bg-clip-text text-transparent" style={{
-            fontSize: '58px'
-          }}>
+            <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+
               WebDirect.
             </span>
           </motion.h2>
