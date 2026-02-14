@@ -1,5 +1,7 @@
+'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import { motion, useAnimationControls } from 'framer-motion';
 type Review = {
   id: string;
@@ -40,14 +42,16 @@ const DEFAULT_REVIEWS: Review[] = [{
   description: 'Alles staat nu op één plek en de ervaring is ongelooflijk soepel.'
 }, {
   id: '6',
-  name: 'Tom Visser',
-  tag: '@tomvisser',
+  name: 'Anna Mulder',
+  tag: '@annamulder',
   avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e04a24089b4bd5496ac3_avatar-11.webp',
   description: 'Als je op zoek bent naar een design dat er geweldig uitziet en nog beter presteert.'
 }, {
   id: '7',
-  name: 'Anna Mulder',
-  tag: '@annamulder',
+
+  name: 'Tom Visser ',
+  tag: '@tomvisser',
+  
   avatar: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bbf7/68e5e0495de73bd388c22a39_avatar-5.webp',
   description: 'We voelden ons gehoord bij elke stap en het eindproduct overtrof de verwachtingen.'
 }, {
@@ -65,8 +69,8 @@ const ReviewCard = ({
   review: Review;
   onHoverStart: () => void;
   onHoverEnd: () => void;
-}) => <div className="flex flex-row items-start gap-5 bg-[#4626c9]/20 w-[450px] min-w-[450px] h-[146px] rounded-[10px] p-[30px] border border-[#6A49FF]/30 shadow-lg select-none backdrop-blur-sm cursor-pointer transition-all hover:border-[#6A49FF]/50 hover:shadow-xl hover:bg-[#4626c9]/30" onMouseEnter={onHoverStart} onMouseLeave={onHoverEnd}>
-    <img src={review.avatar} loading="lazy" alt={`${review.name}'s Avatar`} className="w-[50px] h-[50px] min-w-[50px] rounded-full object-cover border-[0.8px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.3)]" />
+}) => <div className="flex flex-row items-start gap-5 bg-[#0f0a1f]/95 w-[450px] min-w-[450px] h-[146px] rounded-[10px] p-[30px] border border-[#6A49FF]/40 shadow-lg select-none backdrop-blur-sm cursor-pointer transition-all hover:border-[#6A49FF]/50 hover:shadow-xl hover:bg-[#1a1227]/95" onMouseEnter={onHoverStart} onMouseLeave={onHoverEnd}>
+    <Image src={review.avatar} width={50} height={50} alt={`${review.name}'s Avatar`} className="w-[50px] h-[50px] min-w-[50px] rounded-full object-cover border-[0.8px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.3)]" />
     <div className="flex flex-col gap-[10px] flex-1 min-w-0">
       <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-row items-center gap-[10px] overflow-hidden">
@@ -94,9 +98,9 @@ const ReviewPopup = ({
   top: `${position.y}px`,
   transform: 'translate(-50%, 0) translateY(20px)'
 }}>
-    <div className="bg-[#4626c9]/95 backdrop-blur-md rounded-[12px] p-6 border border-[#6A49FF]/50 shadow-2xl max-w-[500px] min-w-[400px]">
+    <div className="bg-[#0f0a1f]/98 backdrop-blur-md rounded-[12px] p-6 border border-[#6A49FF]/50 shadow-2xl max-w-[500px] min-w-[400px]">
       <div className="flex flex-row items-start gap-4 mb-4">
-        <img src={review.avatar} loading="lazy" alt={`${review.name}'s Avatar`} className="w-[60px] h-[60px] min-w-[60px] rounded-full object-cover border-[1px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.4)]" />
+        <Image src={review.avatar} width={60} height={60} alt={`${review.name}'s Avatar`} className="w-[60px] h-[60px] min-w-[60px] rounded-full object-cover border-[1px] border-[#6A49FF]/40 shadow-[0_8px_15px_rgba(70,38,201,0.4)]" />
         <div className="flex flex-col gap-1 flex-1">
           <div className="flex flex-row items-center gap-2">
             <span className="text-white text-[16px] font-semibold">{review.name}</span>
@@ -229,12 +233,12 @@ export const TestimonialCarousel= () => {
     });
   };
 
-  // @return
-  return <div className="relative w-full overflow-hidden py-10 bg-[hsl(252deg_31.91%_9.22%)] min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
+  // @return – no own bg so page gradient (page.tsx) shows through; edge fades match page #0f0a1f
+  return (
+    <div className="relative w-full overflow-hidden py-10 min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
       <div className="flex flex-col gap-5 w-full relative">
-        {/* Blur overlays for fading edges */}
-        <div className="absolute top-0 bottom-0 left-0 w-[200px] z-10 pointer-events-none bg-gradient-to-r from-[hsl(252deg_31.91%_9.22%)] to-transparent" />
-        <div className="absolute top-0 bottom-0 right-0 w-[200px] z-10 pointer-events-none bg-gradient-to-l from-[hsl(252deg_31.91%_9.22%)] to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[200px] z-10 pointer-events-none bg-gradient-to-r from-[#0f0a1f] to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[200px] z-10 pointer-events-none bg-gradient-to-l from-[#0f0a1f] to-transparent" />
 
         {/* Row 1 - Moving Left */}
         <div className="flex overflow-hidden">
@@ -260,5 +264,6 @@ export const TestimonialCarousel= () => {
         <ReviewPopup review={hoveredReview} position={mousePosition} />,
         document.body
       )}
-    </div>;
+    </div>
+  );
 };

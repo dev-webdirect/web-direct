@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Layout } from 'lucide-react';
 interface GalleryImage {
@@ -67,7 +68,15 @@ const TickerRow = ({
         borderRadius: reverse ? '16px 16px 0px 0px' : '0px 0px 16px 16px'
       }}>
             <div className="w-full h-full rounded-lg overflow-hidden relative">
-              <img src={`${img.url}?width=480&height=360`} alt="Gallery content" className="w-full h-full object-cover" loading="lazy" />
+              <Image
+                src={`${img.url}?width=480&height=360`}
+                alt="Gallery content"
+                fill
+                sizes="390px"
+                className="object-cover"
+                loading={!reverse && idx === 0 ? 'eager' : 'lazy'}
+                priority={!reverse && idx === 0}
+              />
             </div>
           </div>)}
       </motion.div>
@@ -76,8 +85,8 @@ const TickerRow = ({
 export const ImageGalleryCarousel = () => {
     return <section className="relative w-full min-h-[420px] sm:min-h-[520px] md:min-h-[580px] flex flex-col items-center justify-center gap-4 sm:gap-[30px] overflow-hidden bg-background py-2.5 px-2 sm:px-0 z-10">
       {/* Top & Bottom Background Dividers */}
-      <div className="absolute top-0 left-[-20px] right-[-20px] h-5 bg-muted border-y border-border z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-[-20px] right-[-20px] h-5 bg-muted border-y border-border z-10 pointer-events-none" />
+      <div className="absolute top-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
 
       {/* Tickers */}
       <div className="flex flex-col gap-[30px] w-full">

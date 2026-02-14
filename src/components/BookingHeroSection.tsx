@@ -1,9 +1,14 @@
 'use client';
 import React, { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Calendar, CheckCircle2, Clock, TrendingUp, Zap, ArrowRight, Users, Award } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { FluidBackground } from './FluidBackground';
+
+const FluidBackground = dynamic(
+  () => import('./FluidBackground').then((m) => m.FluidBackground),
+  { ssr: false }
+);
 
 // Progress Step Component
 const ProgressStep = ({

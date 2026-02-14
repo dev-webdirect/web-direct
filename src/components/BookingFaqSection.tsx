@@ -1,10 +1,17 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, HelpCircle, Mail, MessageCircle, Phone, Clock, Zap, Shield, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { FluidBackground } from './FluidBackground';
+import { FeatureGridSection } from './FeatureGridSection';
+import { TestimonialCarousel } from './TestimonialCarousel';
+
+const FluidBackground = dynamic(
+  () => import('./FluidBackground').then((m) => m.FluidBackground),
+  { ssr: false }
+);
 
 // FAQ Category Type
 interface FaqItem {
@@ -463,25 +470,53 @@ export const BookingFaqSection = () => {
         }} transition={{
           duration: 0.6,
           delay: 0.9
-        }} viewport={{
-          once: true
-        }} className="bg-gradient-to-r from-primary to-secondary rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 flex flex-col items-center text-center">
-            <div className="mb-4 sm:mb-6">
-              <h4 className="text-lg sm:text-xl md:text-2xl leading-[1.3] font-medium text-primary-foreground mb-2 sm:mb-3">
-                Klaar om jouw project te starten?
-              </h4>
-              <p className="text-primary-foreground text-sm sm:text-base leading-relaxed opacity-90 mb-4">
-                Boek hier een 15 min meeting met ons team.
-              </p>
+        }} className="relative rounded-2xl bg-[#40AE96] border border-gray-800 p-8 lg:p-12 shadow-2xl overflow-hidden">
+            {/* Decorative gradient border effect */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#6a49ff]/10 to-[#41AE96]/10 opacity-50 pointer-events-none" />
+            
+            {/* Floating orbs */}
+            <motion.div className="absolute -top-10 -right-10 w-40 h-40 bg-[#6a49ff]/20 rounded-full blur-3xl pointer-events-none" animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2]
+          }} transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }} />
+            <motion.div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#41AE96]/20 rounded-full blur-3xl pointer-events-none" animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.3, 0.2]
+          }} transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }} />
+
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="text-center lg:text-left">
+                <h3 className="text-white font-bold text-3xl mb-3">
+                  Klaar voor je gratis strategiegesprek?
+                </h3>
+                <p className="text-gray-400 text-lg" style={{
+                color: "#ffffff"
+              }}>
+                  Boek nu je afspraak en ontdek hoe we je kunnen helpen groeien
+                </p>
+              </div>
+
+              <motion.button whileHover={{
+              scale: 1.05,
+              boxShadow: "0 20px 25px -5px rgba(106, 73, 255, 0.3), 0 10px 10px -5px rgba(106, 73, 255, 0.2)"
+            }} whileTap={{
+              scale: 0.95
+            }} className="flex items-center gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-10 py-5 rounded-full font-semibold text-lg transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group whitespace-nowrap">
+                <span>Plan je Call</span>
+                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </motion.button>
             </div>
-            <button
-              onClick={goToBooking}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 sm:px-5 sm:py-3 md:px-6 md:py-3.5 min-h-[44px] sm:min-h-[40px] bg-secondary text-secondary-foreground rounded-lg text-xs sm:text-sm md:text-base font-medium transition-all hover:bg-secondary/90 hover:scale-[1.02] cursor-pointer"
-            >
-              <span className="text-center">Boek je GRATIS meeting!</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </motion.div>
+
 
           {/* Trust Indicators */}
           <motion.div initial={{

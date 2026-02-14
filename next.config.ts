@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  productionBrowserSourceMaps: true,
   images: {
     remotePatterns: [
       {
@@ -10,6 +11,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "framerusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.prod.website-files.com",
       },
     ],
     dangerouslyAllowSVG: true,

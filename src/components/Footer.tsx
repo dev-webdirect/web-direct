@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Twitter, Dribbble, Check, Send, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -33,7 +34,7 @@ const FooterLink = ({
   href: string;
   label: string;
   active?: boolean;
-}) => <motion.a href={href} className={cn("relative text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group", active ? "text-white/50" : "text-white/70 hover:text-white")} onClick={e => e.preventDefault()} whileHover={{
+}) => <motion.a href={href} className={cn("relative inline-flex items-center min-h-[44px] py-2 pr-2 text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group", active ? "text-white/50" : "text-white/70 hover:text-white")} onClick={e => e.preventDefault()} whileHover={{
   x: 4
 }}>
     {label}
@@ -50,11 +51,11 @@ const ContactItem = ({
   label: string;
   value: string;
 }) => <div className="flex items-start gap-3 group">
-    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-[#41AE96] group-hover:bg-[#41AE96]/10 transition-all duration-300">
+    <div className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg bg-white/5 border border-white/10 text-[#41AE96] group-hover:bg-[#41AE96]/10 transition-all duration-300">
       <Icon className="w-5 h-5" />
     </div>
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs uppercase tracking-wider text-white/40">{label}</span>
+      <span className="text-xs uppercase tracking-wider text-white/60">{label}</span>
       <span className="text-sm text-white/80">{value}</span>
     </div>
   </div>;
@@ -112,34 +113,19 @@ export const Footer = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Gradient for the shadow glow */}
             <linearGradient id="arcShadowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#6a49ff" stopOpacity="0.55" />
               <stop offset="45%" stopColor="#a78bfa" stopOpacity="0.6" />
               <stop offset="75%" stopColor="#41AE96" stopOpacity="0.55" />
               <stop offset="100%" stopColor="#6a49ff" stopOpacity="0.55" />
             </linearGradient>
-            
-            {/* Blur filter for the glow effect */}
-            <filter id="glowFilter" x="-30%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur1" />
-              <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur2" />
-              <feMerge>
-                <feMergeNode in="blur2" />
-                <feMergeNode in="blur1" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
           </defs>
-          
-          {/* Gradient shadow glow - curved path */}
           <path
             d="M 0 140 Q 600 -20 1200 140"
             fill="none"
             stroke="url(#arcShadowGradient)"
             strokeWidth="50"
             strokeLinecap="round"
-            filter="url(#glowFilter)"
           />
           
           {/* Dark arc shape on top */}
@@ -167,13 +153,16 @@ export const Footer = ({
               once: true
             }} className="flex flex-col gap-6 items-center lg:items-start">
                 <div className="flex lg:justify-start gap-3">
-                  <img
-                    src="/images/logo-white.svg"
-                    alt="WebDirect logo"
-                    className="h-18 w-auto"
-                    loading="lazy"
-                  />
-                  
+                  <div className="relative w-[200px] h-[60px] sm:w-[240px] sm:h-[72px]">
+                    <Image
+                      src="/images/logo-white.svg"
+                      alt="WebDirect logo"
+                      fill
+                      sizes="(max-width: 640px) 200px, 240px"
+                      className="object-contain"
+                      priority={false}
+                    />
+                  </div>
                 </div>
                 <p className="text-base leading-relaxed text-white/70 max-w-md">
                   {brandDescription}
@@ -188,15 +177,18 @@ export const Footer = ({
               }} animate={{
                 opacity: 1,
                 scale: 1
-              }} className="flex items-center gap-3 p-5 bg-gradient-to-br from-[#41AE96]/20 to-[#41AE96]/5 border border-[#41AE96]/30 rounded-xl text-[#41AE96] backdrop-blur-sm">
+              }} className="flex items-center gap-3 p-5 bg-gradient-to-br from-[#41AE96]/20 to-[#41AE96]/5 border border-[#41AE96]/30 rounded-xl text-[#41AE96]">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#41AE96]/20">
                       <Check className="w-5 h-5" />
                     </div>
                     <span className="text-sm font-medium">{successMessage}</span>
                   </motion.div> : <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 pointer-events-none" />
-                      <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={newsletterPlaceholder} required className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-base outline-none focus:border-[#41AE96]/50 focus:bg-white/10 transition-all placeholder:text-white/30 backdrop-blur-sm" />
+                      <label htmlFor="webdirect-footer-newsletter-email" className="sr-only">
+                        E-mailadres
+                      </label>
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none" />
+                      <input id="webdirect-footer-newsletter-email" name="email" type="email" inputMode="email" autoComplete="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={newsletterPlaceholder} required className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-base outline-none focus:border-[#41AE96]/50 focus:bg-white/10 transition-all placeholder:text-white/50" />
                     </div>
                     <motion.button type="submit" disabled={status === 'loading'} className="relative bg-gradient-to-r from-[#41AE96] to-[#41AE96]/90 text-white font-semibold text-sm px-8 py-4 rounded-xl uppercase tracking-wide hover:from-[#41AE96]/90 hover:to-[#41AE96] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden group" whileHover={{
                   scale: 1.02
@@ -229,7 +221,7 @@ export const Footer = ({
             <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 place-items-center sm:place-items-start text-center sm:text-left">
               {/* Column 1 */}
               <div className="flex flex-col gap-5 items-center sm:items-start">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Navigatie
                 </h4>
                 <FooterLink href="#" label="Home" active />
@@ -241,7 +233,7 @@ export const Footer = ({
 
               {/* Column 2 */}
               <div className="flex flex-col gap-5 items-center sm:items-start">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Diensten
                 </h4>
                 <FooterLink href="#" label="Web Design" />
@@ -253,7 +245,7 @@ export const Footer = ({
 
               {/* Column 3 */}
               <div className="flex flex-col gap-5 items-center sm:items-start">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Resources
                 </h4>
                 <FooterLink href="#" label="Blog" />
@@ -274,13 +266,13 @@ export const Footer = ({
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             {/* Copyright */}
             <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-wider text-white/40 mr-2">Volg ons</span>
+              <span className="text-xs uppercase tracking-wider text-white/60 mr-2">Volg ons</span>
               <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
               <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
               <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
               <SocialLink href="https://dribbble.com" icon={Dribbble} label="Dribbble" />
             </div>
-            <div className="flex flex-col sm:flex-row items-center gap-3 text-white/40 text-sm">
+            <div className="flex flex-col sm:flex-row items-center gap-3 text-white/60 text-sm">
               <span>© 2026 WebDirect</span>
               <span className="hidden sm:inline">•</span>
               <span>Alle rechten voorbehouden</span>

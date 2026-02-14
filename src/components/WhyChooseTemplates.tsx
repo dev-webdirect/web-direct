@@ -4,76 +4,66 @@ import { motion } from 'framer-motion';
 import { Palette, Smartphone, Zap, Database, Layout, PenTool, LifeBuoy, Code } from 'lucide-react';
 
 // Constants for the WebDirect features as cards
+const CARD_STYLE = {
+  bgColor: 'rgba(15, 10, 31, 0.98)',
+  borderColor: 'rgba(106, 73, 255, 0.45)',
+  shadowColor: 'rgba(106, 73, 255, 0.2)',
+};
+
 const WEBDIRECT_CARDS = [{
   id: 'conversion-design',
   title: 'Conversion-first design',
   description: 'Wij ontwerpen websites die gemaakt zijn om klanten binnen te halen, niet om alleen "mooi" te zijn.',
   Icon: Palette,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'custom-code',
   title: '100% maatwerk in code',
   description: 'Alles wordt custom gebouwd in React en Next.js. Geen builders, geen templates, geen beperkingen.',
   Icon: Code,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'fast-performance',
   title: 'Supersnelle performance',
   description: 'Snelle laadtijden zorgen voor betere SEO, meer vertrouwen en hogere conversie.',
   Icon: Zap,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'scalable',
   title: 'Gebouwd om te schalen',
   description: 'Nieuwe pagina\'s, campagnes of funnels toevoegen zonder dat je website opnieuw gebouwd moet worden.',
   Icon: Database,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'seo-ready',
   title: 'SEO-ready structuur',
   description: 'Technische SEO zit standaard ingebouwd. Schone code, sterke structuur en goede indexatie in Google.',
   Icon: Layout,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'premium-quality',
   title: 'Premium uitstraling, zonder agency prijzen',
   description: 'Door onze AI-gedreven workflow leveren we high-end kwaliteit sneller en vaak goedkoper dan traditionele bureaus.',
   Icon: PenTool,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'mobile-first',
   title: 'Perfect op mobiel',
   description: 'Mobile-first design zodat je site op elk scherm strak, snel en professioneel aanvoelt.',
   Icon: Smartphone,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }, {
   id: 'support',
   title: 'Support en optimalisatie',
   description: 'Geen "website opleveren en klaar". We blijven betrokken en optimaliseren waar nodig.',
   Icon: LifeBuoy,
-  bgColor: 'rgba(139, 92, 246, 0.1)',
-  borderColor: 'rgba(139, 92, 246, 0.3)',
-  shadowColor: 'rgba(139, 92, 246, 0.3)'
+  ...CARD_STYLE,
 }] as any[];
 
 // @component: WebDirectCards
 export const WhyChooseTemplates = () => {
   // @return
-  return <section className="w-full py-20 px-4 md:px-8 lg:px-12 bg-[#0f0a1f] font-sans">
+  return <section className="w-full py-20 px-4 md:px-8 lg:px-12 font-sans">
       <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">

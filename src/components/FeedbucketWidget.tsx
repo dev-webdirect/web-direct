@@ -1,6 +1,5 @@
 // components/FeedbucketWidget.tsx
 "use client";
-
 import { useEffect } from "react";
 
 export const FeedbucketWidget = () => {

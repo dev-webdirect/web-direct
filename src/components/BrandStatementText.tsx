@@ -100,15 +100,10 @@ export const BrandStatementText = () => {
       ref={containerRef}
       className="relative w-full md:min-h-[120vh] min-h-[150vh] selection:bg-[#6a49ff]/20"
     >
-      {/* Background (match site vibe) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" aria-hidden="true" />
-      <div className="absolute inset-0 bg-[#0f0a1f]/40" aria-hidden="true" />
+      {/* Background */}
 
       {/* Ambient glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-32 left-1/4 w-[520px] h-[520px] rounded-full bg-[#6a49ff]/20 blur-[120px]" />
-        <div className="absolute -bottom-40 right-1/4 w-[520px] h-[520px] rounded-full bg-[#41AE96]/15 blur-[120px]" />
-      </div>
+      
 
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-1 md:gap-2 lg:gap-3">
@@ -128,12 +123,13 @@ export const BrandStatementText = () => {
                       opacity: style.opacity / 100,
                       filter: `blur(${style.blur}px)`,
                     }}
+                  
                     className={[
                       'inline-block m-0 whitespace-nowrap',
                       'text-[clamp(2rem,8vw,4rem)] leading-[1.1] tracking-[-0.04em]',
                       'transition-[opacity,filter] duration-150 ease-out',
                       word.isAlt
-                        ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] via-[#a78bfa] to-[#41AE96]'
+                        ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa]'
                         : 'font-medium text-white',
                     ].join(' ')}
                   >

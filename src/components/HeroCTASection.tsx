@@ -1,6 +1,6 @@
-"use client";
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Calendar, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -41,7 +41,13 @@ export const HeroCTASection = ({
         
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-lg opacity-5">
-          <img src="https://framerusercontent.com/images/4RGuWhw5VjbAJbMonewftyJZ4c.jpg?width=1000&height=400" alt="Background" className="w-full h-full object-cover" />
+          <Image
+            src="https://framerusercontent.com/images/4RGuWhw5VjbAJbMonewftyJZ4c.jpg?width=1000&height=400"
+            alt="Background"
+            fill
+            sizes="960px"
+            className="object-cover"
+          />
         </div>
 
         {/* Gradient Overlay */}
@@ -108,7 +114,7 @@ export const HeroCTASection = ({
             {/* Profile Section */}
             <div className="flex items-center gap-2">
               <div className="w-[50px] h-[50px] rounded-full overflow-hidden ring-2 ring-border">
-                <img src={teamMemberAvatar} alt="Team Member" className="w-full h-full object-cover" />
+                <Image src={teamMemberAvatar} alt="Team Member" width={50} height={50} className="w-full h-full object-cover" />
               </div>
               <div className="text-muted-foreground text-[20px] font-medium tracking-[-0.6px]">+</div>
               <div className="w-[50px] h-[50px] rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground text-base font-medium ring-2 ring-border">

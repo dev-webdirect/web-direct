@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 type Project = {
@@ -70,7 +71,7 @@ export const WorkShowcase = () => {
   }, [paginate]);
 
   // @return
-  return <section className="relative w-full min-h-screen bg-[#13101F] overflow-hidden py-16 sm:py-24 lg:py-32 px-4 sm:px-6 md:px-8 font-sans">
+  return <section className="relative w-full min-h-screen overflow-hidden py-16 sm:py-24 lg:py-32 px-4 sm:px-6 md:px-8 font-sans">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Header Section */}
         <div className="w-full max-w-[900px] mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
@@ -132,7 +133,13 @@ export const WorkShowcase = () => {
                 <div className="group relative w-full bg-[#30294E] p-2 sm:p-2.5 rounded-2xl cursor-pointer overflow-hidden border border-white/5 shadow-2xl transition-colors duration-500 hover:border-white/10">
                   {/* Image Container */}
                   <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl">
-                    <img src={PROJECTS[currentIndex].image} alt={PROJECTS[currentIndex].title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+                    <Image
+                      src={PROJECTS[currentIndex].image}
+                      alt={PROJECTS[currentIndex].title}
+                      fill
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 900px, 900px"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
                     
                     {/* Hover Overlay Button */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

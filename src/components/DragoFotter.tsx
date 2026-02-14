@@ -31,7 +31,7 @@ const FooterLink = ({
   href: string;
   label: string;
   active?: boolean;
-}) => <motion.a href={href} className={cn("relative text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group", active ? "text-white/50" : "text-white/70 hover:text-white")} onClick={e => e.preventDefault()} whileHover={{
+}) => <motion.a href={href} className={cn("relative inline-flex items-center min-h-[44px] py-2 pr-2 text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group", active ? "text-white/50" : "text-white/70 hover:text-white")} onClick={e => e.preventDefault()} whileHover={{
   x: 4
 }}>
     {label}
@@ -48,11 +48,11 @@ const ContactItem = ({
   label: string;
   value: string;
 }) => <div className="flex items-start gap-3 group">
-    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 text-[#41AE96] group-hover:bg-[#41AE96]/10 transition-all duration-300">
+    <div className="flex items-center justify-center min-w-[44px] min-h-[44px] rounded-lg bg-white/5 border border-white/10 text-[#41AE96] group-hover:bg-[#41AE96]/10 transition-all duration-300">
       <Icon className="w-5 h-5" />
     </div>
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs uppercase tracking-wider text-white/40">{label}</span>
+      <span className="text-xs uppercase tracking-wider text-white/60">{label}</span>
       <span className="text-sm text-white/80">{value}</span>
     </div>
   </div>;
@@ -142,8 +142,11 @@ export const DragoFooter = ({
                     <span className="text-sm font-medium">{successMessage}</span>
                   </motion.div> : <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
                     <div className="relative flex-1">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 pointer-events-none" />
-                      <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={newsletterPlaceholder} required className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-base outline-none focus:border-[#41AE96]/50 focus:bg-white/10 transition-all placeholder:text-white/30 backdrop-blur-sm" />
+                      <label htmlFor="webdirect-drago-footer-newsletter-email" className="sr-only">
+                        E-mailadres
+                      </label>
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none" />
+                      <input id="webdirect-drago-footer-newsletter-email" name="email" type="email" inputMode="email" autoComplete="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} placeholder={newsletterPlaceholder} required className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-5 py-4 text-base outline-none focus:border-[#41AE96]/50 focus:bg-white/10 transition-all placeholder:text-white/50 backdrop-blur-sm" />
                     </div>
                     <motion.button type="submit" disabled={status === 'loading'} className="relative bg-gradient-to-r from-[#41AE96] to-[#41AE96]/90 text-white font-semibold text-sm px-8 py-4 rounded-xl uppercase tracking-wide hover:from-[#41AE96]/90 hover:to-[#41AE96] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden group" whileHover={{
                   scale: 1.02
@@ -180,7 +183,7 @@ export const DragoFooter = ({
             <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
               {/* Column 1 */}
               <div className="flex flex-col gap-5">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Navigatie
                 </h4>
                 <FooterLink href="#" label="Home" active />
@@ -192,7 +195,7 @@ export const DragoFooter = ({
 
               {/* Column 2 */}
               <div className="flex flex-col gap-5">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Diensten
                 </h4>
                 <FooterLink href="#" label="Web Design" />
@@ -204,7 +207,7 @@ export const DragoFooter = ({
 
               {/* Column 3 */}
               <div className="flex flex-col gap-5">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/40 mb-2">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Resources
                 </h4>
                 <FooterLink href="#" label="Blog" />
@@ -224,7 +227,7 @@ export const DragoFooter = ({
           {/* Bottom Section */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             {/* Copyright */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 text-white/40 text-sm">
+            <div className="flex flex-col sm:flex-row items-center gap-3 text-white/60 text-sm">
               <span>© 2026 WebDirect</span>
               <span className="hidden sm:inline">•</span>
               <span>Alle rechten voorbehouden</span>
@@ -242,7 +245,7 @@ export const DragoFooter = ({
 
             {/* Social Links */}
             <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-wider text-white/40 mr-2">Volg ons</span>
+              <span className="text-xs uppercase tracking-wider text-white/60 mr-2">Volg ons</span>
               <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
               <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
               <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />

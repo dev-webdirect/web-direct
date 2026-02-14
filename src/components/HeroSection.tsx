@@ -1,10 +1,15 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 import { cn } from '../lib/utils';
-import { FluidBackground } from './FluidBackground';
 import { CTAButtonGroup } from './CTAButtonGroup';
+
+const FluidBackground = dynamic(
+  () => import('./FluidBackground').then((m) => m.FluidBackground),
+  { ssr: false }
+);
 // Helper for brand logos placeholders
 const BrandLogo = ({ className }: { className?: string }) => (
   <div
@@ -19,6 +24,34 @@ export const HeroSection = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const { scrollY } = useScroll();
+  const [isMobile, setIsMobile] = useState(false);
+  const [showFluid, setShowFluid] = useState(false);
+
+  // Defer fluid background until after first paint to improve LCP
+  useEffect(() => {
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(() => setShowFluid(true), { timeout: 300 });
+      return () => cancelIdleCallback(id);
+    }
+    const t = setTimeout(() => setShowFluid(true), 150);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const update = () => setIsMobile(mq.matches);
+    update();
+
+    // Safari fallback: addListener/removeListener
+    if (mq.addEventListener) {
+      mq.addEventListener('change', update);
+      return () => mq.removeEventListener('change', update);
+    }
+    mq.addListener(update);
+    return () => mq.removeListener(update);
+  }, []);
+
+  const shouldAnimate = !isMobile;
 
   // Mouse position tracking
   const mouseX = useMotionValue(0);
@@ -52,6 +85,8 @@ export const HeroSection = () => {
 
   // Mouse move handler
   useEffect(() => {
+    if (!shouldAnimate) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
@@ -77,10 +112,12 @@ export const HeroSection = () => {
         container.removeEventListener('mouseleave', handleMouseLeave);
       }
     };
-  }, [mouseX, mouseY, mouseEventTarget]);
+  }, [mouseX, mouseY, mouseEventTarget, shouldAnimate]);
 
   // Typing animation effect
   useEffect(() => {
+    if (!shouldAnimate) return;
+
     const currentWord = rotatingWords[currentWordIndex];
     const typingSpeed = isDeleting ? 30 : 60;
     const pauseBeforeDelete = 1500;
@@ -110,7 +147,16 @@ export const HeroSection = () => {
     return () => {
       if (timeout) clearTimeout(timeout);
     };
-  }, [displayedText, isDeleting, currentWordIndex, rotatingWords]);
+  }, [displayedText, isDeleting, currentWordIndex, rotatingWords, shouldAnimate]);
+
+  // On mobile, keep a stable (non-typing) word.
+  useEffect(() => {
+    if (shouldAnimate) return;
+    setDisplayedText(rotatingWords[0]);
+    setIsDeleting(false);
+    setCurrentWordIndex(0);
+    setIsMouseInside(false);
+  }, [shouldAnimate]);
 
   return (
     <section
@@ -125,26 +171,35 @@ export const HeroSection = () => {
           {/* Main Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
           
-          {/* Fluid Background - pass mouseEventTarget so fluid receives mouse events (background has pointer-events: none) */}
-          <FluidBackground colorHex="#41ae96" glowSize={0.15} mouseEventTarget={mouseEventTarget} />
+          {/* Fluid Background - deferred so LCP can paint first */}
+          {shouldAnimate && showFluid && (
+            <FluidBackground colorHex="#41ae96" glowSize={0.15} mouseEventTarget={mouseEventTarget} />
+          )}
 
           {/* Animated Orbs for additional depth */}
-          <motion.div
-            style={{ y: y2 }}
-            className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full opacity-20 blur-[150px]"
-            animate={{
-              scale: [1, 1.1, 1],
-              x: [0, -30, 0]
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            initial={{
-              background: 'radial-gradient(circle, #41ae96 0%, transparent 70%)'
-            }}
-          />
+          {shouldAnimate ? (
+            <motion.div
+              style={{ y: y2 }}
+              className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full opacity-20 blur-[150px]"
+              animate={{
+                scale: [1, 1.1, 1],
+                x: [0, -30, 0]
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              initial={{
+                background: 'radial-gradient(circle, #41ae96 0%, transparent 70%)'
+              }}
+            />
+          ) : (
+            <div
+              className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full opacity-20 blur-[150px]"
+              style={{ background: 'radial-gradient(circle, #41ae96 0%, transparent 70%)' }}
+            />
+          )}
 
           {/* Overlay mesh/grid pattern */}
           <div
@@ -157,47 +212,44 @@ export const HeroSection = () => {
         </div>
 
         {/* Mouse Follower Glow - On top of background */}
-        <motion.div
-          className="absolute z-[5] pointer-events-none"
-          style={{
-            x: smoothMouseX,
-            y: smoothMouseY,
-            translateX: '-50%',
-            translateY: '-50%',
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isMouseInside ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Main glow */}
-          <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-[#6a49ff]/30 via-[#6a49ff]/10 to-transparent blur-[100px]" />
-          
-          {/* Secondary glow for more depth */}
+        {shouldAnimate && (
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gradient-radial from-[#a78bfa]/20 via-[#a78bfa]/5 to-transparent blur-[80px]"
-            animate={{
-              scale: [1, 1.2, 1],
+            className="absolute z-[5] pointer-events-none"
+            style={{
+              x: smoothMouseX,
+              y: smoothMouseY,
+              translateX: '-50%',
+              translateY: '-50%',
             }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          
-          {/* Center highlight */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/10 to-transparent blur-[40px]" />
-        </motion.div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isMouseInside ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Main glow */}
+            <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-[#6a49ff]/30 via-[#6a49ff]/10 to-transparent blur-[100px]" />
+            
+            {/* Secondary glow for more depth */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-gradient-radial from-[#a78bfa]/20 via-[#a78bfa]/5 to-transparent blur-[80px]"
+              animate={{
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            
+            {/* Center highlight */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/10 to-transparent blur-[40px]" />
+          </motion.div>
+        )}
 
       {/* Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center flex-1 justify-center pb-16 pt-20">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-5"
-          >
+          <div className="mb-5">
             <span className="inline-flex items-center mt-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#6a49ff]/10 text-[#a78bfa] border border-[#6a49ff]/20 backdrop-blur-md">
               <span className="mr-2 flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#6a49ff] opacity-75"></span>
@@ -205,15 +257,10 @@ export const HeroSection = () => {
               </span>
               100% Custom Websites
             </span>
-          </motion.div>
+          </div>
 
           {/* Main Heading */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-10 leading-[1.15] tracking-tight"
-          >
+          <h1 className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-10 leading-[1.15] tracking-tight">
             Websites die gemaakt zijn om te{' '}
             <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
               {displayedText}
@@ -221,40 +268,26 @@ export const HeroSection = () => {
                 |
               </span>
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-400 leading-relaxed my-4 font-light"
-          >
+          <p className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed my-4 font-light">
             We combineren strategie, design en technologie om ambitieuze merken te
             helpen opvallen en krachtige digitale ervaringen te creëren die écht
             impact maken.
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+          <div>
             <CTAButtonGroup
               primaryText="Vraag GRATIS webdesign aan."
               primaryHref="/booking"
               secondaryText="Bekijk websites."
             />
-          </motion.div>
+          </div>
 
           {/* Social Proof */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
-            className="w-full flex flex-col items-center mt-10"
-          >
+          <div className="w-full flex flex-col items-center mt-10">
             <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-6">
               VERTROUWD DOOR 100+ MERKEN
             </p>
@@ -264,7 +297,7 @@ export const HeroSection = () => {
               <BrandLogo />
               <BrandLogo />
             </div>
-          </motion.div>
+          </div>
 
           {/* Scroll Indicator */}
           <div
@@ -275,15 +308,19 @@ export const HeroSection = () => {
               SCROLL OM TE ONTDEKKEN
             </p>
             <div className="w-6 h-10 border-2 border-white/20 rounded-full flex items-start justify-center p-1.5">
-              <motion.div
-                animate={{ y: [0, 15, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_#fff]"
-              />
+              {shouldAnimate ? (
+                <motion.div
+                  animate={{ y: [0, 15, 0] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_#fff]"
+                />
+              ) : (
+                <div className="w-1 h-1 bg-white rounded-full shadow-[0_0_10px_#fff]" />
+              )}
             </div>
           </div>
         </div>

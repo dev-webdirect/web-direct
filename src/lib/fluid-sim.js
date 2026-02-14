@@ -1007,7 +1007,10 @@ export function initFluidSim(globalConfig) {
     let sunrays;
     let sunraysTemp;
 
-    let ditheringTexture = createTextureAsync("LDR_LLL1_0.png");
+    // Dithering texture used by bloom. Previously this tried to load
+    // "LDR_LLL1_0.png" from the site root, which can cause a 404 in Next.js.
+    // Generate a small noise texture at runtime instead (no network request).
+    let ditheringTexture = createDitheringTexture();
 
     const blurProgram = new Program(blurVertexShader, blurShader);
     const copyProgram = new Program(baseVertexShader, copyShader);
@@ -1200,6 +1203,31 @@ export function initFluidSim(globalConfig) {
         image.src = url;
 
         return obj;
+    }
+
+    function createDitheringTexture() {
+        const size = 64;
+        const data = new Uint8Array(size * size * 3);
+        for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 256) | 0;
+
+        let texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, size, size, 0, gl.RGB, gl.UNSIGNED_BYTE, data);
+
+        return {
+            texture,
+            width: size,
+            height: size,
+            attach(id) {
+                gl.activeTexture(gl.TEXTURE0 + id);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                return id;
+            },
+        };
     }
 
     function updateKeywords() {

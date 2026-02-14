@@ -106,6 +106,13 @@ export default function RootLayout({
   // ✅ FIX: Make sure <html> has only <body> as direct child (no newlines/whitespace)
   return (
     <html lang="nl">
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="https://framerusercontent.com/images/Gw2uTivgvCkhc4dSxTHmfxTLyYU.jpg?width=480&height=360"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SEOJsonLD />
         {children}
