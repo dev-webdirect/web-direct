@@ -233,12 +233,11 @@ export const TestimonialCarousel= () => {
     });
   };
 
-  // @return – no own bg so page gradient (page.tsx) shows through; edge fades match page #0f0a1f
+  // @return – page gradient shows through; edge fades + bottom fade for smooth flow into BookingFaqSection
   return (
-    <div className="relative w-full overflow-hidden py-10 min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
+    <div className="relative w-full overflow-hidden py-10  min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
       <div className="flex flex-col gap-5 w-full relative">
-        <div className="absolute top-0 bottom-0 left-0 w-[200px] z-10 pointer-events-none bg-gradient-to-r from-[#0f0a1f] to-transparent" />
-        <div className="absolute top-0 bottom-0 right-0 w-[200px] z-10 pointer-events-none bg-gradient-to-l from-[#0f0a1f] to-transparent" />
+        
 
         {/* Row 1 - Moving Left */}
         <div className="flex overflow-hidden">

@@ -327,34 +327,9 @@ export const BookingFaqSection = () => {
     setOpenItems(prev => prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]);
   };
   const currentCategory = faqCategories[activeCategory];
-  return <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0f0a1f] py-20 px-6 lg:px-12">
-      {/* Dynamic Glow Background - matching BookingHeroSection aesthetic */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Main Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
-        
-        {/* Fluid Background with secondary color for variation */}
-        <FluidBackground colorHex="#41AE96" glowSize={0.12} />
-        
-        {/* Animated Primary Orb */}
-        <motion.div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full opacity-10 blur-[100px] pointer-events-none" animate={{
-        scale: [1, 1.3, 1],
-        x: [0, 60, 0],
-        y: [0, -40, 0]
-      }} transition={{
-        duration: 20,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }} style={{
-        background: 'radial-gradient(circle, #6a49ff 0%, transparent 70%)'
-      }} />
-
-        {/* Bottom gradient fade */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(rgba(15, 10, 31, 0) 60%, rgba(15, 10, 31, 1) 100%)'
-      }} />
-      </div>
-
+  return (
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-20 px-6 lg:px-12">
+      {/* No background – uses page.tsx gradient; tight top padding for smooth flow from TestimonialCarousel */}
       {/* Content Container */}
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         {/* Header Section */}
@@ -544,5 +519,6 @@ export const BookingFaqSection = () => {
       </div>
 
       {/* Bottom decorative line - matching BookingHeroSection */}
-    </section>;
+    </section>
+  );
 };
