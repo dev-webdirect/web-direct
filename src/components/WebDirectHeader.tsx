@@ -87,7 +87,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
         )}
       </AnimatePresence>
 
-      <div className="sticky top-4 sm:top-6 z-50 w-full px-3 sm:px-6">
+      <div className="sticky top-2 sm:top-4 md:top-6 z-50 w-full px-2 sm:px-3 md:px-6">
         <motion.nav
           className="flex justify-center mx-auto"
           initial={false}

@@ -20,7 +20,7 @@ export const CTAButtonGroup = ({
   className
 }: CTAButtonGroupProps) => {
   return (
-    <div className={cn("flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 px-4 py-4 sm:p-6 md:p-8 w-full", className)}>
+    <div className={cn("flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-2 py-3 sm:px-4 sm:py-4 md:p-6 lg:p-8 w-full", className)}>
       {/* Primary Action Button */}
       <motion.a
         href={primaryHref}

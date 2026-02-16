@@ -235,7 +235,7 @@ export const TestimonialCarousel= () => {
 
   // @return – page gradient shows through; edge fades + bottom fade for smooth flow into BookingFaqSection
   return (
-    <div className="relative w-full overflow-hidden py-10  min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
+    <div className="relative w-full overflow-hidden py-6 sm:py-8 md:py-10 min-h-[350px] sm:min-h-[400px] flex items-center justify-center px-2 sm:px-4" onMouseMove={handleMouseMove}>
       <div className="flex flex-col gap-5 w-full relative">
         
 

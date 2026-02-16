@@ -154,7 +154,7 @@ export const HeroSection = () => {
         (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
         setMouseEventTarget(el);
       }}
-      className="relative min-h-screen w-full flex flex-col overflow-hidden px-4 lg:px-8"
+      className="relative min-h-screen w-full flex flex-col overflow-hidden px-3 sm:px-4 lg:px-8"
     >
         {/* Dynamic Glow Background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -237,10 +237,10 @@ export const HeroSection = () => {
         )}
 
       {/* Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center flex-1 justify-center pb-16 pt-20">
+      <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col items-center text-center flex-1 justify-center pb-8 pt-2 sm:pb-12 sm:pt-16 lg:pb-16 lg:pt-20">
           {/* Badge */}
-          <div className="mb-5">
-            <span className="inline-flex items-center mt-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#6a49ff]/10 text-[#a78bfa] border border-[#6a49ff]/20 backdrop-blur-md">
+          <div className="mb-3 sm:mb-5">
+            <span className="inline-flex items-center mt-8 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#6a49ff]/10 text-[#a78bfa] border border-[#6a49ff]/20 backdrop-blur-md">
               <span className="mr-2 flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#6a49ff] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6a49ff]"></span>
@@ -250,7 +250,7 @@ export const HeroSection = () => {
           </div>
 
           {/* Main Heading */}
-          <h1 className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-10 leading-[1.15] tracking-tight">
+          <h1 className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-6 sm:mb-8 lg:mb-10 leading-[1.15] tracking-tight">
             Websites die gemaakt zijn om te{' '}
             <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
               {displayedText}
@@ -261,10 +261,8 @@ export const HeroSection = () => {
           </h1>
 
           {/* Subtitle */}
-          <p className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed my-4 font-light">
-            We combineren strategie, design en technologie om ambitieuze merken te
-            helpen opvallen en krachtige digitale ervaringen te creëren die écht
-            impact maken.
+          <p className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed my-2 sm:my-4 font-light px-1 sm:px-0">
+          Wij combineren strategie, design en technologie om ambitieuze merken te helpen groeien met krachtige digitale ervaringen die écht impact maken.
           </p>
 
           {/* CTAs */}
@@ -277,11 +275,11 @@ export const HeroSection = () => {
           </div>
 
           {/* Social Proof */}
-          <div className="w-full flex flex-col items-center mt-10">
-            <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-6">
+          <div className="w-full flex flex-col items-center mt-6 sm:mt-8 lg:mt-10">
+            <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4 sm:mb-6">
               VERTROUWD DOOR 100+ MERKEN
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-10 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
               <BrandLogo />
               <BrandLogo />
               <BrandLogo />
@@ -292,7 +290,7 @@ export const HeroSection = () => {
           {/* Scroll Indicator */}
           <div
             style={{ opacity: 0.75 }}
-            className="mt-10 sm:mt-12 flex flex-col items-center gap-2 cursor-pointer"
+            className="mt-6 sm:mt-8 lg:mt-10 flex flex-col items-center gap-2 cursor-pointer"
           >
             <p className="text-[10px] text-gray-500 font-medium uppercase tracking-[0.15em]">
               SCROLL OM TE ONTDEKKEN

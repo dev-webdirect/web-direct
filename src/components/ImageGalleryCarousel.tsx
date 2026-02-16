@@ -54,7 +54,7 @@ const TickerRow = ({
 }) => {
   // Triple the images to ensure seamless infinite scroll
   const items = [...images, ...images, ...images];
-  return <div className="flex w-full overflow-hidden whitespace-nowrap py-4">
+  return <div className="flex w-full overflow-hidden whitespace-nowrap py-2 sm:py-3 md:py-4">
       <motion.div className="flex gap-[30px]" initial={{
       x: reverse ? '-66.66%' : '0%'
     }} animate={{
@@ -83,13 +83,13 @@ const TickerRow = ({
     </div>;
 };
 export const ImageGalleryCarousel = () => {
-    return <section className="relative w-full min-h-[420px] sm:min-h-[520px] md:min-h-[580px] flex flex-col items-center justify-center gap-4 sm:gap-[30px] overflow-hidden bg-background py-2.5 px-2 sm:px-0 z-10">
+    return <section className="relative w-full min-h-[360px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[580px] flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-[30px] overflow-hidden bg-background py-2 sm:py-2.5 px-2 sm:px-4 md:px-0 z-10">
       {/* Top & Bottom Background Dividers */}
       <div className="absolute top-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
       <div className="absolute bottom-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
 
       {/* Tickers */}
-      <div className="flex flex-col gap-[30px] w-full">
+      <div className="flex flex-col gap-4 sm:gap-6 md:gap-[30px] w-full">
         <TickerRow images={GALLERY_TOP} reverse={false} />
         <TickerRow images={GALLERY_BOTTOM} reverse={true} />
       </div>

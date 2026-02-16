@@ -71,10 +71,10 @@ export const WorkShowcase = () => {
   }, [paginate]);
 
   // @return
-  return <section className="relative w-full min-h-screen overflow-hidden py-16 sm:py-24 lg:py-32 px-4 sm:px-6 md:px-8 font-sans">
+  return <section className="relative w-full  overflow-hidden py-8 sm:py-16 md:py-24 lg:py-32 px-3 sm:px-4 md:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto flex flex-col items-center">
         {/* Header Section */}
-        <div className="w-full max-w-[900px] mb-10 sm:mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="w-full mb-6 sm:mb-8 md:mb-12 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
           
           {/*<motion.h2 initial={{
           opacity: 0,
@@ -115,8 +115,8 @@ export const WorkShowcase = () => {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative w-full flex items-center justify-center h-[420px] sm:h-[520px] lg:h-[650px]">
-          <div className="w-full max-w-[1000px] relative h-full flex items-center justify-center">
+        <div className="relative w-full flex items-center justify-center h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
+          <div className="w-full relative h-full flex items-center justify-center">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div key={currentIndex} custom={direction} initial={{
               opacity: 0,
@@ -149,7 +149,7 @@ export const WorkShowcase = () => {
                 duration: 0.4
               }
             }} className="absolute w-full max-w-[900px] h-full flex flex-col items-center z-10 px-0">
-                <div className="group relative w-full bg-[#0f0a1f] p-2 sm:p-2.5 rounded-2xl cursor-pointer overflow-hidden border border-white/5 shadow-2xl transition-colors duration-500 hover:border-white/10">
+                <div className="group relative w-full bg-[#0f0a1f] p-1.5 sm:p-2 md:p-2.5 rounded-2xl cursor-pointer overflow-hidden border border-white/5 shadow-2xl transition-colors duration-500 hover:border-white/10">
                   {/* Image Container */}
                   <div className="relative w-full aspect-[16/9] overflow-hidden rounded-xl">
                     <Image
@@ -167,13 +167,13 @@ export const WorkShowcase = () => {
                     }} whileHover={{
                       y: 0
                     }} className="bg-linear-to-br from-[#dafe7d] to-[#7af080] px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <span className="text-[#0a0a0a] text-sm font-semibold">View project</span>
+                        <span className="text-[#0a0a0a] text-sm font-semibold">Bekijk het project</span>
                       </motion.div>
                     </div>
                   </div>
 
                   {/* Project Info */}
-                  <div className="w-full py-5 sm:py-6 px-3 sm:px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-6">
+                  <div className="w-full py-3 sm:py-5 md:py-6 px-2 sm:px-3 md:px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 md:gap-6">
                     <h3 className="text-white/90 text-base sm:text-xl font-normal group-hover:text-white transition-colors">
                       {PROJECTS[currentIndex].title}
                     </h3>
@@ -199,7 +199,7 @@ export const WorkShowcase = () => {
         </div>
 
         {/* Progress Navigation Dots */}
-        <div className="flex flex-wrap justify-center gap-2.5 mt-8 sm:mt-12 px-2">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-2.5 mt-6 sm:mt-8 md:mt-12 px-2">
           {PROJECTS.map((_, idx) => <button key={idx} onClick={() => {
           setDirection(idx > currentIndex ? 1 : -1);
           setCurrentIndex(idx);

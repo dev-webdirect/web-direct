@@ -50,7 +50,7 @@ const FaqAccordionItem = ({
     duration: 0.5,
     delay
   }} className="border border-gray-800 rounded-2xl overflow-hidden bg-[#1a1227] hover:shadow-2xl transition-all duration-300">
-      <button onClick={onToggle} className="w-full p-6 lg:p-8 text-left flex justify-between items-start lg:items-center hover:bg-white/[0.02] transition-colors gap-4">
+      <button onClick={onToggle} className="w-full p-4 sm:p-5 md:p-6 lg:p-8 text-left flex justify-between items-start lg:items-center hover:bg-white/[0.02] transition-colors gap-3 sm:gap-4">
         <div className="flex-1">
           <span className="text-xs font-bold uppercase tracking-widest text-[#6a49ff] mb-2 block">
             {categoryTitle}
@@ -78,7 +78,7 @@ const FaqAccordionItem = ({
         duration: 0.3,
         ease: "easeInOut"
       }}>
-            <div className="px-6 lg:px-8 pb-8 text-gray-400 leading-relaxed text-base border-t border-white/[0.05] pt-6">
+            <div className="px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8 text-gray-400 leading-relaxed text-base border-t border-white/[0.05] pt-4 sm:pt-6">
               {answer}
             </div>
           </motion.div>}
@@ -139,7 +139,7 @@ const SupportCard = ({
     duration: 0.5,
     delay
   }} className="relative group w-full h-full">
-      <div className="relative w-full h-full min-h-[220px] p-8 rounded-2xl bg-[#1a1227] border border-gray-800 hover:border-[#41AE96] transition-all duration-300 hover:shadow-2xl">
+      <div className="relative w-full h-full min-h-[200px] sm:min-h-[220px] p-5 sm:p-6 md:p-8 rounded-2xl bg-[#1a1227] border border-gray-800 hover:border-[#41AE96] transition-all duration-300 hover:shadow-2xl">
         <div className="w-12 h-12 rounded-xl bg-[#251b36] flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
           <Icon className="w-6 h-6 text-[#41AE96]" />
         </div>
@@ -328,12 +328,12 @@ export const BookingFaqSection = () => {
   };
   const currentCategory = faqCategories[activeCategory];
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-20 px-6 lg:px-12">
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-6 pb-12 sm:pt-8 sm:pb-16 md:pt-12 md:pb-20 px-3 sm:px-4 md:px-6 lg:px-12">
       {/* No background – uses page.tsx gradient; tight top padding for smooth flow from TestimonialCarousel */}
       {/* Content Container */}
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         {/* Header Section */}
-        <div className="text-center mb-16 space-y-6">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16 space-y-4 sm:space-y-6">
           <motion.div initial={{
           opacity: 0,
           y: 20
@@ -380,7 +380,7 @@ export const BookingFaqSection = () => {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex items-center justify-center gap-3 mb-12 flex-wrap">
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 flex-wrap">
           {faqCategories.map((category, index) => <CategoryTab key={index} title={category.title} icon={category.icon} isActive={activeCategory === index} onClick={() => {
           setActiveCategory(index);
           setOpenItems([0]); // Reset to first item open when switching categories
@@ -388,7 +388,7 @@ export const BookingFaqSection = () => {
         </div>
 
         {/* FAQ Accordion */}
-        <div className="max-w-4xl mx-auto mb-20 space-y-4">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-16 md:mb-20 space-y-3 sm:space-y-4">
           <AnimatePresence mode="wait">
             <motion.div key={activeCategory} initial={{
             opacity: 0,
@@ -418,7 +418,7 @@ export const BookingFaqSection = () => {
         }} transition={{
           duration: 0.6,
           delay: 0.5
-        }} className="text-center mb-10">
+        }} className="text-center mb-6 sm:mb-8 md:mb-10">
             <h3 className="text-white font-bold text-3xl mb-3">
               Geen antwoord gevonden?
             </h3>
@@ -427,7 +427,7 @@ export const BookingFaqSection = () => {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10 md:mb-12">
             
             <SupportCard icon={Mail} title="E-mail Ons" description="Stuur ons een bericht en we reageren binnen 24 uur" 
              delay={0.6} />
@@ -445,7 +445,7 @@ export const BookingFaqSection = () => {
         }} transition={{
           duration: 0.6,
           delay: 0.9
-        }} className="relative rounded-2xl bg-[#40AE96] border border-gray-800 p-8 lg:p-12 shadow-2xl overflow-hidden">
+        }} className="relative rounded-2xl bg-[#40AE96] border border-gray-800 p-4 sm:p-6 md:p-8 lg:p-12 shadow-2xl overflow-hidden">
             {/* Decorative gradient border effect */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#6a49ff]/10 to-[#41AE96]/10 opacity-50 pointer-events-none" />
             
@@ -468,7 +468,7 @@ export const BookingFaqSection = () => {
             delay: 1
           }} />
 
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 md:gap-8">
               <div className="text-center lg:text-left">
                 <h3 className="text-white font-bold text-3xl mb-3">
                   Klaar voor je gratis strategiegesprek?
@@ -501,7 +501,7 @@ export const BookingFaqSection = () => {
         }} transition={{
           duration: 0.6,
           delay: 1
-        }} className="flex flex-wrap items-center justify-center gap-6 mt-10 text-sm text-gray-500">
+        }} className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 md:mt-10 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#41AE96]" />
               <span>100% Vrijblijvend</span>

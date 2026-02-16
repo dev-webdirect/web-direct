@@ -93,7 +93,7 @@ export const DragoFooter = ({
   };
 
   // @return
-  return <footer className="relative w-full bg-background text-white overflow-hidden font-sans py-12 px-6 md:px-12 lg:px-24">
+  return <footer className="relative w-full bg-background text-white overflow-hidden font-sans py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-12 lg:px-24">
       {/* Card Container */}
       <div className="relative max-w-[1580px] mx-auto bg-[#2a1f4d] rounded-3xl shadow-2xl overflow-hidden">
         {/* Decorative background elements */}
@@ -104,11 +104,11 @@ export const DragoFooter = ({
         </div>
 
         {/* Main content */}
-        <div className="relative px-6 md:px-12 lg:px-24 pt-24 pb-12">
+        <div className="relative px-4 sm:px-6 md:px-12 lg:px-24 pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-10 md:pb-12">
           {/* Top section with CTA and links */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-12 lg:gap-16 mb-12 sm:mb-16 md:mb-20">
             {/* Brand & Newsletter Section */}
-            <div className="lg:col-span-5 flex flex-col gap-8">
+            <div className="lg:col-span-5 flex flex-col gap-6 sm:gap-8">
               {/* Logo/Brand */}
               <motion.div initial={{
               opacity: 0,
@@ -180,7 +180,7 @@ export const DragoFooter = ({
             </div>
 
             {/* Navigation Links Section */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
               {/* Column 1 */}
               <div className="flex flex-col gap-5">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">

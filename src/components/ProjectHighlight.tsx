@@ -47,11 +47,11 @@ const testimonials: Testimonial[] = [{
 // @component: ClientTestimonials
 export const ProjectHighlight = () => {
   // @return
-  return <section className="relative w-full py-16 sm:py-24 bg-[#0f0a1f] overflow-hidden">
+  return <section className="relative w-full py-10 sm:py-16 md:py-24 bg-[#0f0a1f] overflow-hidden">
       {/* Gradient Overlay matching Why Choose Templates */}
       <GradientOverlay />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-3 sm:px-4 relative z-10">
         {/* Header Section */}
         <motion.div initial={{
         opacity: 0,
@@ -63,7 +63,7 @@ export const ProjectHighlight = () => {
         once: true
       }} transition={{
         duration: 0.6
-      }} className="mb-12 text-center">
+      }} className="mb-8 sm:mb-10 md:mb-12 text-center">
           <p className="text-xs uppercase text-muted-foreground tracking-[0.2em] mb-3 font-sans font-semibold">Geliefde projecten<br /></p>
           <h2 className="text-4xl sm:text-5xl font-heading tracking-tight font-medium text-foreground">Project <span className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif" style={{
             marginTop: "50px",
@@ -74,8 +74,8 @@ export const ProjectHighlight = () => {
         </motion.div>
 
         {/* Testimonials Stack */}
-        <div className="relative flex items-center justify-center min-h-[500px] mt-8 lg:mt-16">
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:-gap-24">
+        <div className="relative flex items-center justify-center min-h-[400px] sm:min-h-[500px] mt-6 sm:mt-8 md:mt-12 lg:mt-16">
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-6 sm:gap-8 lg:-gap-24">
             {testimonials.map((testimonial, idx) => <motion.div key={testimonial.id} initial={{
             opacity: 0,
             y: 30,
@@ -98,7 +98,7 @@ export const ProjectHighlight = () => {
               duration: 0.5,
               ease: [0.25, 0.46, 0.45, 0.94]
             }
-          }} className={cn("relative group cursor-pointer w-[340px] h-[340px] transition-all duration-300", idx !== 0 && "lg:-ml-12")} style={{
+          }} className={cn("relative group cursor-pointer w-full max-w-[340px] min-w-[280px] sm:w-[340px] h-[340px] transition-all duration-300", idx !== 0 && "lg:-ml-12")} style={{
             zIndex: 10 + idx
           }}>
                 {/* Outer Glass Container */}

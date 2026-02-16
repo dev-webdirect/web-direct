@@ -35,9 +35,9 @@ export const HeroCTASection = ({
 
   // @return
   return (
-    <section className="relative w-full min-h-auto flex items-center justify-center bg-card rounded-2xl overflow-hidden pt-0 pb-13 font-sans">
+    <section className="relative w-full min-h-auto flex items-center justify-center bg-card rounded-2xl overflow-hidden pt-0 pb-8 sm:pb-10 md:pb-13 font-sans">
       {/* Background Container — centered */}
-      <div className="relative w-full max-w-[960px] min-h-auto mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 bg-secondary rounded-lg p-6 md:p-12 overflow-hidden z-10 border border-border">
+        <div className="relative w-full max-w-[960px] min-h-auto mx-auto flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-12 bg-secondary rounded-lg p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden z-10 border border-border">
         
         {/* Background Image Layer */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none rounded-lg opacity-5">
@@ -75,7 +75,7 @@ export const HeroCTASection = ({
         </motion.div>
 
         {/* Left Content */}
-        <div className="relative flex flex-col items-center text-center gap-8 max-w-[450px] z-10">
+        <div className="relative flex flex-col items-center text-center gap-6 sm:gap-8 max-w-[450px] z-10">
           <div className="flex flex-col items-center gap-2.5">
             <span className="text-[12px] font-semibold text-muted-foreground tracking-[1.8px] uppercase">
               {label}
@@ -101,7 +101,7 @@ export const HeroCTASection = ({
       }} transition={{
         duration: 0.4
       }} className="relative w-full md:w-[360px] bg-background/50 rounded-lg p-2 z-10">
-          <div className="w-full h-full bg-card rounded-lg p-5 flex flex-col gap-5 border border-border">
+          <div className="w-full h-full bg-card rounded-lg p-4 sm:p-5 flex flex-col gap-4 sm:gap-5 border border-border">
             {/* Availability Status */}
             <div className="flex items-center gap-2 px-0.5">
               <div className="relative w-2 h-2">

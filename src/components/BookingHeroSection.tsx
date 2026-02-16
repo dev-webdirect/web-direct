@@ -122,7 +122,7 @@ export const BookingHeroSection = () => {
       (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
       setMouseEventTarget(el);
     }}
-    className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0f0a1f] py-6 lg:py-8 px-4 lg:px-8"
+    className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#0f0a1f] py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 lg:px-8"
   >
       {/* Dynamic Glow Background - matching HeroSection aesthetic */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -153,7 +153,7 @@ export const BookingHeroSection = () => {
 
       {/* Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-center">
           
           {/* Left Column - Copy & Benefits */}
           <motion.div initial={{
@@ -164,7 +164,7 @@ export const BookingHeroSection = () => {
           x: 0
         }} transition={{
           duration: 0.6
-        }} className="space-y-5">
+        }} className="space-y-4 sm:space-y-5">
             {/* Badge */}
             <motion.div initial={{
             opacity: 0,
@@ -281,11 +281,11 @@ export const BookingHeroSection = () => {
           delay: 0.2
         }} className="relative">
             {/* Glassmorphic Card */}
-            <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 lg:p-6 shadow-2xl">
+            <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-4 sm:p-5 md:p-6 shadow-2xl">
               {/* Decorative gradient border effect */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               
-              <div className="relative z-10 space-y-4">
+              <div className="relative z-10 space-y-3 sm:space-y-4">
                 {/* Calendar Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <div className="flex items-center gap-3">

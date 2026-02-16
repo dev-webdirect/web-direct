@@ -34,7 +34,7 @@ const FeatureCard = ({
   </motion.div>;
 
 // @component: FeatureGridSection
-export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean }) => {
+export const FeatureGridSection = () => {
   const features = [{
     icon: <ShieldCheck size={40} strokeWidth={1.5} />,
     title: "Decentralization",
@@ -54,8 +54,8 @@ export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean })
   }] as any[];
 
   // @return
-  const content = (
-      <div className="relative w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[50px] items-stretch h-full">
+  return <div className="w-full min-h-screen h-screen bg-background py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-10 flex items-center overflow-y-auto">
+      <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-[50px] my-auto">
         {/* Left Card: Principles & Mission */}
         <motion.div initial={{
         opacity: 0,
@@ -67,24 +67,24 @@ export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean })
         duration: 0.6
       }} viewport={{
         once: true
-      }} className="bg-card border-2 border-border rounded-[20px] p-8 md:p-[50px] backdrop-blur-[10px] h-full">
-          <div className="mb-[60px]">
-            <h3 className="text-[32px] md:text-[40px] leading-[1.3] font-medium text-foreground">
+      }} className="bg-card border-2 border-border rounded-[16px] sm:rounded-[20px] p-4 sm:p-6 md:p-8 lg:p-[50px] backdrop-blur-[10px]">
+          <div className="mb-6 sm:mb-8 md:mb-12 lg:mb-[60px]">
+            <h3 className="text-[24px] sm:text-[28px] md:text-[40px] leading-[1.3] font-medium text-foreground">
               The{" "}
-              <span className="bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
                 principles and mission
               </span>{" "}
               behind all we do.
             </h3>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[50px] gap-y-[50px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 sm:gap-x-6 md:gap-x-8 lg:gap-x-[50px] gap-y-6 sm:gap-y-8 md:gap-y-10 lg:gap-y-[50px]">
             {features.map((feature, index) => <FeatureCard key={index} {...feature} />)}
           </div>
         </motion.div>
 
         {/* Right Section: Vision and Call to Action */}
-        <div className="flex flex-col gap-[50px] h-full">
+        <div className="flex flex-col gap-4 sm:gap-6 md:gap-8 lg:gap-[50px]">
           {/* Vision Card */}
           <motion.div initial={{
           opacity: 0,
@@ -96,9 +96,9 @@ export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean })
           duration: 0.6
         }} viewport={{
           once: true
-        }} className="bg-[#40AE96]  rounded-[20px] p-8 md:p-[50px] flex flex-col flex-1">
-            <div className="mb-[40px] md:mb-[60px]">
-              <h4 className="text-[32px] md:text-[40px] leading-[1.3] font-medium text-primary-foreground">
+        }} className="bg-gradient-to-r from-primary to-secondary rounded-[16px] sm:rounded-[20px] p-4 sm:p-6 md:p-8 lg:p-[50px]">
+            <div className="mb-4 sm:mb-6 md:mb-10 lg:mb-[60px]">
+              <h4 className="text-[24px] sm:text-[28px] md:text-[40px] leading-[1.3] font-medium text-primary-foreground">
                 The vision that guides everything we do
               </h4>
             </div>
@@ -121,8 +121,8 @@ export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean })
           delay: 0.2
         }} viewport={{
           once: true
-        }} className="bg-[#40AE96]  rounded-[20px] p-8 md:p-[50px] flex flex-col flex-1 items-center text-center">
-            <div className="mb-[40px] md:mb-[60px]">
+        }} className="bg-gradient-to-r from-primary to-secondary rounded-[20px] p-4 sm:p-6 md:p-8 lg:p-[50px] flex flex-col items-center text-center">
+            <div className="mb-6 sm:mb-8 md:mb-[40px] lg:mb-[60px]">
               <h4 className="text-[32px] md:text-[40px] leading-[1.3] font-medium text-primary-foreground mb-4">
                 Ready to shape the future?
               </h4>
@@ -137,14 +137,5 @@ export const FeatureGridSection = ({ embedded = false }: { embedded?: boolean })
           </motion.div>
         </div>
       </div>
-  );
-
-  if (embedded) {
-    return <div className="relative w-full h-full flex items-center py-8 sm:py-10 lg:py-12 px-4 md:px-10 overflow-hidden">{content}</div>;
-  }
-  return (
-    <section className="relative w-full h-full flex items-center py-8 sm:py-10 lg:py-12 px-4 md:px-10 overflow-hidden">
-      {content}
-    </section>
-  );
+    </div>;
 };

@@ -98,19 +98,19 @@ export const BrandStatementText = () => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full md:min-h-[120vh] min-h-[150vh] selection:bg-[#6a49ff]/20"
+      className="relative w-full h-auto selection:bg-[#6a49ff]/20"
     >
       {/* Background */}
 
       {/* Ambient glow */}
       
 
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6">
-        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-1 md:gap-2 lg:gap-3">
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-3 sm:px-4 md:px-6">
+        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 sm:gap-5 md:gap-6 lg:gap-8">
           {allLines.map((line, lineIndex) => (
             <div
               key={`line-${lineIndex}`}
-              className="flex flex-wrap justify-center items-center gap-x-2 md:gap-x-4 lg:gap-x-5"
+              className="flex flex-wrap justify-center items-center gap-x-1.5 sm:gap-x-2 md:gap-x-4 lg:gap-x-5"
             >
               {line.map((word, wordIndex) => {
                 const currentIndex = flatIndex++;
@@ -126,11 +126,13 @@ export const BrandStatementText = () => {
                   
                     className={[
                       'inline-block m-0 whitespace-nowrap',
-                      'text-[clamp(2rem,8vw,4rem)] leading-[1.1] tracking-[-0.04em]',
+                      'text-[clamp(2.5rem,10vw,4rem)] leading-[1.1] tracking-[-0.04em]',
                       'transition-[opacity,filter] duration-150 ease-out',
                       word.isAlt
-                        ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa]'
-                        : 'font-medium text-white',
+                      ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] scale-[1.05]'
+                      : 'font-medium text-white'
+
+
                     ].join(' ')}
                   >
                     {word.text}

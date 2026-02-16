@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Palette, Smartphone, Zap, Database, Layout, PenTool, LifeBuoy, Code } from 'lucide-react';
 
 // Constants for the WebDirect features as cards
@@ -63,61 +62,32 @@ const WEBDIRECT_CARDS = [{
 // @component: WebDirectCards
 export const WhyChooseTemplates = () => {
   // @return
-  return <section className="w-full py-20 px-4 md:px-8 lg:px-12 font-sans">
+  return <section className="w-full py-12 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 font-sans">
       <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16 max-w-2xl mx-auto">
-        <motion.h2 initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.1
-        }} className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16 max-w-2xl mx-auto">
+        <h2 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
             Waarom bedrijven kiezen voor{' '}
             <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
 
               WebDirect.
             </span>
-          </motion.h2>
-          <motion.p initial={{
-          opacity: 0,
-          y: 20
-        }} whileInView={{
-          opacity: 1,
-          y: 0
-        }} viewport={{
-          once: true
-        }} transition={{
-          delay: 0.1
-        }} className="text-gray-300 text-lg leading-relaxed">
+          </h2>
+          <p className="text-gray-300 text-lg leading-relaxed">
             Wij bouwen conversion-first websites in code. Geen wordpress of Webflow templates. Sneller, krachtiger en
             schaalbaar zonder beperkingen.
-          </motion.p>
+          </p>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {WEBDIRECT_CARDS.map((item, index) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
+          {WEBDIRECT_CARDS.map((item) => {
           const IconComponent = item.Icon;
-          return <motion.div key={item.id} initial={{
-            opacity: 0,
-            y: 30
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} transition={{
-            delay: index * 0.1
-          }} style={{
+          return <div key={item.id} style={{
             backgroundColor: item.bgColor,
             borderColor: item.borderColor
           }} className="group flex flex-col justify-between rounded-2xl border overflow-hidden relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <div className="p-8 z-10">
+                <div className="p-5 sm:p-6 md:p-8 z-10">
                   {/* Icon */}
                   <div className="w-[50px] h-[50px] rounded-lg mb-6 flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-110" style={{
                 boxShadow: `0 8px 16px 0 ${item.shadowColor}`
@@ -129,7 +99,7 @@ export const WhyChooseTemplates = () => {
                   <h3 className="text-2xl font-medium mb-3 text-white">{item.title}</h3>
                   <p className="text-gray-300 text-sm leading-relaxed">{item.description}</p>
                 </div>
-              </motion.div>;
+              </div>;
         })}
         </div>
       </div>
