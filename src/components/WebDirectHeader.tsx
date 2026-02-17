@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface WebDirectHeaderProps {}
 
@@ -13,11 +15,11 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { name: 'Services', href: '#services' },
+  { name: 'Over ons', href: '#about' },
   { name: 'Process', href: '#process' },
-  { name: 'About', href: '#about' },
+  { name: 'Projecten', href: '#projects' },
+  { name: 'Vragen', href: '#faq' },
 ];
-
 const smoothTransition = {
   type: "spring" as const,
   stiffness: 200,
@@ -27,6 +29,7 @@ const smoothTransition = {
 
 // @component: WebDirectHeader
 export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -116,7 +119,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                 }}
                 transition={smoothTransition}
               >
-                <div>
+                <Link href="/" className="cursor-pointer hover:opacity-80 transition-opacity">
                   <Image
                     src={logoSrc}
                     alt="WebDirect"
@@ -125,7 +128,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                     loading="eager"
                     priority
                   />
-                </div>
+                </Link>
                 
               </motion.div>
 
@@ -196,6 +199,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
+                  onClick={() => router.push('/booking')}
                 >
                   <span className="hidden sm:inline">Gratis Webdesign</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -243,7 +247,10 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                         <motion.button
                           className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#6a49ff] text-white rounded-lg hover:bg-[#5839e6] transition-colors font-medium text-sm group"
                           whileTap={{ scale: 0.95 }}
-                          onClick={() => setIsMobileMenuOpen(false)}
+                          onClick={() => {
+                            setIsMobileMenuOpen(false);
+                            router.push('/booking');
+                          }}
                         >
                           Get Started
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

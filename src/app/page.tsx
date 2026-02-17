@@ -1,5 +1,4 @@
 
-import { WebDirectHeader } from '../components/WebDirectHeader';
 import { ImageGalleryCarousel } from '../components/ImageGalleryCarousel';
 import { Footer } from '../components/Footer';
 import { HeroSection } from '../components/HeroSection';
@@ -12,12 +11,11 @@ import { HeroCTASection } from '../components/HeroCTASection';
 import { WorkShowcase } from '../components/WorkShowcase';
 import { FeatureGridSection } from '../components/FeatureGridSection';
 import { BookingFaqSection } from '../components/BookingFaqSection';
+import { ProcessTimeline } from '../components/ProcessTimeline';
 
 export default function Home() {
   return (
-    <div className="m-0 min-h-screen bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
-      <WebDirectHeader />
-
+    <>
       {/* Hero – unchanged, keeps its own gradient */}
       <div id="hero" className="relative">
         <HeroSection />
@@ -34,16 +32,20 @@ export default function Home() {
           aria-hidden
         />
         <div className="relative z-10">
-          <div id="gallery" className="relative z-10">
+          <div >
             <ImageGalleryCarousel />
           </div>
-          <section id="about" className="w-full pt-0">
+          <div id="about">
             <BrandStatementText />
-          </section>
-          <div id="services">
+          </div>
+          <div id="process">
+            <ProcessTimeline />
+          </div>
+
+          <div>
             <WhyChooseTemplates />
           </div>
-          <div id="work">
+          <div id="projects">
             <WorkShowcase />
           </div>
           {/*}
@@ -51,15 +53,15 @@ export default function Home() {
             <FeatureGridSection />
           </div>
           */}
-          <div id="testimonials">
+          <div >
             <TestimonialCarousel />
           </div>
-          <div>
+          <div id="faq">
             <BookingFaqSection />
           </div>
           <Footer />
         </div>
       </div>
-    </div>
+    </>
   );
 }

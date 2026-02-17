@@ -1,9 +1,70 @@
 'use client';
 import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { motion } from 'framer-motion';
-import { Calendar, CheckCircle2, Clock, TrendingUp, Zap, ArrowRight, Users, Award } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, CheckCircle2, Clock, TrendingUp, Zap, ArrowRight, Users, Award, Minus, Plus } from 'lucide-react';
 import { cn } from '../lib/utils';
+
+type FaqItem = { q: string; a: string };
+type FaqGroup = { title: string; items: FaqItem[] };
+
+const FAQ_GROUPS: FaqGroup[] = [
+  {
+    title: 'Meest gestelde vragen',
+    items: [
+      { q: 'Wat kost een website bij WebDirect?', a: 'Onze websites starten vanaf €695 voor een one-pager. De meeste klanten zitten tussen €1.000 en €2.000, afhankelijk van het aantal pagina\'s en gewenste functionaliteiten. Tijdens een vrijblijvend gesprek kijken we samen wat past bij jouw situatie en budget.' },
+      { q: 'Hoe snel is mijn website klaar?', a: 'Een standaard bedrijfswebsite leveren we binnen 5 werkdagen op, mits content en materialen snel worden aangeleverd. Voor webshops of complexere projecten spreken we een apart traject af.' },
+      { q: 'Kan ik mijn website zelf aanpassen na oplevering?', a: 'Ja. We bouwen een gebruiksvriendelijk CMS in waarmee je zelf content zoals blogberichten en afbeeldingen kunt toevoegen. Voor grotere aanpassingen aan het design of de structuur kun je altijd een verzoek indienen bij ons team.' },
+      { q: 'Wat als ik geen content heb – teksten of foto\'s?', a: 'Geen probleem. Op basis van een korte vragenlijst of je huidige website schrijven wij de teksten voor je. We gebruiken stock- of AI-gegenereerde afbeeldingen als je geen eigen beelden hebt. Dit is optioneel bij te boeken.' },
+      { q: 'Zit ik vast aan een contract of abonnement?', a: 'Nee. Je betaalt eenmalig voor de ontwikkeling van je website. We raden onze eigen hosting sterk aan — die is geoptimaliseerd voor snelheid, veiligheid en uptime. Wil je toch elders hosten, dan zorgen we voor een volledige overdracht van je website.' },
+    ],
+  },
+  {
+    title: 'Aanpak & Proces',
+    items: [
+      { q: 'Hoe verloopt het proces?', a: 'We starten met een kort kennismakingsgesprek (online, 20 minuten) om je wensen en doelen te begrijpen. Daarna werken we in vijf fasen: intake en analyse, design, ontwikkeling, testen, en lancering. Je blijft in elke fase betrokken en kunt op elk moment feedback geven.' },
+      { q: 'Werken jullie met vaste pakketten of maatwerk?', a: 'Allebei. We kijken eerst naar wat jij nodig hebt en wat past bij je budget. Sommige klanten beginnen met een strakke one-pager, anderen willen een volledig uitgewerkte website met meerdere pagina\'s en functionaliteiten. We denken mee en adviseren eerlijk.' },
+      { q: 'Kan ik tussentijds aanpassingen aanvragen?', a: 'Ja. We werken met vaste feedbackrondes tijdens het proces, zodat je altijd weet waar het project staat. Feedback binnen de projectscope verwerken we zonder meerkosten. Grotere wijzigingen bespreken we eerst qua tijd en budget.' },
+      { q: 'Bieden jullie een gratis preview aan?', a: 'Ja. Voordat je akkoord gaat, laten we je een design concept zien gebaseerd op jouw merk en doelen. Zo weet je precies wat je krijgt voordat het project start.' },
+    ],
+  },
+  {
+    title: 'Design & Techniek',
+    items: [
+      { q: 'Krijg ik een uniek design of een template?', a: 'Elk design is op maat gemaakt. We gebruiken geen kant-en-klare templates, maar ontwerpen een look & feel die aansluit bij jouw merk, doelgroep en doelen.' },
+      { q: 'Is mijn website ook goed op mobiel?', a: 'Altijd. We bouwen mobile-first: je website werkt perfect op smartphone, tablet en desktop. We testen op verschillende schermformaten en browsers voor oplevering.' },
+      { q: 'Is mijn website snel en goed vindbaar in Google?', a: 'Ja. Technische SEO is standaard onderdeel van elk project: snelle laadtijden, schone code, correcte meta-tags, structured data en mobile-friendly design. Gemiddeld scoren onze websites 90+ op Google PageSpeed Insights.' },
+      { q: 'Welke technologie gebruiken jullie?', a: 'We werken met moderne technologieën zoals React, Next.js en TypeScript, aangevuld met betrouwbare cloud hosting. We kiezen altijd de technologie die het beste past bij jouw project en behoeften.' },
+      { q: 'Is mijn website GDPR/AVG-proof?', a: 'We bouwen conform de AVG: cookie consent, privacy policy, veilige dataopslag en opt-in mechanismen. We adviseren over wat er juridisch nodig is, maar de eindverantwoordelijkheid ligt bij jou als ondernemer.' },
+    ],
+  },
+  {
+    title: 'Prijs & Betaling',
+    items: [
+      { q: 'Wat kost een website bij WebDirect?', a: 'Websites starten vanaf €695 voor een one-pager. De meeste projecten vallen tussen €1.000 en €2.000. Voor uitgebreidere websites of webapplicaties hanteren we hogere tarieven, afhankelijk van de complexiteit. We maken altijd een offerte op maat.' },
+      { q: 'Zijn er verborgen kosten?', a: 'Nee. We zijn transparant over alle kosten vanaf dag één. Je betaalt eenmalig voor de ontwikkeling. Eventuele hosting- of onderhoudskosten worden vooraf besproken en vastgelegd.' },
+      { q: 'Kan ik in termijnen betalen?', a: 'Ja. Voor grotere projecten werken we met een gespreid betalingsschema: een deel bij start, een deel bij design goedkeuring, en het resterende bedrag bij oplevering. Dit stemmen we af in het intakegesprek.' },
+      { q: 'Wat zijn de kosten voor hosting en onderhoud?', a: 'Hosting en onderhoud zijn optioneel en worden apart geoffreerd. Daarin zijn inbegrepen: SSL-certificaat, dagelijkse back-ups, security monitoring, software-updates en kleine content aanpassingen. Voor grotere wijzigingen maken we een aparte offerte.' },
+    ],
+  },
+  {
+    title: 'Eigendom & Beheer',
+    items: [
+      { q: 'Ben ik eigenaar van mijn website?', a: 'Ja. Alle content, designs en assets zijn van jou. De broncode is clean en gedocumenteerd. Je kunt altijd besluiten om elders te hosten – wij leveren dan alle bestanden, database en documentatie volledig aan.' },
+      { q: 'Wat als ik later wil overstappen naar een andere partij?', a: 'Geen probleem. We leveren een volledige export van de website inclusief alle bestanden en credentials.' },
+      { q: 'Maken jullie back-ups?', a: 'Ja. Automatische dagelijkse back-ups zijn standaard. We bewaren meerdere restore points zodat we bij problemen snel kunnen terugdraaien. Back-ups worden off-site opgeslagen.' },
+    ],
+  },
+  {
+    title: 'Support & Schaalbaarheid',
+    items: [
+      { q: 'Welke support bieden jullie na de lancering?', a: 'Na oplevering bieden we een post-launch periode voor bugfixes en kleine aanpassingen. Klanten met een onderhoudsplan hebben een vast aanspreekpunt. Voor kritieke issues (website onbereikbaar) reageren we binnen 1 uur; overige vragen binnen 24 uur op werkdagen.' },
+      { q: 'Kan ik later uitbreiden of nieuwe functies toevoegen?', a: 'Absoluut. Veel klanten werken na de lancering verder met ons samen voor nieuwe pagina\'s, functionaliteiten of optimalisaties. We staan klaar om mee te groeien met jouw bedrijf.' },
+      { q: 'Kunnen jullie integraties bouwen met andere systemen?', a: 'Ja. We koppelen regelmatig met CRM-systemen, boekhoudprogramma\'s, betalingsproviders, marketingtools en custom API\'s. We bespreken jouw integratie behoeften tijdens de intake.' },
+      { q: 'Kunnen jullie een webshop of klantenportaal bouwen?', a: 'Ja. We bouwen e-commerce oplossingen met productcatalogi, winkelwagen, betaal integraties (IDEAL/Wero, PayPal, creditcard) en voorraadbeheer. Ook beveiligde klantenportalen met login- en persoonlijke dashboards behoren tot de mogelijkheden.' },
+    ],
+  },
+];
 
 const FluidBackground = dynamic(
   () => import('./FluidBackground').then((m) => m.FluidBackground),
@@ -79,6 +140,7 @@ export const BookingHeroSection = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const [hoveredSlot, setHoveredSlot] = useState<number | null>(null);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const steps = [{
     title: 'Strategy Call',
     isCompleted: false,
@@ -117,7 +179,8 @@ export const BookingHeroSection = () => {
   }] as any[];
 
   // @return
-  return <section
+  return (
+    <section
     ref={(el) => {
       (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
       setMouseEventTarget(el);
@@ -365,9 +428,80 @@ export const BookingHeroSection = () => {
           }} />
           </motion.div>
         </div>
+
+        {/* FAQ Section - WebDirect Veelgestelde vragen */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="mt-16 sm:mt-20 md:mt-24 pt-10 sm:pt-12 md:pt-16 border-t border-white/10"
+        >
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl text-white leading-tight tracking-tight mb-2">
+              WebDirect – Veelgestelde vragen
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
+              Meest gestelde vragen
+            </p>
+          </div>
+
+          <div className="space-y-8 md:space-y-10">
+            {FAQ_GROUPS.map((group, groupIndex) => (
+              <div key={groupIndex}>
+                <h3 className="text-lg sm:text-xl font-semibold text-[#41AE96] mb-4 sm:mb-5">
+                  {group.title}
+                </h3>
+                <div className="space-y-2 sm:space-y-3">
+                  {group.items.map((faq, itemIndex) => {
+                    const globalIndex = FAQ_GROUPS.slice(0, groupIndex).reduce((acc, g) => acc + g.items.length, 0) + itemIndex;
+                    const isOpen = openFaqIndex === globalIndex;
+                    return (
+                      <div
+                        key={itemIndex}
+                        className="rounded-xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/[0.07] transition-colors"
+                      >
+                        <button
+                          type="button"
+                          className="w-full p-4 sm:p-5 text-left flex justify-between items-center gap-4"
+                          onClick={() => setOpenFaqIndex(isOpen ? null : globalIndex)}
+                        >
+                          <span className="font-semibold text-sm sm:text-base text-white pr-2 leading-snug">
+                            {faq.q}
+                          </span>
+                          {isOpen ? (
+                            <Minus className="w-5 h-5 text-[#41AE96] flex-shrink-0" />
+                          ) : (
+                            <Plus className="w-5 h-5 text-[#41AE96] flex-shrink-0" />
+                          )}
+                        </button>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-gray-400 text-sm sm:text-base leading-relaxed border-t border-white/10 pt-2">
+                                {faq.a}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* Bottom decorative line - matching HeroSection */}
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-    </section>;
-};
+    </section>
+  );
+}

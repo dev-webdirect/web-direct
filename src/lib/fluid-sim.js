@@ -1617,13 +1617,7 @@ export function initFluidSim(globalConfig) {
             updatePointerUpData(pointer);
         }
     };
-    const handleKeyDown = (e) => {
-        if (e.code === "KeyP") config.PAUSED = !config.PAUSED;
-        if (e.key === " ") splatStack.push(parseInt(Math.random() * 20) + 5);
-    };
-
     window.addEventListener("touchend", handleTouchEnd);
-    window.addEventListener("keydown", handleKeyDown);
 
     function updatePointerDownData(pointer, id, posX, posY) {
         pointer.id = id;
@@ -1805,7 +1799,6 @@ export function initFluidSim(globalConfig) {
         mouseEventTarget.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("mouseup", handleMouseUp);
         window.removeEventListener("touchend", handleTouchEnd);
-        window.removeEventListener("keydown", handleKeyDown);
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
 }

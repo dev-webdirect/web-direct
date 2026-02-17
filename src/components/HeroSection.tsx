@@ -271,6 +271,7 @@ export const HeroSection = () => {
               primaryText="Vraag GRATIS webdesign aan."
               primaryHref="/booking"
               secondaryText="Bekijk websites."
+              secondaryHref="#projects"
             />
           </div>
 

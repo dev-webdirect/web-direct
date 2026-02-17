@@ -15,7 +15,7 @@ const SocialLink = ({
   href: string;
   icon: any;
   label: string;
-}) => <motion.a href={href} target="_blank" rel="noopener noreferrer" className="group relative flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 transition-all duration-300 bg-white/5 border border-white/10 rounded-xl text-white/60 hover:text-white hover:border-[#41AE96]/50 hover:bg-[#41AE96]/10 hover:scale-110" onClick={e => e.preventDefault()} whileHover={{
+}) => <motion.a href={href} target="_blank" rel="noopener noreferrer" className="group relative flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 transition-all duration-300 bg-white/5 border border-white/10 rounded-xl text-white/60 hover:text-white hover:border-[#41AE96]/50 hover:bg-[#41AE96]/10 hover:scale-110" whileHover={{
   y: -2
 }} whileTap={{
   scale: 0.95
@@ -25,7 +25,7 @@ const SocialLink = ({
     <span className="sr-only">{label}</span>
   </motion.a>;
 
-// Helper for navigation links with enhanced styling
+// Helper for navigation links with enhanced styling (uses Link for internal, anchor for hash)
 const FooterLink = ({
   href,
   label,
@@ -34,12 +34,33 @@ const FooterLink = ({
   href: string;
   label: string;
   active?: boolean;
-}) => <motion.a href={href} className={cn("relative inline-flex items-center min-h-[44px] py-2 pr-2 text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group", active ? "text-white/50" : "text-white/70 hover:text-white")} onClick={e => e.preventDefault()} whileHover={{
-  x: 4
-}}>
-    {label}
-    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
-  </motion.a>;
+}) => {
+  const isHash = href.startsWith('#');
+  const className = cn(
+    "relative inline-flex items-center min-h-[44px] py-2 pr-2 text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group",
+    active ? "text-white/50" : "text-white/70 hover:text-white"
+  );
+  const content = (
+    <>
+      {label}
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
+    </>
+  );
+  if (href === '/' || (!isHash && !href.startsWith('http'))) {
+    return (
+      <Link href={href} className={className} onClick={() => window.scrollTo(0, 0)}>
+        <motion.span className="inline-flex items-center" whileHover={{ x: 4 }}>
+          {content}
+        </motion.span>
+      </Link>
+    );
+  }
+  return (
+    <motion.a href={href} className={className} whileHover={{ x: 4 }}>
+      {content}
+    </motion.a>
+  );
+};
 
 // Contact info item
 const ContactItem = ({
@@ -169,7 +190,7 @@ export const Footer = ({
                 </p>
               </motion.div>
 
-              {/* Newsletter */}
+              {/* Newsletter 
               <div className="relative">
                 {status === 'success' ? <motion.div initial={{
                 opacity: 0,
@@ -212,47 +233,46 @@ export const Footer = ({
                       Oeps! Er ging iets mis. Probeer het opnieuw.
                     </motion.p>}
               </div>
+              */}
+              
 
               {/* Contact info */}
               
             </div>
 
-            {/* Navigation Links Section */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 place-items-center sm:place-items-start text-center sm:text-left">
-              {/* Column 1 */}
+            {/* Navigation Links Section - aligned with WebDirectHeader and page sections */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 place-items-center sm:place-items-start text-center sm:text-left">
+              {/* Column 1: Main navigation (matches header) */}
               <div className="flex flex-col gap-3 sm:gap-5 items-center sm:items-start">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   Navigatie
                 </h4>
-                <FooterLink href="#" label="Home" active />
-                <FooterLink href="#" label="Over ons" />
-                <FooterLink href="#" label="Projecten" />
-                <FooterLink href="#" label="Diensten" />
-                <FooterLink href="#" label="Contact" />
+                <FooterLink href="/" label="Home" />
+                <FooterLink href="#about" label="Over ons" />
+                <FooterLink href="#process" label="Process" />
+                <FooterLink href="#projects" label="Projecten" />
+                <FooterLink href="#faq" label="Vragen" />
               </div>
 
-              {/* Column 2 */}
+              {/* Column 2: Booking & contact */}
               <div className="flex flex-col gap-3 sm:gap-5 items-center sm:items-start">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
-                  Diensten
+                  Plan & contact
                 </h4>
-                <FooterLink href="#" label="Web Design" />
-                <FooterLink href="#" label="Development" />
-                <FooterLink href="#" label="Branding" />
-                <FooterLink href="#" label="Marketing" />
-                <FooterLink href="#" label="Consultancy" />
-              </div>
-
-              {/* Column 3 */}
-              <div className="flex flex-col gap-3 sm:gap-5 items-center sm:items-start">
-                <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
-                  Resources
-                </h4>
-                <FooterLink href="#" label="Blog" />
-                <FooterLink href="#" label="Portfolio" />
-                <FooterLink href="#" label="Style Guide" />
-                <FooterLink href="#" label="Changelog" />
-                <FooterLink href="#" label="Support" />
+                <FooterLink href="/booking" label="Plan een afspraak" />
+                <FooterLink href="#about" label="Over ons" />
+                <FooterLink href="#faq" label="Veelgestelde vragen" />
+                <a
+                  href={`mailto:${email}`}
+                  className={cn(
+                    "relative inline-flex items-center min-h-[44px] py-2 pr-2 text-[14px] font-medium uppercase tracking-wider transition-all duration-300 group text-white/70 hover:text-white"
+                  )}
+                >
+                  <motion.span className="inline-flex items-center" whileHover={{ x: 4 }}>
+                    Contact
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
+                  </motion.span>
+                </a>
               </div>
             </div>
           </div>
@@ -278,13 +298,13 @@ export const Footer = ({
               <span>Alle rechten voorbehouden</span>
               <span className="hidden sm:inline">•</span>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4">
-                <a href="#" className="hover:text-white/60 transition-colors" onClick={e => e.preventDefault()}>
+                <Link href="/privacy" className="hover:text-white transition-colors">
                   Privacy
-                </a>
+                </Link>
                 <span>•</span>
-                <a href="#" className="hover:text-white/60 transition-colors" onClick={e => e.preventDefault()}>
+                <Link href="/voorwaarden" className="hover:text-white transition-colors">
                   Voorwaarden
-                </a>
+                </Link>
               </div>
             </div>
 

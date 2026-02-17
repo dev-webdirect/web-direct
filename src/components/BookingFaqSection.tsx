@@ -159,170 +159,69 @@ export const BookingFaqSection = () => {
 
   const [activeCategory, setActiveCategory] = useState(0);
   const [openItems, setOpenItems] = useState<number[]>([0]);
-  const faqCategories: FaqCategory[] = [{
-    title: "Algemeen",
-    icon: MessageCircle,
-    items: [{
-      question: "Waarom kiezen voor custom code in plaats van WordPress of No-Code tools?",
-      answer: "Custom code biedt superieure snelheid, betere SEO, en nul plugin-kwetsbaarheden. Het biedt een schone basis die schaalt zonder de technische schuld of prestatieproblemen die geassocieerd worden met templates en zware CMS-plugins."
-    }, {
-      question: "Wat is het verschil tussen een website en een webapplicatie?",
-      answer: "Een website is primair informatief en statisch van aard, terwijl een webapplicatie interactieve functionaliteit biedt zoals gebruikersaccounts, dataverwerking en complexe workflows. Wij ontwikkelen beide, afhankelijk van uw behoeften."
-    }, {
-      question: "Voor welke bedrijven zijn jullie diensten het meest geschikt?",
-      answer: "Wij werken met ambitieuze scale-ups, gevestigde MKB-bedrijven en enterprises die op zoek zijn naar een professionele online aanwezigheid of custom weboplossingen. Van simpele bedrijfswebsites tot complexe webapplicaties."
-    }]
-  }, {
-    title: "Proces",
-    icon: Clock,
-    items: [{
-      question: "Hoe verloopt het ontwikkelproces bij jullie?",
-      answer: "Ons proces bestaat uit 5 fasen: (1) Intakegesprek en behoefteanalyse, (2) Design & wireframes, (3) Ontwikkeling & programmering, (4) Testing & optimalisatie, (5) Lancering & overdracht. U blijft tijdens elke fase betrokken."
-    }, {
-      question: "Hoe lang duurt het om een website te ontwikkelen?",
-      answer: "Een standaard bedrijfswebsite realiseren wij in 5-10 werkdagen. Voor complexere projecten zoals webshops of custom webapplicaties plannen we 3-8 weken in, afhankelijk van de functionaliteiten en integraties."
-    }, {
-      question: "Kan ik tussentijds feedback geven en aanpassingen aanvragen?",
-      answer: "Absoluut! We werken iteratief en tonen regelmatig voortgang. U kunt op elk moment feedback geven. Binnen het projectscope zijn aanpassingen mogelijk; grote wijzigingen bespreken we eerst qua tijd en budget."
-    }, {
-      question: "Is het Design Preview echt gratis?",
-      answer: "Ja! Wij geloven erin om onze waarde te bewijzen voordat u zich committeert. We creëren een high-fidelity homepage-concept gebaseerd op uw merkdoelen, zodat u precies ziet waarvoor u betaalt voordat het project start."
-    }, {
-      question: "Hoe wordt de communicatie tijdens het project georganiseerd?",
-      answer: "We werken met een dedicated projectmanager die uw vaste aanspreekpunt is. Communicatie verloopt via email, videocalls, en een projectdashboard waar u 24/7 de voortgang kunt volgen."
-    }]
-  }, {
-    title: "Design",
-    icon: Zap,
-    items: [{
-      question: "Krijg ik een uniek design of werken jullie met templates?",
-      answer: "Elk project krijgt een volledig custom design dat aansluit bij uw merkidentiteit, doelgroep en bedrijfsdoelen. We gebruiken geen vooraf gemaakte templates, maar creëren een unieke look & feel."
-    }, {
-      question: "Ontwerpen jullie ook logo's en huisstijlen?",
-      answer: "We richten ons primair op webdesign en kunnen binnen een website bestaande branding doorvoeren. Voor complete huisstijltrajecten werken we samen met gespecialiseerde branding-partners."
-    }, {
-      question: "Is mijn website responsive en geschikt voor mobiele apparaten?",
-      answer: "Ja, standaard! Alle websites ontwikkelen we mobile-first en testen we op verschillende schermformaten, browsers en apparaten. Uw site ziet er perfect uit op desktop, tablet en smartphone."
-    }, {
-      question: "Kunnen jullie mijn bestaande website redesignen?",
-      answer: "Zeker! We analyseren eerst uw huidige site, identificeren verbeterpunten op het gebied van UX, design en techniek, en bouwen vervolgens een moderne, geoptimaliseerde versie die uw merk beter representeert."
-    }]
-  }, {
-    title: "Functionaliteit",
-    icon: Shield,
-    items: [{
-      question: "Kan ik zelf content aanpassen na de oplevering?",
-      answer: "Ja, we bouwen een gebruiksvriendelijk content management systeem (CMS) in waarbij u eenvoudig teksten, afbeeldingen en andere content kunt beheren zonder technische kennis. Training is inbegrepen."
-    }, {
-      question: "Kunnen jullie integraties maken met andere systemen?",
-      answer: "Jazeker! We koppelen regelmatig met CRM-systemen (Salesforce, HubSpot), boekhoudsoftware, betalingsproviders, marketing tools en custom API's. We bespreken uw specifieke integratiebehoeften tijdens de intake."
-    }, {
-      question: "Is er een contactformulier of chatfunctie mogelijk?",
-      answer: "Ja, we kunnen diverse contactopties integreren: formulieren, live chat, WhatsApp Business, chatbots en meer. We adviseren welke oplossing het beste past bij uw klantenservice-strategie."
-    }, {
-      question: "Kunnen jullie een webshop of e-commerce platform ontwikkelen?",
-      answer: "Absoluut! We bouwen custom e-commerce oplossingen met productcatalogi, winkelwagen, payment processing (iDEAL, PayPal, creditcard), voorraadbeheer en ordermanagement. Van kleine webshops tot grote platforms."
-    }, {
-      question: "Kunnen jullie een klantenportaal of inlogomgeving maken?",
-      answer: "Ja, we ontwikkelen beveiligde gebruikersportalen met login-functionaliteit, persoonlijke dashboards, documentbeheer en meer. Ideaal voor SaaS-platforms, ledenomgevingen of klantportalen."
-    }, {
-      question: "Is meertaligheid mogelijk op mijn website?",
-      answer: "Zeker! We bouwen meertalige websites met eenvoudige taalwisselingen, waarbij elke taal volledig aan te passen is. Ook SEO-optimalisatie per taal is onderdeel van onze aanpak."
-    }]
-  }, {
-    title: "SEO & Marketing",
-    icon: HelpCircle,
-    items: [{
-      question: "Wordt mijn website geoptimaliseerd voor zoekmachines (SEO)?",
-      answer: "Ja, technische SEO is standaard onderdeel van elk project: snelle laadtijden, schone code, meta-tags, structured data, mobile-friendly design en optimale indexering. Voor content SEO kunnen we samenwerken met specialisten."
-    }, {
-      question: "Helpen jullie ook met Google Ads of social media marketing?",
-      answer: "We richten ons op webontwikkeling en technische basis voor marketing. Voor campagnebeheer en marketing strategieën verwijzen we graag door naar onze marketing partners die specialiseren in ads en social media."
-    }, {
-      question: "Krijg ik Google Analytics en tracking tools?",
-      answer: "Ja, we implementeren Google Analytics (GA4), Google Tag Manager en andere tracking tools zodat u inzicht krijgt in bezoekersgedrag, conversies en website performance. We helpen u met de setup en basis interpretatie."
-    }, {
-      question: "Is mijn website GDPR/AVG-proof?",
-      answer: "Ja, we bouwen websites conform GDPR/AVG-wetgeving: cookie consent banners, privacy policy pagina's, veilige dataopslag en duidelijke opt-in mechanismes. We adviseren ook over juridische vereisten."
-    }]
-  }, {
-    title: "Techniek",
-    icon: Zap,
-    items: [{
-      question: "Welke technologieën gebruiken jullie?",
-      answer: "We werken met moderne tech-stacks zoals React, Next.js, TypeScript, Node.js en headless CMS-oplossingen. Voor hosting gebruiken we betrouwbare cloud platforms. We kiezen altijd de beste technologie voor uw specifieke project."
-    }, {
-      question: "Is mijn website veilig en beschermd tegen hackers?",
-      answer: "Ja, security staat bij ons voorop: SSL-certificaten, beveiligde databases, regular updates, firewall bescherming en security monitoring. We volgen industry best practices voor webbeveiliging."
-    }, {
-      question: "Hoe snel laadt mijn website?",
-      answer: "We optimaliseren voor maximale snelheid: geoptimaliseerde afbeeldingen, efficient code, CDN-gebruik, caching strategieën en lazy loading. Gemiddeld scoren onze websites 90+ op Google PageSpeed Insights."
-    }, {
-      question: "Wat gebeurt er als mijn website down gaat?",
-      answer: "We monitoren 24/7 en krijgen direct alerts bij downtime. Onze hosting heeft 99.9% uptime garantie. Bij problemen lossen we dit direct op en communiceren we transparant over de status."
-    }, {
-      question: "Maken jullie back-ups van mijn website?",
-      answer: "Ja, automatische dagelijkse back-ups zijn standaard. We bewaren meerdere restore points, zodat we bij problemen snel kunnen terugdraaien naar een werkende versie. Back-ups worden veilig off-site opgeslagen."
-    }]
-  }, {
-    title: "Eigendom",
-    icon: Shield,
-    items: [{
-      question: "Ben ik eigenaar van de code na afronding van het project?",
-      answer: "Hoewel onze sites gehost worden op onze geoptimaliseerde infrastructuur voor maximale performance en security, bent u eigenaar van alle content, design en assets. We bieden duidelijke offboarding opties als u ooit elders wilt hosten."
-    }, {
-      question: "Kan ik mijn website laten overnemen door een andere partij?",
-      answer: "Ja, alle code is clean en gedocumenteerd, zodat overname door een andere developer mogelijk is. We leveren alle broncode, documentatie en credentials aan bij offboarding."
-    }, {
-      question: "Wat gebeurt er als ik stop met de hosting bij jullie?",
-      answer: "U kunt altijd besluiten om elders te hosten. We leveren dan een volledige export van de website, database en alle bestanden. We helpen ook bij de overdracht naar een nieuwe hosting partij."
-    }]
-  }, {
-    title: "Prijzen",
-    icon: MessageCircle,
-    items: [{
-      question: "Wat kost een website bij jullie?",
-      answer: "Prijzen variëren afhankelijk van complexiteit en functionaliteit. Een basis bedrijfswebsite start vanaf €2.500, terwijl custom webapplicaties tussen €5.000-€25.000+ liggen. We maken altijd eerst een vrijblijvende offerte op maat."
-    }, {
-      question: "Zijn er verborgen maandelijkse kosten?",
-      answer: "Nee, geen verborgen kosten. We zijn transparant over hosting- en onderhoudskosten vanaf dag één. U betaalt voor de ontwikkeling en daarna een vaste maandelijkse fee voor hosting, security updates en performance optimalisatie."
-    }, {
-      question: "Kan ik in termijnen betalen?",
-      answer: "Ja, voor grotere projecten bieden we een termijnenregeling aan: bijvoorbeeld 30% bij start, 40% bij design goedkeuring, en 30% bij oplevering. Dit bespreken we graag tijdens het intakegesprek."
-    }, {
-      question: "Wat is inbegrepen in de hosting- en onderhoudskosten?",
-      answer: "Hosting, SSL-certificaat, dagelijkse back-ups, security monitoring, software updates, performance optimalisatie, technische support en kleine content aanpassingen. Voor grote wijzigingen maken we een separate offerte."
-    }]
-  }, {
-    title: "Support",
-    icon: Phone,
-    items: [{
-      question: "Welke ondersteuning bieden jullie na de lancering?",
-      answer: "Elk project bevat een post-launch support periode voor bugfixes en kleine aanpassingen. Daarnaast bieden we maandelijkse onderhoudsplannen voor groeiende bedrijven die continue updates en performance monitoring nodig hebben."
-    }, {
-      question: "Hoe snel kan ik hulp krijgen bij problemen?",
-      answer: "Voor kritieke issues (website down) reageren we binnen 1 uur. Voor normale support vragen binnen 24 uur op werkdagen. Bestaande klanten hebben toegang tot onze support portal en directe contactlijnen."
-    }, {
-      question: "Bieden jullie training voor het CMS aan?",
-      answer: "Ja, na oplevering plannen we een training sessie (1-2 uur) waarin we u leren hoe u content kunt beheren, pagina's kunt aanmaken en de website kunt onderhouden. Documentatie leveren we ook schriftelijk."
-    }, {
-      question: "Kan ik jullie inhuren voor doorontwikkeling na de lancering?",
-      answer: "Zeker! Veel klanten blijven met ons samenwerken voor nieuwe features, optimalisaties of uitbreidingen. We staan altijd klaar om uw digitale product verder te laten groeien met uw bedrijf."
-    }]
-  }, {
-    title: "Strategie",
-    icon: HelpCircle,
-    items: [{
-      question: "Helpen jullie ook met strategie en concept ontwikkeling?",
-      answer: "Ja, we beginnen elk project met strategische vragen: Wie is uw doelgroep? Wat zijn uw doelen? Hoe kunnen we conversie maximaliseren? Op basis daarvan adviseren we over structuur, features en user experience."
-    }, {
-      question: "Kunnen jullie een bestaande website analyseren en verbeteren?",
-      answer: "Absoluut! We doen een UX audit, performance analyse en conversie-optimalisatie review. Op basis hiervan presenteren we concrete verbeterpunten die we kunnen doorvoeren in een redesign of iteratieve updates."
-    }, {
-      question: "Hoe zorgen jullie ervoor dat mijn website conversie optimaliseert?",
-      answer: "Door strategische UX design, duidelijke call-to-actions, snelle laadtijden, vertrouwenssignalen, mobile optimization en data-driven beslissingen. We analyseren gebruikersgedrag en optimaliseren continu op basis van resultaten."
-    }]
-  }];
+  const faqCategories: FaqCategory[] = [
+    {
+      title: "Algemeen",
+      icon: MessageCircle,
+      items: [
+        { question: "Wat kost een website bij WebDirect?", answer: "Onze websites starten vanaf €695 voor een one-pager. De meeste klanten zitten tussen €1.000 en €2.000, afhankelijk van het aantal pagina's en gewenste functionaliteiten. Tijdens een vrijblijvend gesprek kijken we samen wat past bij jouw situatie en budget." },
+        { question: "Hoe snel is mijn website klaar?", answer: "Een standaard bedrijfswebsite leveren we binnen 5 werkdagen op, mits content en materialen snel worden aangeleverd. Voor webshops of complexere projecten spreken we een apart traject af." },
+        { question: "Kan ik mijn website zelf aanpassen na oplevering?", answer: "Ja. We bouwen een gebruiksvriendelijk CMS in waarmee je zelf content zoals blogberichten en afbeeldingen kunt toevoegen. Voor grotere aanpassingen aan het design of de structuur kun je altijd een verzoek indienen bij ons team." },
+        { question: "Wat als ik geen content heb – teksten of foto's?", answer: "Geen probleem. Op basis van een korte vragenlijst of je huidige website schrijven wij de teksten voor je. We gebruiken stock- of AI-gegenereerde afbeeldingen als je geen eigen beelden hebt. Dit is optioneel bij te boeken." },
+        { question: "Zit ik vast aan een contract of abonnement?", answer: "Nee. Je betaalt eenmalig voor de ontwikkeling van je website. We raden onze eigen hosting sterk aan — die is geoptimaliseerd voor snelheid, veiligheid en uptime. Wil je toch elders hosten, dan zorgen we voor een volledige overdracht van je website." },
+      ],
+    },
+    {
+      title: "Aanpak & Proces",
+      icon: Clock,
+      items: [
+        { question: "Hoe verloopt het proces?", answer: "We starten met een kort kennismakingsgesprek (online, 20 minuten) om je wensen en doelen te begrijpen. Daarna werken we in vijf fasen: intake en analyse, design, ontwikkeling, testen, en lancering. Je blijft in elke fase betrokken en kunt op elk moment feedback geven." },
+        { question: "Werken jullie met vaste pakketten of maatwerk?", answer: "Allebei. We kijken eerst naar wat jij nodig hebt en wat past bij je budget. Sommige klanten beginnen met een strakke one-pager, anderen willen een volledig uitgewerkte website met meerdere pagina's en functionaliteiten. We denken mee en adviseren eerlijk." },
+        { question: "Kan ik tussentijds aanpassingen aanvragen?", answer: "Ja. We werken met vaste feedbackrondes tijdens het proces, zodat je altijd weet waar het project staat. Feedback binnen de projectscope verwerken we zonder meerkosten. Grotere wijzigingen bespreken we eerst qua tijd en budget." },
+        { question: "Bieden jullie een gratis preview aan?", answer: "Ja. Voordat je akkoord gaat, laten we je een design concept zien gebaseerd op jouw merk en doelen. Zo weet je precies wat je krijgt voordat het project start." },
+      ],
+    },
+    {
+      title: "Design & Techniek",
+      icon: Zap,
+      items: [
+        { question: "Krijg ik een uniek design of een template?", answer: "Elk design is op maat gemaakt. We gebruiken geen kant-en-klare templates, maar ontwerpen een look & feel die aansluit bij jouw merk, doelgroep en doelen." },
+        { question: "Is mijn website ook goed op mobiel?", answer: "Altijd. We bouwen mobile-first: je website werkt perfect op smartphone, tablet en desktop. We testen op verschillende schermformaten en browsers voor oplevering." },
+        { question: "Is mijn website snel en goed vindbaar in Google?", answer: "Ja. Technische SEO is standaard onderdeel van elk project: snelle laadtijden, schone code, correcte meta-tags, structured data en mobile-friendly design. Gemiddeld scoren onze websites 90+ op Google PageSpeed Insights." },
+        { question: "Welke technologie gebruiken jullie?", answer: "We werken met moderne technologieën zoals React, Next.js en TypeScript, aangevuld met betrouwbare cloud hosting. We kiezen altijd de technologie die het beste past bij jouw project en behoeften." },
+        { question: "Is mijn website GDPR/AVG-proof?", answer: "We bouwen conform de AVG: cookie consent, privacy policy, veilige dataopslag en opt-in mechanismen. We adviseren over wat er juridisch nodig is, maar de eindverantwoordelijkheid ligt bij jou als ondernemer." },
+      ],
+    },
+    {
+      title: "Prijs & Betaling",
+      icon: MessageCircle,
+      items: [
+        { question: "Wat kost een website bij WebDirect?", answer: "Websites starten vanaf €695 voor een one-pager. De meeste projecten vallen tussen €1.000 en €2.000. Voor uitgebreidere websites of webapplicaties hanteren we hogere tarieven, afhankelijk van de complexiteit. We maken altijd een offerte op maat." },
+        { question: "Zijn er verborgen kosten?", answer: "Nee. We zijn transparant over alle kosten vanaf dag één. Je betaalt eenmalig voor de ontwikkeling. Eventuele hosting- of onderhoudskosten worden vooraf besproken en vastgelegd." },
+        { question: "Kan ik in termijnen betalen?", answer: "Ja. Voor grotere projecten werken we met een gespreid betalingsschema: een deel bij start, een deel bij design goedkeuring, en het resterende bedrag bij oplevering. Dit stemmen we af in het intakegesprek." },
+        { question: "Wat zijn de kosten voor hosting en onderhoud?", answer: "Hosting en onderhoud zijn optioneel en worden apart geoffreerd. Daarin zijn inbegrepen: SSL-certificaat, dagelijkse back-ups, security monitoring, software-updates en kleine content aanpassingen. Voor grotere wijzigingen maken we een aparte offerte." },
+      ],
+    },
+    {
+      title: "Eigendom & Beheer",
+      icon: Shield,
+      items: [
+        { question: "Ben ik eigenaar van mijn website?", answer: "Ja. Alle content, designs en assets zijn van jou. De broncode is clean en gedocumenteerd. Je kunt altijd besluiten om elders te hosten – wij leveren dan alle bestanden, database en documentatie volledig aan." },
+        { question: "Wat als ik later wil overstappen naar een andere partij?", answer: "Geen probleem. We leveren een volledige export van de website inclusief alle bestanden en credentials." },
+        { question: "Maken jullie back-ups?", answer: "Ja. Automatische dagelijkse back-ups zijn standaard. We bewaren meerdere restore points zodat we bij problemen snel kunnen terugdraaien. Back-ups worden off-site opgeslagen." },
+      ],
+    },
+    {
+      title: "Support & Schaalbaarheid",
+      icon: Phone,
+      items: [
+        { question: "Welke support bieden jullie na de lancering?", answer: "Na oplevering bieden we een post-launch periode voor bugfixes en kleine aanpassingen. Klanten met een onderhoudsplan hebben een vast aanspreekpunt. Voor kritieke issues (website onbereikbaar) reageren we binnen 1 uur; overige vragen binnen 24 uur op werkdagen." },
+        { question: "Kan ik later uitbreiden of nieuwe functies toevoegen?", answer: "Absoluut. Veel klanten werken na de lancering verder met ons samen voor nieuwe pagina's, functionaliteiten of optimalisaties. We staan klaar om mee te groeien met jouw bedrijf." },
+        { question: "Kunnen jullie integraties bouwen met andere systemen?", answer: "Ja. We koppelen regelmatig met CRM-systemen, boekhoudprogramma's, betalingsproviders, marketingtools en custom API's. We bespreken jouw integratie behoeften tijdens de intake." },
+        { question: "Kunnen jullie een webshop of klantenportaal bouwen?", answer: "Ja. We bouwen e-commerce oplossingen met productcatalogi, winkelwagen, betaal integraties (IDEAL/Wero, PayPal, creditcard) en voorraadbeheer. Ook beveiligde klantenportalen met login- en persoonlijke dashboards behoren tot de mogelijkheden." },
+      ],
+    },
+  ];
   const toggleItem = (index: number) => {
     setOpenItems(prev => prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]);
   };
@@ -471,12 +370,15 @@ export const BookingFaqSection = () => {
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 md:gap-8">
               <div className="text-center lg:text-left">
                 <h3 className="text-white font-bold text-3xl mb-3">
-                  Klaar voor je gratis strategiegesprek?
+                Klaar voor je gratis {' '}
+                <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+                webdesign?
+                </span>
                 </h3>
                 <p className="text-gray-400 text-lg" style={{
                 color: "#ffffff"
               }}>
-                  Boek nu je afspraak en ontdek hoe we je kunnen helpen groeien
+                  Plan nu je meeting in en ontvang een geheel vrijblijvend webdesign voor jouw bedrijf. 
                 </p>
               </div>
 
@@ -504,15 +406,16 @@ export const BookingFaqSection = () => {
         }} className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 md:mt-10 text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-[#41AE96]" />
-              <span>100% Vrijblijvend</span>
+
+              <span>100% vrijblijvend</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-[#41AE96]" />
-              <span>20 Minuten</span>
+              <span>20 minuten</span>
             </div>
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-[#41AE96]" />
-              <span>Direct Toepasbare Inzichten</span>
+              <span>Direct toepasbare inzichten</span>
             </div>
           </motion.div>
         </div>

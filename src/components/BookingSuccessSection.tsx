@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Calendar, Clock, Mail, FileText, Phone, ArrowRight, Download, Plus } from 'lucide-react';
+import { CheckCircle2, Calendar, Clock, Mail, Phone, Download, Plus, Monitor } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { FluidBackground } from './FluidBackground';
 
@@ -64,60 +64,231 @@ const TimelineStep = ({
 const CalendarButton = ({
   icon: Icon,
   name,
-  delay
+  delay,
+  href,
+  onClick,
+  disabled,
 }: {
   icon: React.ElementType;
   name: string;
   delay: number;
+  href?: string;
+  onClick?: () => void;
+  disabled?: boolean;
 }) => {
-  return <motion.button initial={{
-    opacity: 0,
-    y: 20
-  }} animate={{
-    opacity: 1,
-    y: 0
-  }} transition={{
-    duration: 0.5,
-    delay
-  }} whileHover={{
-    scale: 1.05,
-    y: -2
-  }} whileTap={{
-    scale: 0.95
-  }} className="flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-[#41AE96]/30 transition-all duration-300 group">
+  const baseClasses = 'flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 transition-all duration-300 group';
+  const enabledClasses = 'hover:bg-white/10 hover:border-[#41AE96]/30 cursor-pointer';
+  const disabledClasses = 'opacity-50 cursor-not-allowed';
+  
+  const content = (
+    <>
       <Icon className="w-5 h-5 text-[#41AE96] group-hover:scale-110 transition-transform" />
       <span className="text-white text-sm font-medium">{name}</span>
       <Plus className="w-4 h-4 text-gray-400 ml-auto" />
-    </motion.button>;
+    </>
+  );
+
+  const motionProps = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5, delay },
+    whileHover: disabled ? {} : { scale: 1.05, y: -2 },
+    whileTap: disabled ? {} : { scale: 0.95 },
+    className: cn(baseClasses, disabled ? disabledClasses : enabledClasses),
+  };
+
+  if (href && !disabled) {
+    return (
+      <motion.a
+        {...motionProps}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {content}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.button
+      {...motionProps}
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
+    >
+      {content}
+    </motion.button>
+  );
 };
 
+function formatBookingDateTime(isoString: string | null | undefined): { dateLabel: string; timeLabel: string; duration: string } {
+  if (!isoString) return { dateLabel: '—', timeLabel: '—', duration: '20 minuten' };
+  try {
+    const d = new Date(isoString);
+    const dateLabel = d.toLocaleDateString('nl-NL', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    const timeLabel = d.toLocaleTimeString('nl-NL', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return {
+      dateLabel: dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1),
+      timeLabel,
+      duration: '20 minuten',
+    };
+  } catch {
+    return { dateLabel: '—', timeLabel: '—', duration: '20 minuten' };
+  }
+}
+
+// Calendar helper functions
+function formatDateForGoogleCalendar(date: Date): string {
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+  return `${year}${month}${day}T${hours}${minutes}${seconds}Z`;
+}
+
+function formatDateForOutlook(date: Date): string {
+  return date.toISOString();
+}
+
+function escapeIcsText(text: string): string {
+  return text
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n');
+}
+
+function createGoogleCalendarUrl(start: Date, end: Date): string {
+  const title = encodeURIComponent('Gratis webdesign – WebDirect');
+  const description = encodeURIComponent('20-minuten strategiegesprek. De videolink ontvang je per e-mail.');
+  const location = encodeURIComponent('Online');
+  const startStr = formatDateForGoogleCalendar(start);
+  const endStr = formatDateForGoogleCalendar(end);
+  
+  return `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startStr}/${endStr}&details=${description}&location=${location}`;
+}
+
+function createOutlookCalendarUrl(start: Date, end: Date): string {
+  const subject = encodeURIComponent('Gratis webdesign – WebDirect');
+  const body = encodeURIComponent('20-minuten strategiegesprek. De videolink ontvang je per e-mail.');
+  const location = encodeURIComponent('Online');
+  const startStr = formatDateForOutlook(start);
+  const endStr = formatDateForOutlook(end);
+  
+  return `https://outlook.live.com/calendar/0/action/compose?path=/calendar/action/compose&rru=addevent&startdt=${startStr}&enddt=${endStr}&subject=${subject}&body=${body}&location=${location}`;
+}
+
+function createIcsContent(start: Date, end: Date): string {
+  const title = escapeIcsText('Gratis webdesign – WebDirect');
+  const description = escapeIcsText('20-minuten strategiegesprek. De videolink ontvang je per e-mail.');
+  const location = escapeIcsText('Online');
+  
+  const startStr = formatDateForGoogleCalendar(start);
+  const endStr = formatDateForGoogleCalendar(end);
+  
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//WebDirect//Booking//NL',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `DTSTART:${startStr}`,
+    `DTEND:${endStr}`,
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${description}`,
+    `LOCATION:${location}`,
+    'STATUS:CONFIRMED',
+    'SEQUENCE:0',
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+}
+
+function downloadIcsFile(start: Date, end: Date): void {
+  const icsContent = createIcsContent(start, end);
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'webdirect-afspraak.ics';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export interface BookingSuccessSectionProps {
+  email?: string;
+  name?: string;
+  selectedDateTime?: string | null;
+}
+
 // @component: BookingSuccessSection
-export const BookingSuccessSection = () => {
+export const BookingSuccessSection = ({ email, name, selectedDateTime }: BookingSuccessSectionProps) => {
+  const { dateLabel, timeLabel, duration } = formatBookingDateTime(selectedDateTime ?? undefined);
+  
+  // Derive start and end dates from selectedDateTime
+  const startDate = selectedDateTime ? new Date(selectedDateTime) : null;
+  const endDate = startDate ? new Date(startDate.getTime() + 20 * 60 * 1000) : null;
+  
+  // Create calendar URLs and handlers
+  const googleCalendarUrl = startDate && endDate ? createGoogleCalendarUrl(startDate, endDate) : undefined;
+  const outlookCalendarUrl = startDate && endDate ? createOutlookCalendarUrl(startDate, endDate) : undefined;
+  
+  const handleIcsDownload = () => {
+    if (startDate && endDate) {
+      downloadIcsFile(startDate, endDate);
+    }
+  };
+  
+  const hasDate = !!selectedDateTime;
+  
   const timelineSteps = [{
     icon: Mail,
     title: 'Bevestigingsmail',
-    description: 'Je ontvangt direct een e-mail met alle details van je afspraak en een link naar je persoonlijke videoconferentie.'
+    description: 'Je ontvangt direct een e-mail met alle details van je afspraak en een link naar de videoconferentie.'
   }, {
-    icon: FileText,
-    title: 'Intakeformulier',
-    description: 'Vul het korte intakeformulier in (optioneel) om ons vooraf te informeren over je doelen en verwachtingen.'
+    icon: Calendar,
+    title: 'Webdesign concept',
+    description: 'Op basis van jouw ingevulde vragenlijst maken we alvast een eerste webdesign dat we tijdens de call presenteren.'
   }, {
-    icon: Phone,
-    title: 'De Call',
-    description: 'Op het afgesproken tijdstip komen we samen voor een persoonlijk strategiegesprek van 30 minuten.'
+    icon: Monitor,
+    title: 'De meeting',
+    description: 'Op het afgesproken tijdstip komen we samen voor een gesprek van 20 minuten. We lopen door het design, bespreken je wensen en bepalen de volgende stappen.'
   }] as any[];
+  
   const calendarOptions = [{
     icon: Calendar,
-    name: 'Google Calendar'
+    name: 'Google Calendar',
+    href: googleCalendarUrl,
+    disabled: !hasDate,
   }, {
     icon: Calendar,
-    name: 'Apple Calendar'
+    name: 'Apple Calendar',
+    onClick: handleIcsDownload,
+    disabled: !hasDate,
   }, {
     icon: Calendar,
-    name: 'Outlook'
+    name: 'Outlook',
+    href: outlookCalendarUrl,
+    disabled: !hasDate,
   }, {
     icon: Download,
-    name: 'iCal File'
+    name: 'iCal File',
+    onClick: handleIcsDownload,
+    disabled: !hasDate,
   }] as any[];
   return <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0f0a1f] py-20 px-6 lg:px-12">
       {/* Dynamic Glow Background - matching the booking section */}
@@ -211,7 +382,7 @@ export const BookingSuccessSection = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid lg:grid-cols-1 gap-8 mb-12">
           {/* Left Column - Booking Summary */}
           <motion.div initial={{
           opacity: 0,
@@ -236,7 +407,7 @@ export const BookingSuccessSection = () => {
                   </div>
                   <div>
                     <h3 className="text-white font-semibold text-lg">Je Afspraak</h3>
-                    <p className="text-gray-400 text-xs">Gratis strategiesessie</p>
+                    <p className="text-gray-400 text-xs">Gratis webdesign</p>
                   </div>
                 </div>
 
@@ -248,8 +419,8 @@ export const BookingSuccessSection = () => {
                       <Clock className="w-5 h-5 text-[#41AE96]" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-white font-semibold">Today at 2:00 PM</p>
-                      <p className="text-gray-400 text-sm">30 minuten</p>
+                      <p className="text-white font-semibold">{dateLabel} om {timeLabel}</p>
+                      <p className="text-gray-400 text-sm">{duration}</p>
                     </div>
                   </div>
 
@@ -259,7 +430,7 @@ export const BookingSuccessSection = () => {
                       <Phone className="w-5 h-5 text-[#6a49ff]" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-white font-semibold">Video Call</p>
+                      <p className="text-white font-semibold">Online video meeting</p>
                       <p className="text-gray-400 text-sm">Link wordt per e-mail verstuurd</p>
                     </div>
                   </div>
@@ -271,9 +442,14 @@ export const BookingSuccessSection = () => {
                     <Mail className="w-4 h-4 text-[#41AE96]" />
                     <span className="text-gray-400">
                       Bevestiging verstuurd naar{' '}
-                      <span className="text-white font-medium">jouw@email.com</span>
+                      <span className="text-white font-medium">{email || 'jouw e-mailadres'}</span>
                     </span>
                   </div>
+                  {name && (
+                    <p className="text-gray-400 text-sm mt-1">
+                      Bedankt, {name}!
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -293,103 +469,22 @@ export const BookingSuccessSection = () => {
                 <Calendar className="w-5 h-5 text-[#41AE96]" />
                 Voeg toe aan je agenda
               </h3>
+              {!hasDate && (
+                <p className="text-gray-400 text-sm">Geen afspraakdatum beschikbaar</p>
+              )}
               <div className="grid grid-cols-2 gap-3">
-                {calendarOptions.map((option, index) => <CalendarButton key={index} icon={option.icon} name={option.name} delay={0.7 + index * 0.1} />)}
+                {calendarOptions.map((option, index) => (
+                  <CalendarButton
+                    key={index}
+                    icon={option.icon}
+                    name={option.name}
+                    delay={0.7 + index * 0.1}
+                    href={option.href}
+                    onClick={option.onClick}
+                    disabled={option.disabled}
+                  />
+                ))}
               </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column - Intake Form CTA */}
-          <motion.div initial={{
-          opacity: 0,
-          x: 30
-        }} animate={{
-          opacity: 1,
-          x: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.5
-        }} className="space-y-8">
-            {/* Primary CTA - Intake Form */}
-            <div className="relative rounded-3xl bg-gradient-to-br from-[#6a49ff]/10 to-[#41AE96]/10 backdrop-blur-xl border border-[#6a49ff]/30 p-8 shadow-2xl group hover:border-[#6a49ff]/50 transition-all duration-300">
-              {/* Animated Background Glow */}
-              <motion.div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" animate={{
-              scale: [1, 1.05, 1],
-              opacity: [0, 0.3, 0]
-            }} transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }} />
-
-              <div className="relative z-10 space-y-6">
-                {/* Icon & Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center shadow-lg shadow-[#6a49ff]/30">
-                    <FileText className="w-7 h-7 text-white" />
-                  </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#41AE96]/20 text-[#41AE96] border border-[#41AE96]/30">
-                    Aanbevolen
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-3">
-                  <h3 className="text-white font-bold text-2xl leading-tight">
-                    Vul het intakeformulier in
-                  </h3>
-                  <p className="text-gray-300 text-base leading-relaxed">
-                    Bespaar 10 minuten tijdens ons gesprek door ons alvast wat info te geven over je huidige situatie en doelen.
-                  </p>
-                </div>
-
-                {/* Benefits List */}
-                <div className="space-y-2 pt-2">
-                  {['Meer tijd voor strategie', 'Betere voorbereiding', 'Gerichtere aanbevelingen'].map((benefit, index) => <motion.div key={index} initial={{
-                  opacity: 0,
-                  x: -10
-                }} animate={{
-                  opacity: 1,
-                  x: 0
-                }} transition={{
-                  duration: 0.4,
-                  delay: 0.8 + index * 0.1
-                }} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#41AE96]" />
-                      <span className="text-sm text-gray-400">{benefit}</span>
-                    </motion.div>)}
-                </div>
-
-                {/* CTA Button */}
-                <motion.button whileHover={{
-                scale: 1.02,
-                boxShadow: "0 20px 25px -5px rgba(106, 73, 255, 0.3), 0 10px 10px -5px rgba(106, 73, 255, 0.2)"
-              }} whileTap={{
-                scale: 0.98
-              }} className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-4 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-6">
-                  <span>Start Intakeformulier</span>
-                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </motion.button>
-
-                {/* Optional Note */}
-                <p className="text-center text-xs text-gray-500 pt-1">
-                  Duurt slechts 3-5 minuten • Volledig optioneel
-                </p>
-              </div>
-            </div>
-
-            {/* Skip Option */}
-            <motion.div initial={{
-            opacity: 0
-          }} animate={{
-            opacity: 1
-          }} transition={{
-            duration: 0.6,
-            delay: 0.9
-          }} className="text-center">
-              <button className="text-gray-400 text-sm hover:text-white transition-colors underline underline-offset-4">
-                Ik doe dit later
-              </button>
             </motion.div>
           </motion.div>
         </div>
@@ -428,8 +523,8 @@ export const BookingSuccessSection = () => {
           }} className="text-center pt-8 border-t border-white/10">
               <p className="text-gray-400 text-sm">
                 Heb je vragen? Stuur ons een bericht op{' '}
-                <a href="mailto:hello@example.com" className="text-[#41AE96] hover:text-[#6dd5c0] transition-colors font-medium">
-                  hello@example.com
+                <a href="mailto:projects@webdirect.nl" className="text-[#41AE96] hover:text-[#6dd5c0] transition-colors font-medium">
+                projects@webdirect.nl
                 </a>
               </p>
             </motion.div>

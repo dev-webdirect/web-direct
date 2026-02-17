@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SEOJsonLD } from "./SEOJsonLD";
+import { WebDirectHeader } from '../components/WebDirectHeader';
 
 /* -------------------------------
    Fonts setup
@@ -115,7 +116,10 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SEOJsonLD />
-        {children}
+        <div className="m-0 min-h-screen bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
+          <WebDirectHeader />
+          {children}
+        </div>
         <Script
           src="https://cdn.feedbucket.app/assets/feedbucket.js"
           data-feedbucket={process.env.NEXT_PUBLIC_FEEDBUCKET_KEY}

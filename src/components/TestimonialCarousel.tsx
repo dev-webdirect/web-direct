@@ -132,31 +132,37 @@ export const TestimonialCarousel= () => {
   const animationStartTime1 = useRef(0);
   const animationStartTime2 = useRef(0);
 
-  // Duplicating for seamless scrolling
-  const firstRow = [...DEFAULT_REVIEWS.slice(0, 4), ...DEFAULT_REVIEWS.slice(0, 4)];
-  const secondRow = [...DEFAULT_REVIEWS.slice(4), ...DEFAULT_REVIEWS.slice(4)];
+  // Triple copy for seamless loop: no gap when animation resets (animate by 1/3 so reset shows same content)
+  const firstSet = DEFAULT_REVIEWS.slice(0, 4);
+  const secondSet = DEFAULT_REVIEWS.slice(4);
+  const firstRow = [...firstSet, ...firstSet, ...firstSet];
+  const secondRow = [...secondSet, ...secondSet, ...secondSet];
+  const oneThird = 100 / 3;
+
   useEffect(() => {
     const startAnimations = async () => {
       animationStartTime1.current = Date.now();
       animationStartTime2.current = Date.now();
 
-      // Row 1: Leftward movement
+      // Row 1: move left by one third so loop back to 0% shows identical content (no gap)
       controls1.start({
-        x: ['0%', '-50%'],
+        x: ['0%', `-${oneThird}%`],
         transition: {
           duration: 30,
           ease: 'linear',
-          repeat: Infinity
+          repeat: Infinity,
+          repeatType: 'loop'
         }
       });
 
-      // Row 2: Rightward movement
+      // Row 2: move from -1/3 to 0% (rightward), then loop
       controls2.start({
-        x: ['-50%', '0%'],
+        x: [`-${oneThird}%`, '0%'],
         transition: {
           duration: 30,
           ease: 'linear',
-          repeat: Infinity
+          repeat: Infinity,
+          repeatType: 'loop'
         }
       });
     };
@@ -235,25 +241,35 @@ export const TestimonialCarousel= () => {
 
   // @return – page gradient shows through; edge fades + bottom fade for smooth flow into BookingFaqSection
   return (
-    <div className="relative w-full overflow-hidden py-6 sm:py-8 md:py-10 min-h-[350px] sm:min-h-[400px] flex items-center justify-center px-2 sm:px-4" onMouseMove={handleMouseMove}>
+    <div className="relative w-full overflow-hidden py-6 sm:py-8 md:py-10 min-h-[350px] sm:min-h-[400px] flex items-center justify-center" onMouseMove={handleMouseMove}>
       <div className="flex flex-col gap-5 w-full relative">
-        
-
-        {/* Row 1 - Moving Left */}
-        <div className="flex overflow-hidden">
-          <motion.div animate={controls1} className="flex gap-5 whitespace-nowrap" style={{
-          width: 'max-content'
-        }}>
-            {firstRow.map((review, idx) => <ReviewCard key={`row1-${review.id}-${idx}`} review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />)}
+        {/* Row 1 - Moving Left: full-bleed so no gap at edges */}
+        <div className="w-full overflow-hidden" style={{ marginLeft: 0, marginRight: 0 }}>
+          <motion.div
+            animate={controls1}
+            className="flex gap-5 whitespace-nowrap flex-nowrap"
+            style={{ width: 'max-content', willChange: 'transform' }}
+          >
+            {firstRow.map((review, idx) => (
+              <div key={`row1-${review.id}-${idx}`} className="flex-shrink-0">
+                <ReviewCard review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />
+              </div>
+            ))}
           </motion.div>
         </div>
 
         {/* Row 2 - Moving Right */}
-        <div className="flex overflow-hidden">
-          <motion.div animate={controls2} className="flex gap-5 whitespace-nowrap" style={{
-          width: 'max-content'
-        }}>
-            {secondRow.map((review, idx) => <ReviewCard key={`row2-${review.id}-${idx}`} review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />)}
+        <div className="w-full overflow-hidden" style={{ marginLeft: 0, marginRight: 0 }}>
+          <motion.div
+            animate={controls2}
+            className="flex gap-5 whitespace-nowrap flex-nowrap"
+            style={{ width: 'max-content', willChange: 'transform' }}
+          >
+            {secondRow.map((review, idx) => (
+              <div key={`row2-${review.id}-${idx}`} className="flex-shrink-0">
+                <ReviewCard review={review} onHoverStart={() => handleHoverStart(review)} onHoverEnd={handleHoverEnd} />
+              </div>
+            ))}
           </motion.div>
         </div>
       </div>
