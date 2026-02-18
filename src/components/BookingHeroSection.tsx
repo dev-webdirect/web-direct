@@ -446,10 +446,11 @@ export const BookingHeroSection = () => {
             </p>
           </div>
 
-          <div className="space-y-8 md:space-y-10">
+          {/* FAQ: grid with max 3 columns; each cell = one group (title + items) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
             {FAQ_GROUPS.map((group, groupIndex) => (
-              <div key={groupIndex}>
-                <h3 className="text-lg sm:text-xl font-semibold text-[#41AE96] mb-4 sm:mb-5">
+              <div key={groupIndex} className="min-w-0 flex flex-col">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#41AE96] mb-4 flex-shrink-0">
                   {group.title}
                 </h3>
                 <div className="space-y-2 sm:space-y-3">

@@ -44,7 +44,7 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
         (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
         setMouseEventTarget(el);
       }}
-      className="relative min-h-screen w-full flex flex-col items-center justify-start bg-[#0f0a1f] pt-2 sm:pt-16 lg:pt-20 pb-8 sm:pb-12 lg:pb-16 px-3 sm:px-4 lg:px-8"
+      className="relative min-h-screen w-full flex flex-col items-center justify-start bg-[#0f0a1f] pt-6 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-10 xl:px-12"
     >
       {/* Dynamic Glow Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -74,15 +74,15 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
         />
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 max-w-8xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 items-start">
-          {/* Left Column - Copy & Benefits */}
+      {/* Content Container - centered, max width for readability */}
+      <div className="relative z-10 w-full max-w-6xl xl:max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-start">
+          {/* Left Column - 1/3 width: Copy & Benefits */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-4 sm:space-y-5 lg:sticky lg:top-10"
+            className="space-y-5 sm:space-y-6 lg:col-span-1 lg:sticky lg:top-10"
           >
             <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#41AE96]/10 text-[#41AE96] border border-[#41AE96]/20 backdrop-blur-md">
               <span className="mr-2 flex h-2 w-2">
@@ -92,7 +92,7 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
               Gratis Strategie Sessie
             </span>
 
-            <div className="space-y-3">
+            <div className="space-y-4 sm:space-y-5">
               <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.1] tracking-tight">
                 Klaar om je{' '}
                 <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
@@ -105,15 +105,15 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap gap-3 pt-4 sm:pt-5">
               {benefits.map((benefit) => (
                 <TrustBadge key={benefit.text} icon={benefit.icon} text={benefit.text} />
               ))}
             </div>
           </motion.div>
 
-          {/* Right Column - Step Content */}
-          <div className="relative">{children}</div>
+          {/* Right Column - 2/3 width: Step Content */}
+          <div className="relative lg:col-span-2">{children}</div>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />

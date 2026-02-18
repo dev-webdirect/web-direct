@@ -109,7 +109,7 @@ const CategoryTab = ({
   }} transition={{
     duration: 0.5,
     delay
-  }} onClick={onClick} className={cn("relative flex items-center gap-3 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap", isActive ? "bg-[#6a49ff] text-white shadow-lg shadow-[#6a49ff]/20" : "bg-[#1a1227] text-gray-400 hover:bg-[#251b36] hover:text-white border border-gray-800")}>
+  }} onClick={onClick} className={cn("relative flex items-center gap-3 px-6 py-3 rounded-xl text-sm font-medium transition-all duration-300 whitespace-nowrap w-auto", isActive ? "bg-[#6a49ff] text-white shadow-lg shadow-[#6a49ff]/20" : "bg-[#1a1227] text-gray-400 hover:bg-[#251b36] hover:text-white border border-gray-800")}>
       <Icon className="w-4 h-4" />
       <span>{title}</span>
     </motion.button>;
@@ -139,7 +139,7 @@ const SupportCard = ({
     duration: 0.5,
     delay
   }} className="relative group w-full h-full">
-      <div className="relative w-full h-full min-h-[200px] sm:min-h-[220px] p-5 sm:p-6 md:p-8 rounded-2xl bg-[#1a1227] border border-gray-800 hover:border-[#41AE96] transition-all duration-300 hover:shadow-2xl">
+      <div className="relative w-auto h-full min-h-[200px] sm:min-h-[220px] p-5 sm:p-6 md:p-8 rounded-2xl bg-[#1a1227] border border-gray-800 hover:border-[#41AE96] transition-all duration-300 hover:shadow-2xl">
         <div className="w-12 h-12 rounded-xl bg-[#251b36] flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
           <Icon className="w-6 h-6 text-[#41AE96]" />
         </div>
@@ -278,12 +278,21 @@ export const BookingFaqSection = () => {
           </motion.p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 flex-wrap">
-          {faqCategories.map((category, index) => <CategoryTab key={index} title={category.title} icon={category.icon} isActive={activeCategory === index} onClick={() => {
-          setActiveCategory(index);
-          setOpenItems([0]); // Reset to first item open when switching categories
-        }} delay={0.3 + index * 0.1} />)}
+        {/* Category Tabs - max 3 per row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-12 max-w-4xl mx-auto ">
+          {faqCategories.map((category, index) => (
+            <CategoryTab
+              key={index}
+              title={category.title}
+              icon={category.icon}
+              isActive={activeCategory === index}
+              onClick={() => {
+                setActiveCategory(index);
+                setOpenItems([0]);
+              }}
+              delay={0.3 + index * 0.1}
+            />
+          ))}
         </div>
 
         {/* FAQ Accordion */}
@@ -371,7 +380,7 @@ export const BookingFaqSection = () => {
               <div className="text-center lg:text-left">
                 <h3 className="text-white font-bold text-3xl mb-3">
                 Klaar voor je gratis {' '}
-                <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+                <span className="relative inline-block italic font-large bg-clip-text  text-[#5839e6] font-serif">
                 webdesign?
                 </span>
                 </h3>

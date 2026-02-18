@@ -45,9 +45,11 @@ export default function Home() {
           <div>
             <WhyChooseTemplates />
           </div>
+          {/*}
           <div id="projects">
             <WorkShowcase />
           </div>
+          */}
           {/*}
           <div id="features">
             <FeatureGridSection />

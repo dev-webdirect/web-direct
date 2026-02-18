@@ -12,39 +12,27 @@ type Project = {
 };
 const PROJECTS: Project[] = [{
   id: '1',
-  title: 'QuickTask - Productivity App',
-  category: 'Branding',
-  image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e6270c1cc92077f082d697_05.webp',
-  link: '#'
-}, {
-  id: '2',
-  title: 'Brandora – Creative Agency Website',
+  title: 'Prime Vision',
   category: 'UI/UX design',
   image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e62886fbccb91a947910b0_01.webp',
   link: '#'
 }, {
-  id: '3',
-  title: 'Bloom CRM – Sales Dashboard',
+  id: '2',
+  title: 'Pluto',
   category: 'SaaS Web Design',
   image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e62aebcb5242413f1c78aa_02.webp',
   link: '#'
 }, {
-  id: '4',
-  title: 'Shoppr – E-commerce Landing Page',
+  id: '3',
+  title: 'VOXO',
   category: 'UI Design',
   image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e62b920428efb76a94093d_03.webp',
   link: '#'
 }, {
-  id: '5',
-  title: 'Insightly – Analytics SaaS Website',
+  id: '4',
+  title: 'Men&Gents',
   category: 'Webflow Development',
   image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e62c823cecf3170ffffe28_04.webp',
-  link: '#'
-}, {
-  id: '6',
-  title: 'Brandora – Creative Agency Website',
-  category: 'UI/UX design',
-  image: 'https://cdn.prod.website-files.com/68e09a47f4893fd87793bc0d/68e62886fbccb91a947910b0_01.webp',
   link: '#'
 }];
 

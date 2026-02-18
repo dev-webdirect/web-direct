@@ -17,7 +17,7 @@ interface NavLink {
 const NAV_LINKS: NavLink[] = [
   { name: 'Over ons', href: '#about' },
   { name: 'Process', href: '#process' },
-  { name: 'Projecten', href: '#projects' },
+  //{ name: 'Projecten', href: '#projects' },
   { name: 'Vragen', href: '#faq' },
 ];
 const smoothTransition = {
@@ -31,8 +31,8 @@ const smoothTransition = {
 export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
@@ -51,21 +51,15 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setIsMobileMenuOpen(false);
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+        setIsDesktopMenuOpen(false);
+      }
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Burger menu variants for the interactive scrolled state
-  const topBarVariants = {
-    initial: { y: 0, rotate: 0 },
-    hover: { y: 2, rotate: 0 },
-  };
-  const bottomBarVariants = {
-    initial: { y: 0, rotate: 0 },
-    hover: { y: -2, rotate: 0 },
-  };
   const logoSrc = '/images/logo-white.svg';
 
   // Prevent flash of unstyled content
@@ -86,6 +80,20 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Backdrop blur overlay for desktop menu */}
+      <AnimatePresence>
+        {isDesktopMenuOpen && isScrolled && (
+          <motion.div
+            className="hidden md:block fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setIsDesktopMenuOpen(false)}
           />
         )}
       </AnimatePresence>
@@ -155,33 +163,25 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                 )}
               </AnimatePresence>
 
-              {/* Scrolled Interactive Indicator (Desktop only) */}
+              {/* Desktop Hamburger Menu (shown when scrolled) */}
               <AnimatePresence mode="wait">
                 {isScrolled && (
-                  <motion.div
-                    className="hidden md:flex items-center justify-center cursor-pointer group absolute left-1/2 -translate-x-1/2"
+                  <motion.button
+                    className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full transition-colors text-white hover:bg-white/10 absolute left-1/2 -translate-x-1/2"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.2 }}
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={() => setIsDesktopMenuOpen(!isDesktopMenuOpen)}
+                    whileTap={{ scale: 0.9 }}
+                    aria-label={isDesktopMenuOpen ? 'Close menu' : 'Open menu'}
                   >
-                    <div className="relative w-[30px] h-[30px] flex items-center justify-center">
-                      <motion.div
-                        className="absolute top-[11px] left-[5px] w-5 h-[1.5px] bg-white"
-                        variants={topBarVariants}
-                        animate={isHovered ? 'hover' : 'initial'}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                      <motion.div
-                        className="absolute bottom-[11px] left-[5px] w-5 h-[1.5px] bg-white"
-                        variants={bottomBarVariants}
-                        animate={isHovered ? 'hover' : 'initial'}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    </div>
-                  </motion.div>
+                    {isDesktopMenuOpen ? (
+                      <X className="w-5 h-5" />
+                    ) : (
+                      <Menu className="w-5 h-5" />
+                    )}
+                  </motion.button>
                 )}
               </AnimatePresence>
 
@@ -256,6 +256,34 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </motion.button>
                       </div>
+                    </nav>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Desktop Navigation List — positioned directly below navbar (shown when scrolled) */}
+            <AnimatePresence>
+              {isDesktopMenuOpen && isScrolled && (
+                <motion.div
+                  className="hidden md:block absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 z-50 min-w-[200px]"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className="rounded-xl backdrop-blur-sm shadow-lg overflow-hidden bg-[#1a1227]/95 border border-gray-800">
+                    <nav className="flex flex-col p-3">
+                      {NAV_LINKS.map((link) => (
+                        <a
+                          key={link.name}
+                          href={link.href}
+                          onClick={() => setIsDesktopMenuOpen(false)}
+                          className="flex items-center px-4 py-3 rounded-lg transition-colors font-medium text-sm text-white/90 hover:text-[#a78bfa] hover:bg-white/5 whitespace-nowrap"
+                        >
+                          {link.name}
+                        </a>
+                      ))}
                     </nav>
                   </div>
                 </motion.div>

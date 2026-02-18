@@ -6,7 +6,7 @@ import { Calendar, ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const DATETIME_STORAGE_KEY = 'webdirect_booking_datetime';
-const TIMEZONE = 'Europe/Paris';
+const TIMEZONE = 'Europe/Paris'; // Central European Time (CET/CEST) — same as Calendly
 const MAX_DAYS_AHEAD = 14;
 const MIN_NOTICE_HOURS = 4;
 
@@ -15,37 +15,79 @@ interface TimeSlot {
   invitees_remaining?: number;
 }
 
+/** Get offset in ms for a timezone at a given date (e.g. Paris = UTC+1 or UTC+2). */
+function getTimezoneOffsetMs(date: Date, timeZone: string): number {
+  const utcHour = date.getUTCHours();
+  const utcMinutes = date.getUTCMinutes();
+  const tzStr = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date);
+  const [tzHour, tzMin] = tzStr.split(':').map(Number);
+  let diffMinutes = (tzHour * 60 + tzMin) - (utcHour * 60 + utcMinutes);
+  if (diffMinutes > 12 * 60) diffMinutes -= 24 * 60;
+  if (diffMinutes < -12 * 60) diffMinutes += 24 * 60;
+  return diffMinutes * 60 * 1000;
+}
+
+/** Start of the given calendar day in the given timezone, as a UTC Date. */
+function startOfDayInTz(year: number, month: number, day: number, timeZone: string): Date {
+  const noonUtc = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  const offsetMs = getTimezoneOffsetMs(noonUtc, timeZone);
+  return new Date(Date.UTC(year, month - 1, day, 0, 0, 0) - offsetMs);
+}
+
+/** End of the given calendar day in the given timezone (last ms), as a UTC Date. */
+function endOfDayInTz(year: number, month: number, day: number, timeZone: string): Date {
+  const start = startOfDayInTz(year, month, day, timeZone);
+  return new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
+}
+
+/** Current calendar date (y, m, d) in the given timezone. */
+function getDatePartsInTz(date: Date, timeZone: string): { year: number; month: number; day: number } {
+  const str = date.toLocaleDateString('en-CA', { timeZone });
+  const [y, m, d] = str.split('-').map(Number);
+  return { year: y, month: m, day: d };
+}
+
 function formatSlotTime(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleTimeString('nl-NL', {
+    timeZone: TIMEZONE,
     hour: '2-digit',
     minute: '2-digit',
   });
 }
 
 function formatDateLabel(date: Date): string {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const d = new Date(date);
-  d.setHours(0, 0, 0, 0);
-  if (d.getTime() === today.getTime()) return 'Vandaag';
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  if (d.getTime() === tomorrow.getTime()) return 'Morgen';
-  return d.toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+  const parts = getDatePartsInTz(date, TIMEZONE);
+  const todayParts = getDatePartsInTz(new Date(), TIMEZONE);
+  if (parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day) return 'Vandaag';
+  const tomorrowStart = startOfDayInTz(todayParts.year, todayParts.month, todayParts.day + 1, TIMEZONE);
+  const tomorrowParts = getDatePartsInTz(tomorrowStart, TIMEZONE);
+  if (parts.year === tomorrowParts.year && parts.month === tomorrowParts.month && parts.day === tomorrowParts.day) return 'Morgen';
+  return date.toLocaleDateString('nl-NL', {
+    timeZone: TIMEZONE,
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  });
 }
 
 function getSelectableDates(): Date[] {
   const now = new Date();
-  const minDate = new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
-  const start = new Date(minDate);
-  start.setHours(0, 0, 0, 0);
-  const maxDate = new Date(now.getTime() + MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000);
+  const minStart = new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
+  const minParts = getDatePartsInTz(minStart, TIMEZONE);
+  const maxAllowed = new Date(now.getTime() + MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000);
   const dates: Date[] = [];
-  let d = new Date(start);
-  while (d <= maxDate && dates.length < MAX_DAYS_AHEAD) {
-    dates.push(new Date(d));
-    d.setDate(d.getDate() + 1);
+  for (let i = 0; i < MAX_DAYS_AHEAD; i++) {
+    const nextDay = new Date(Date.UTC(minParts.year, minParts.month - 1, minParts.day + i, 12, 0, 0));
+    const parts = getDatePartsInTz(nextDay, TIMEZONE);
+    const startOfDay = startOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
+    if (startOfDay.getTime() > maxAllowed.getTime()) break;
+    dates.push(startOfDay);
   }
   return dates;
 }
@@ -84,15 +126,14 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
     setSlots([]);
     setSelectedSlot(null);
 
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
+    const parts = getDatePartsInTz(date, TIMEZONE);
+    let start = startOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
+    let end = endOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
 
     const now = new Date();
     const minStart = new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
-    if (start < minStart) {
-      start.setTime(minStart.getTime());
+    if (start.getTime() < minStart.getTime()) {
+      start = minStart;
     }
 
     const startTime = start.toISOString();
@@ -159,7 +200,13 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
             <p className="text-sm text-gray-400 font-medium mb-2">Kies een datum</p>
             <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
               {dates.map((d) => {
-                const isSelected = selectedDate?.toDateString() === d.toDateString();
+                const selParts = selectedDate && getDatePartsInTz(selectedDate, TIMEZONE);
+                const dParts = getDatePartsInTz(d, TIMEZONE);
+                const isSelected =
+                  !!selParts &&
+                  selParts.year === dParts.year &&
+                  selParts.month === dParts.month &&
+                  selParts.day === dParts.day;
                 return (
                   <button
                     key={d.toISOString()}
