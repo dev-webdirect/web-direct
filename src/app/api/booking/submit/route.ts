@@ -123,7 +123,7 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
 
   // 4. Create Calendly invitee
   // Temporarily commented out
-
+/*
   const calendlyToken = process.env.CALENDLY_API_TOKEN?.trim();
   const eventTypeUuid = process.env.CALENDLY_EVENT_TYPE_UUID?.trim();
   const locationKind = process.env.CALENDLY_LOCATION_KIND?.trim();
@@ -157,7 +157,7 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
       console.error('Calendly booking error:', error);
     }
   }
-  
+*/
 }
 
 /** Build the structured Website Generation Prompt JSON from intake data (always adapted from actual form data). */
