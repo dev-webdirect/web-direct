@@ -105,7 +105,7 @@ export const BrandStatementText = () => {
       {/* Ambient glow */}
       
 
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden px-3 sm:px-4 md:px-6">
+      <div className="sticky top-0 h-auto py-30 sm:h-screen flex items-center justify-center overflow-hidden px-3 sm:px-4 md:px-6">
         <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 sm:gap-5 md:gap-6 lg:gap-8">
           {allLines.map((line, lineIndex) => (
             <div
