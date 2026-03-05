@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, HelpCircle, Mail, MessageCircle, Phone, Clock, Zap, Shield, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { FeatureGridSection } from './FeatureGridSection';
 import { TestimonialCarousel } from './TestimonialCarousel';
 import { useTranslations } from 'next-intl';
 
