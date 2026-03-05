@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { Palette, Smartphone, Zap, Database, Layout, PenTool, LifeBuoy, Code } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // Constants for the WebDirect features as cards
 const CARD_STYLE = {
@@ -9,79 +10,78 @@ const CARD_STYLE = {
   shadowColor: 'rgba(106, 73, 255, 0.2)',
 };
 
-const WEBDIRECT_CARDS = [{
-  id: 'conversion-design',
-  title: 'Conversion-first design',
-  description: 'Wij ontwerpen websites die gemaakt zijn om klanten binnen te halen, niet om alleen "mooi" te zijn.',
-  Icon: Palette,
-  ...CARD_STYLE,
-}, {
-  id: 'custom-code',
-  title: '100% maatwerk in code',
-  description: 'Alles wordt custom gebouwd in React en Next.js. Geen builders, geen templates, geen beperkingen.',
-  Icon: Code,
-  ...CARD_STYLE,
-}, {
-  id: 'fast-performance',
-  title: 'Supersnelle performance',
-  description: 'Snelle laadtijden zorgen voor betere SEO, meer vertrouwen en hogere conversie.',
-  Icon: Zap,
-  ...CARD_STYLE,
-}, {
-  id: 'scalable',
-  title: 'Gebouwd om te schalen',
-  description: 'Nieuwe pagina\'s, campagnes of funnels toevoegen zonder dat je website opnieuw gebouwd moet worden.',
-  Icon: Database,
-  ...CARD_STYLE,
-}, {
-  id: 'seo-ready',
-  title: 'SEO-ready structuur',
-  description: 'Technische SEO zit standaard ingebouwd. Schone code, sterke structuur en goede indexatie in Google.',
-  Icon: Layout,
-  ...CARD_STYLE,
-}, {
-  id: 'premium-quality',
-  title: 'Premium uitstraling, zonder agency prijzen',
-  description: 'Door onze AI-gedreven workflow leveren we high-end kwaliteit sneller en vaak goedkoper dan traditionele bureaus.',
-  Icon: PenTool,
-  ...CARD_STYLE,
-}, {
-  id: 'mobile-first',
-  title: 'Perfect op mobiel',
-  description: 'Mobile-first design zodat je site op elk scherm strak, snel en professioneel aanvoelt.',
-  Icon: Smartphone,
-  ...CARD_STYLE,
-}, {
-  id: 'support',
-  title: 'Support en optimalisatie',
-  description: 'Geen "website opleveren en klaar". We blijven betrokken en optimaliseren waar nodig.',
-  Icon: LifeBuoy,
-  ...CARD_STYLE,
-}] as any[];
+const WEBDIRECT_CARD_META = [
+  {
+    id: 'conversion-design',
+    Icon: Palette,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'custom-code',
+    Icon: Code,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'fast-performance',
+    Icon: Zap,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'scalable',
+    Icon: Database,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'seo-ready',
+    Icon: Layout,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'premium-quality',
+    Icon: PenTool,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'mobile-first',
+    Icon: Smartphone,
+    ...CARD_STYLE,
+  },
+  {
+    id: 'support',
+    Icon: LifeBuoy,
+    ...CARD_STYLE,
+  },
+] as const;
 
 // @component: WebDirectCards
 export const WhyChooseTemplates = () => {
+  const t = useTranslations('home.whyChoose');
+
+  const cards = WEBDIRECT_CARD_META.map((card) => ({
+    ...card,
+    title: t(`cards.${card.id}.title`),
+    description: t(`cards.${card.id}.description`),
+  }));
+
   // @return
   return <section className="w-full py-12 sm:py-16 md:py-20 px-3 sm:px-4 md:px-8 lg:px-12 font-sans">
       <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16 max-w-2xl mx-auto">
-        <h2 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
-            Waarom bedrijven kiezen voor{' '}
+          <h2 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+            {t('heading.beforeHighlight')}{' '}
             <span className="relative inline-block italic font-large text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
-
-              WebDirect.
+              {t('heading.highlight')}
             </span>
           </h2>
           <p className="text-gray-300 text-lg leading-relaxed">
-            Wij bouwen conversion-first websites in code. Geen wordpress of Webflow templates. Sneller, krachtiger en
-            schaalbaar zonder beperkingen.
+            {t('description')}
           </p>
         </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
-          {WEBDIRECT_CARDS.map((item) => {
+          {cards.map((item) => {
           const IconComponent = item.Icon;
           return <div key={item.id} style={{
             backgroundColor: item.bgColor,

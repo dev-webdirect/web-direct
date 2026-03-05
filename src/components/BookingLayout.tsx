@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Clock, TrendingUp, Zap, Award } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const FluidBackground = dynamic(
   () => import('./FluidBackground').then((m) => m.FluidBackground),
@@ -24,19 +25,21 @@ const TrustBadge = ({
   </div>
 );
 
-const benefits = [
-  { icon: TrendingUp, text: 'Gratis webdesign' },
-  { icon: Zap, text: 'Geheel vrijblijvend' },
-  { icon: Award, text: '100+ succesverhalen' },
-];
-
 interface BookingLayoutProps {
   children: React.ReactNode;
+  mode?: 'full' | 'intake';
 }
 
-export const BookingLayout = ({ children }: BookingLayoutProps) => {
+export const BookingLayout = ({ children, mode = 'full' }: BookingLayoutProps) => {
   const containerRef = useRef<HTMLElement | null>(null);
   const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
+  const t = useTranslations('booking.layout');
+
+  const benefits = [
+    { icon: TrendingUp, text: t('benefits.freeDesign') },
+    { icon: Zap, text: t('benefits.noObligation') },
+    { icon: Award, text: t('benefits.successStories') },
+  ];
 
   return (
     <section
@@ -48,7 +51,7 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
     >
       {/* Dynamic Glow Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
+        <div className="absolute inset-0 bg-linear-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
         <FluidBackground colorHex="#41ae96" glowSize={0.15} mouseEventTarget={mouseEventTarget} />
         <motion.div
           className="absolute top-[10%] right-[-5%] w-[600px] h-[600px] rounded-full opacity-15 blur-[120px]"
@@ -89,20 +92,36 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
                 <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#41AE96] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#41AE96]" />
               </span>
-              Gratis Strategie Sessie
+              {mode === 'intake' ? t('badge.intake') : t('badge.full')}
             </span>
 
             <div className="space-y-4 sm:space-y-5">
-              <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.1] tracking-tight">
-                Klaar om je{' '}
-                <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
-                  digitale aanwezigheid
-                </span>{' '}
-                te transformeren?
-              </h1>
-              <p className="text-base text-gray-400 leading-relaxed max-w-xl">
-              Boek hier eenvoudig je 20-minuten meeting om je gratis webdesign te ontvangen. In de meeting ontdek je hoe we je merk kunnen helpen groeien met een website die écht converteert. 
-              </p>
+              {mode === 'intake' ? (
+                <>
+                  <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.1] tracking-tight">
+                    {t('title.intake.beforeHighlight')}{' '}
+                    <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-linear-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+                      {t('title.intake.highlight')}
+                    </span>
+                  </h1>
+                  <p className="text-base text-gray-400 leading-relaxed max-w-xl">
+                    {t('description.intake')}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-white leading-[1.1] tracking-tight">
+                    {t('title.full.beforeHighlight')}{' '}
+                    <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-linear-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+                      {t('title.full.highlight')}
+                    </span>{' '}
+                    {t('title.full.afterHighlight')}
+                  </h1>
+                  <p className="text-base text-gray-400 leading-relaxed max-w-xl">
+                    {t('description.full')}
+                  </p>
+                </>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-3 pt-4 sm:pt-5">
@@ -116,7 +135,7 @@ export const BookingLayout = ({ children }: BookingLayoutProps) => {
           <div className="relative lg:col-span-2">{children}</div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 };

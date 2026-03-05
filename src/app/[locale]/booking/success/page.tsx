@@ -6,11 +6,13 @@ import { getBookingFormData, clearBookingFormData } from '@/src/components/Booki
 
 const DATETIME_KEY = 'webdirect_booking_datetime';
 const INTAKE_KEY = 'webdirect_booking_intake';
+const MODE_KEY = 'webdirect_booking_mode';
 
 export default function BookingSuccessPage() {
   const [email, setEmail] = useState<string | undefined>();
   const [name, setName] = useState<string | undefined>();
   const [selectedDateTime, setSelectedDateTime] = useState<string | null>(null);
+  const [mode, setMode] = useState<'full' | 'intake'>('full');
 
   useEffect(() => {
     const data = getBookingFormData();
@@ -21,11 +23,15 @@ export default function BookingSuccessPage() {
     if (typeof window !== 'undefined') {
       const dt = sessionStorage.getItem(DATETIME_KEY);
       if (dt) setSelectedDateTime(dt);
+
+      const storedMode = sessionStorage.getItem(MODE_KEY);
+      if (storedMode === 'intake') setMode('intake');
     }
     clearBookingFormData();
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(DATETIME_KEY);
       sessionStorage.removeItem(INTAKE_KEY);
+      sessionStorage.removeItem(MODE_KEY);
     }
   }, []);
 
@@ -34,6 +40,8 @@ export default function BookingSuccessPage() {
       email={email}
       name={name}
       selectedDateTime={selectedDateTime}
+      mode={mode}
     />
   );
 }
+

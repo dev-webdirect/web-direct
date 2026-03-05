@@ -1,0 +1,633 @@
+{
+  "common": {
+    "language": "Nederlands"
+  },
+  "hero": {
+    "badge": "100% Custom Websites",
+    "heading": "Websites die gemaakt zijn om te",
+    "rotatingWords": ["Converteren.", "Overtuigen.", "Verkopen.", "Groeien.", "Schalen.", "Presteren.", "Domineren."],
+    "subtitle": "Wij combineren strategie, design en technologie om ambitieuze merken te helpen groeien met krachtige digitale ervaringen die écht impact maken.",
+    "cta": {
+      "primary": "Vraag GRATIS webdesign aan.",
+      "secondary": "Bekijk websites."
+    },
+    "socialProof": "VERTROUWD DOOR 100+ MERKEN",
+    "scrollIndicator": "SCROLL OM TE ONTDEKKEN"
+  },
+  "booking": {
+    "layout": {
+      "badge": {
+        "intake": "Pre-website intake",
+        "full": "Gratis strategie sessie"
+      },
+      "title": {
+        "intake": {
+          "beforeHighlight": "Vertel ons over je",
+          "highlight": "project"
+        },
+        "full": {
+          "beforeHighlight": "Klaar om je",
+          "highlight": "digitale aanwezigheid",
+          "afterHighlight": "te transformeren?"
+        }
+      },
+      "description": {
+        "intake": "Vul de intake in zodat we je project optimaal kunnen voorbereiden. Hoe meer we weten, hoe beter we je kunnen helpen.",
+        "full": "Boek hier eenvoudig je 20-minuten meeting om je gratis webdesign te ontvangen. In de meeting ontdek je hoe we je merk kunnen helpen groeien met een website die écht converteert."
+      },
+      "benefits": {
+        "freeDesign": "Gratis webdesign",
+        "noObligation": "Geheel vrijblijvend",
+        "successStories": "100+ succesverhalen"
+      }
+    },
+    "date": {
+      "stepLabel": "Stap 1 van 3",
+      "subtitle": "20-minuten sessie • Max {days} dagen vooruit",
+      "heading": "Kies datum en tijd",
+      "today": "Vandaag",
+      "tomorrow": "Morgen",
+      "chooseDate": "Kies een datum",
+      "availableTimes": "Beschikbare tijden",
+      "noSlots": "Geen beschikbare tijden voor deze datum",
+      "next": "Volgende",
+      "errorLoadingSlots": "Kon beschikbare tijden niet laden.",
+      "genericError": "Er ging iets mis. Probeer het opnieuw."
+    },
+    "intake": {
+      "title": "Pre-website intake",
+      "sections": {
+        "companyProject": "Bedrijf & Project",
+        "goalsOffer": "Doelen & Aanbod",
+        "styleDesign": "Stijl & Design",
+        "budgetOther": "Budget & Overig"
+      },
+      "back": "Terug",
+      "previous": "Vorige",
+      "fields": {
+        "companyName": {
+          "label": "Bedrijfsnaam",
+          "placeholder": "Je bedrijfsnaam"
+        },
+        "logo": {
+          "label": "Logo (optioneel)",
+          "helper": "Bij voorkeur zonder achtergrond (PNG of SVG). Max 10 bestanden, 100 MB per bestand.",
+          "cta": "Klik om te uploaden of sleep bestanden hierheen",
+          "formats": "PNG, JPG, SVG, PDF (max 100 MB per bestand)"
+        },
+        "projectType": {
+          "label": "Is dit een nieuwe website of een update/vervanging?",
+          "new": "Nieuwe website",
+          "existing": "Bestaande website updaten/vervangen"
+        },
+        "currentWebsiteUrl": {
+          "label": "Huidige website URL",
+          "placeholder": "https://..."
+        },
+        "mainGoal": {
+          "label": "Wat is het hoofddoel van de website?"
+        },
+        "primaryAction": {
+          "label": "Belangrijkste actie die een bezoeker moet doen"
+        },
+        "servicesDescription": {
+          "label": "Welke diensten, producten of services bied je aan?",
+          "placeholder": "Kort wat je aanbiedt, voor wie, belangrijkste voordeel"
+        },
+        "focusCentral": {
+          "label": "Wat moet het meest centraal staan op de website?"
+        },
+        "offerExplanation": {
+          "label": "Toelichting op je aanbod (optioneel)",
+          "placeholder": "Concreet welke diensten/producten, voor wie, voordeel"
+        },
+        "primaryAudience": {
+          "label": "Wie is de primaire doelgroep?"
+        },
+        "colorHex": {
+          "label": "Welke kleuren? (Hex codes, optioneel)",
+          "placeholder": "#081534"
+        },
+        "style": {
+          "label": "Welke stijl past het beste bij je bedrijf?"
+        },
+        "favoriteWebsites": {
+          "label": "Welke websites vind je tof? (optioneel)",
+          "placeholder": "Links + waarom"
+        },
+        "competitors": {
+          "label": "Belangrijkste concurrenten (optioneel)",
+          "placeholder": "Naam + website URL"
+        },
+        "doNotMention": {
+          "label": "Dingen die wel/niet benoemd moeten worden (optioneel)",
+          "placeholder": "..."
+        },
+        "budget": {
+          "label": "Wat is je budget?"
+        }
+      },
+      "errors": {
+        "companyNameRequired": "Bedrijfsnaam is verplicht",
+        "currentWebsiteUrlRequired": "Huidige website URL is verplicht bij bestaande website",
+        "mainGoalRequired": "Hoofddoel is verplicht",
+        "primaryActionRequired": "Belangrijkste actie is verplicht",
+        "servicesDescriptionRequired": "Beschrijving diensten/producten is verplicht",
+        "focusCentralRequired": "Wat moet centraal staan is verplicht",
+        "primaryAudienceRequired": "Doelgroep is verplicht",
+        "styleRequired": "Stijl is verplicht",
+        "budgetRequired": "Budget is verplicht",
+        "logo": {
+          "tooManyFiles": "Maximum 10 bestanden toegestaan",
+          "tooLarge": "{name} is te groot (max {maxMb} MB)",
+          "invalidType": "{name} heeft een ongeldig bestandstype. Toegestaan: PNG, JPG, SVG, PDF"
+        }
+      },
+      "cta": {
+        "next": "Volgende",
+        "nextToDetails": "Volgende — naar gegevens"
+      }
+    },
+    "form": {
+      "back": "Terug",
+      "stepLabel": {
+        "full": "Stap 6 van 6",
+        "intake": "Stap 5 van 5"
+      },
+      "fields": {
+        "name": {
+          "label": "Naam",
+          "placeholder": "Je volledige naam"
+        },
+        "email": {
+          "label": "E-mail",
+          "placeholder": "je@email.nl"
+        },
+        "phone": {
+          "label": "Telefoon",
+          "placeholder": "+31 6 12345678"
+        }
+      },
+      "errors": {
+        "nameRequired": "Naam is verplicht",
+        "emailRequired": "E-mail is verplicht",
+        "emailInvalid": "Voer een geldig e-mailadres in"
+      },
+      "cta": {
+        "submitting": "Versturen...",
+        "submit": "Verstuur en ga naar bevestiging"
+      },
+      "footnote": "Je gegevens worden alleen gebruikt om je afspraak te bevestigen"
+    },
+    "success": {
+      "intake": {
+        "heading": {
+          "beforeHighlight": "Je intake is",
+          "highlight": "ontvangen!"
+        },
+        "subheading": "Bedankt voor het invullen. We gaan direct aan de slag met de voorbereiding van je project.",
+        "card": {
+          "title": "Intake ontvangen",
+          "subtitle": "We gaan ermee aan de slag"
+        },
+        "timeline": {
+          "confirmation": {
+            "title": "Bevestigingsmail",
+            "description": "Je ontvangt direct een e-mail met een bevestiging dat we je intake hebben ontvangen."
+          },
+          "concept": {
+            "title": "Webdesign concept",
+            "description": "Op basis van jouw ingevulde vragenlijst maken we alvast een eerste webdesign concept."
+          },
+          "contact": {
+            "title": "Persoonlijk contact",
+            "description": "We nemen contact met je op om het design te bespreken, je wensen door te nemen en de volgende stappen te bepalen."
+          }
+        }
+      },
+      "full": {
+        "heading": {
+          "beforeHighlight": "Je afspraak is",
+          "highlight": "bevestigd!"
+        },
+        "subheading": "We kijken ernaar uit om met je te praten over je digitale strategie.",
+        "card": {
+          "title": "Je Afspraak",
+          "subtitle": "Gratis webdesign",
+          "dateLabel": "{date} om {time}",
+          "duration": "{duration}",
+          "meetingTitle": "Online video meeting",
+          "meetingDescription": "Link wordt per e-mail verstuurd"
+        },
+        "timeline": {
+          "confirmation": {
+            "title": "Bevestigingsmail",
+            "description": "Je ontvangt direct een e-mail met alle details van je afspraak en een link naar de videoconferentie."
+          },
+          "concept": {
+            "title": "Webdesign concept",
+            "description": "Op basis van jouw ingevulde vragenlijst maken we alvast een eerste webdesign dat we tijdens de call presenteren."
+          },
+          "meeting": {
+            "title": "De meeting",
+            "description": "Op het afgesproken tijdstip komen we samen voor een gesprek van 20 minuten. We lopen door het design, bespreken je wensen en bepalen de volgende stappen."
+          }
+        }
+      },
+      "confirmation": {
+        "sentTo": "Bevestiging verstuurd naar {email}",
+        "emailPlaceholder": "jouw e-mailadres",
+        "thanks": "Bedankt, {name}!"
+      },
+      "calendar": {
+        "heading": "Voeg toe aan je agenda",
+        "noDate": "Geen afspraakdatum beschikbaar",
+        "google": "Google Calendar",
+        "apple": "Apple Calendar",
+        "outlook": "Outlook",
+        "ical": "iCal-bestand"
+      },
+      "timelineSection": {
+        "heading": "Wat kun je verwachten?",
+        "subheading": "De volgende stappen in je reis naar een betere digitale aanwezigheid"
+      },
+      "footer": {
+        "contact": "Heb je vragen? Stuur ons een bericht op",
+        "email": "projects@webdirect.nl"
+      }
+    },
+    "faq": {
+      "badgeLabel": "Veelgestelde vragen",
+      "heading": {
+        "beforeHighlight": "Alles wat je moet",
+        "highlight": "weten."
+      },
+      "description": "Nog vragen over het strategiegesprek? We hebben de meest gestelde vragen voor je verzameld.",
+      "categories": [
+        {
+          "title": "Algemeen",
+          "items": [
+            {
+              "question": "Wat kost een website bij WebDirect?",
+              "answer": "Onze websites starten vanaf €695 voor een one-pager. De meeste klanten zitten tussen €1.000 en €2.000, afhankelijk van het aantal pagina's en gewenste functionaliteiten. Tijdens een vrijblijvend gesprek kijken we samen wat past bij jouw situatie en budget."
+            },
+            {
+              "question": "Hoe snel is mijn website klaar?",
+              "answer": "Een standaard bedrijfswebsite leveren we binnen 5 werkdagen op, mits content en materialen snel worden aangeleverd. Voor webshops of complexere projecten spreken we een apart traject af."
+            },
+            {
+              "question": "Kan ik mijn website zelf aanpassen na oplevering?",
+              "answer": "Ja. We bouwen een gebruiksvriendelijk CMS in waarmee je zelf content zoals blogberichten en afbeeldingen kunt toevoegen. Voor grotere aanpassingen aan het design of de structuur kun je altijd een verzoek indienen bij ons team."
+            },
+            {
+              "question": "Wat als ik geen content heb – teksten of foto's?",
+              "answer": "Geen probleem. Op basis van een korte vragenlijst of je huidige website schrijven wij de teksten voor je. We gebruiken stock- of AI-gegenereerde afbeeldingen als je geen eigen beelden hebt. Dit is optioneel bij te boeken."
+            },
+            {
+              "question": "Zit ik vast aan een contract of abonnement?",
+              "answer": "Nee. Je betaalt eenmalig voor de ontwikkeling van je website. We raden onze eigen hosting sterk aan — die is geoptimaliseerd voor snelheid, veiligheid en uptime. Wil je toch elders hosten, dan zorgen we voor een volledige overdracht van je website."
+            }
+          ]
+        },
+        {
+          "title": "Aanpak & Proces",
+          "items": [
+            {
+              "question": "Hoe verloopt het proces?",
+              "answer": "We starten met een kort kennismakingsgesprek (online, 20 minuten) om je wensen en doelen te begrijpen. Daarna werken we in vijf fasen: intake en analyse, design, ontwikkeling, testen, en lancering. Je blijft in elke fase betrokken en kunt op elk moment feedback geven."
+            },
+            {
+              "question": "Werken jullie met vaste pakketten of maatwerk?",
+              "answer": "Allebei. We kijken eerst naar wat jij nodig hebt en wat past bij je budget. Sommige klanten beginnen met een strakke one-pager, anderen willen een volledig uitgewerkte website met meerdere pagina's en functionaliteiten. We denken mee en adviseren eerlijk."
+            },
+            {
+              "question": "Kan ik tussentijds aanpassingen aanvragen?",
+              "answer": "Ja. We werken met vaste feedbackrondes tijdens het proces, zodat je altijd weet waar het project staat. Feedback binnen de projectscope verwerken we zonder meerkosten. Grotere wijzigingen bespreken we eerst qua tijd en budget."
+            },
+            {
+              "question": "Bieden jullie een gratis preview aan?",
+              "answer": "Ja. Voordat je akkoord gaat, laten we je een design concept zien gebaseerd op jouw merk en doelen. Zo weet je precies wat je krijgt voordat het project start."
+            }
+          ]
+        },
+        {
+          "title": "Design & Techniek",
+          "items": [
+            {
+              "question": "Krijg ik een uniek design of een template?",
+              "answer": "Elk design is op maat gemaakt. We gebruiken geen kant-en-klare templates, maar ontwerpen een look & feel die aansluit bij jouw merk, doelgroep en doelen."
+            },
+            {
+              "question": "Is mijn website ook goed op mobiel?",
+              "answer": "Altijd. We bouwen mobile-first: je website werkt perfect op smartphone, tablet en desktop. We testen op verschillende schermformaten en browsers voor oplevering."
+            },
+            {
+              "question": "Is mijn website snel en goed vindbaar in Google?",
+              "answer": "Ja. Technische SEO is standaard onderdeel van elk project: snelle laadtijden, schone code, correcte meta-tags, structured data en mobile-friendly design. Gemiddeld scoren onze websites 90+ op Google PageSpeed Insights."
+            },
+            {
+              "question": "Welke technologie gebruiken jullie?",
+              "answer": "We werken met moderne technologieën zoals React, Next.js en TypeScript, aangevuld met betrouwbare cloud hosting. We kiezen altijd de technologie die het beste past bij jouw project en behoeften."
+            },
+            {
+              "question": "Is mijn website GDPR/AVG-proof?",
+              "answer": "We bouwen conform de AVG: cookie consent, privacy policy, veilige dataopslag en opt-in mechanismen. We adviseren over wat er juridisch nodig is, maar de eindverantwoordelijkheid ligt bij jou als ondernemer."
+            }
+          ]
+        },
+        {
+          "title": "Prijs & Betaling",
+          "items": [
+            {
+              "question": "Wat kost een website bij WebDirect?",
+              "answer": "Websites starten vanaf €695 voor een one-pager. De meeste projecten vallen tussen €1.000 en €2.000. Voor uitgebreidere websites of webapplicaties hanteren we hogere tarieven, afhankelijk van de complexiteit. We maken altijd een offerte op maat."
+            },
+            {
+              "question": "Zijn er verborgen kosten?",
+              "answer": "Nee. We zijn transparant over alle kosten vanaf dag één. Je betaalt eenmalig voor de ontwikkeling. Eventuele hosting- of onderhoudskosten worden vooraf besproken en vastgelegd."
+            },
+            {
+              "question": "Kan ik in termijnen betalen?",
+              "answer": "Ja. Voor grotere projecten werken we met een gespreid betalingsschema: een deel bij start, een deel bij design goedkeuring, en het resterende bedrag bij oplevering. Dit stemmen we af in het intakegesprek."
+            },
+            {
+              "question": "Wat zijn de kosten voor hosting en onderhoud?",
+              "answer": "Hosting en onderhoud zijn optioneel en worden apart geoffreerd. Daarin zijn inbegrepen: SSL-certificaat, dagelijkse back-ups, security monitoring, software-updates en kleine content aanpassingen. Voor grotere wijzigingen maken we een aparte offerte."
+            }
+          ]
+        },
+        {
+          "title": "Eigendom & Beheer",
+          "items": [
+            {
+              "question": "Ben ik eigenaar van mijn website?",
+              "answer": "Ja. Alle content, designs en assets zijn van jou. De broncode is clean en gedocumenteerd. Je kunt altijd besluiten om elders te hosten – wij leveren dan alle bestanden, database en documentatie volledig aan."
+            },
+            {
+              "question": "Wat als ik later wil overstappen naar een andere partij?",
+              "answer": "Geen probleem. We leveren een volledige export van de website inclusief alle bestanden en credentials."
+            },
+            {
+              "question": "Maken jullie back-ups?",
+              "answer": "Ja. Automatische dagelijkse back-ups zijn standaard. We bewaren meerdere restore points zodat we bij problemen snel kunnen terugdraaien. Back-ups worden off-site opgeslagen."
+            }
+          ]
+        },
+        {
+          "title": "Support & Schaalbaarheid",
+          "items": [
+            {
+              "question": "Welke support bieden jullie na de lancering?",
+              "answer": "Na oplevering bieden we een post-launch periode voor bugfixes en kleine aanpassingen. Klanten met een onderhoudsplan hebben een vast aanspreekpunt. Voor kritieke issues (website onbereikbaar) reageren we binnen 1 uur; overige vragen binnen 24 uur op werkdagen."
+            },
+            {
+              "question": "Kan ik later uitbreiden of nieuwe functies toevoegen?",
+              "answer": "Absoluut. Veel klanten werken na de lancering verder met ons samen voor nieuwe pagina's, functionaliteiten of optimalisaties. We staan klaar om mee te groeien met jouw bedrijf."
+            },
+            {
+              "question": "Kunnen jullie integraties bouwen met andere systemen?",
+              "answer": "Ja. We koppelen regelmatig met CRM-systemen, boekhoudprogramma's, betalingsproviders, marketingtools en custom API's. We bespreken jouw integratie behoeften tijdens de intake."
+            },
+            {
+              "question": "Kunnen jullie een webshop of klantenportaal bouwen?",
+              "answer": "Ja. We bouwen e-commerce oplossingen met productcatalogi, winkelwagen, betaal integraties (IDEAL/Wero, PayPal, creditcard) en voorraadbeheer. Ook beveiligde klantenportalen met login- en persoonlijke dashboards behoren tot de mogelijkheden."
+            }
+          ]
+        }
+      ],
+      "support": {
+        "title": "Geen antwoord gevonden?",
+        "description": "Ons team staat klaar om je te helpen met elke vraag.",
+        "cards": [
+          {
+            "title": "E-mail ons",
+            "description": "Stuur ons een bericht en we reageren binnen 24 uur."
+          },
+          {
+            "title": "Live chat",
+            "description": "Direct contact met ons team tijdens kantooruren."
+          },
+          {
+            "title": "Bel ons",
+            "description": "Praat direct met een specialist."
+          }
+        ]
+      },
+      "cta": {
+        "title": {
+          "beforeHighlight": "Klaar voor je gratis",
+          "highlight": "webdesign?"
+        },
+        "description": "Plan nu je meeting in en ontvang een geheel vrijblijvend webdesign voor jouw bedrijf.",
+        "button": "Plan je call"
+      },
+      "trust": {
+        "items": [
+          "100% vrijblijvend",
+          "20 minuten",
+          "Direct toepasbare inzichten"
+        ]
+      }
+    }
+  },
+  "home": {
+    "brandStatement": {
+      "lines": [
+        [
+          { "text": "Wij" },
+          { "text": "creëren" },
+          { "text": "conversion-first", "isAlt": true },
+          { "text": "oplossingen" }
+        ],
+        [
+          { "text": "die" },
+          { "text": "merken", "isAlt": true },
+          { "text": "helpen" },
+          { "text": "opvallen", "isAlt": true },
+          { "text": "en" }
+        ],
+        [
+          { "text": "groeien", "isAlt": true },
+          { "text": "in" },
+          { "text": "het" },
+          { "text": "digitale", "isAlt": true },
+          { "text": "tijdperk.", "isAlt": true }
+        ]
+      ]
+    },
+    "gallery": {
+      "centerCard": {
+        "title": "Websites in custom code",
+        "cta": "Ontdek onze projecten"
+      }
+    },
+    "process": {
+      "badge": "Ons proces",
+      "heading": {
+        "beforeHighlight": "Zo werkt het",
+        "highlight": "proces",
+        "afterHighlight": ""
+      },
+      "description": "In vijf eenvoudige stappen van een eerste kennismaking naar een moderne, resultaatgerichte website.",
+      "steps": [
+        {
+          "title": "Plan een gratis gesprek",
+          "duration": "20 min",
+          "description": "Kies een moment dat jou uitkomt en vul de korte vragenlijst in. Zo weten we alvast wie je bent en wat je nodig hebt."
+        },
+        {
+          "title": "Gratis webdesign concept",
+          "description": "Op basis van de ingevulde vragenlijst bouwen we alvast een eerste webdesign. Geen verplichtingen: je ziet wat mogelijk is vóórdat je beslist."
+        },
+        {
+          "title": "De meeting",
+          "description": "We komen samen voor een gesprek van 20 minuten. We presenteren het design, bespreken je doelen en bepalen samen de beste aanpak voor jouw website."
+        },
+        {
+          "title": "Website ontwikkeling",
+          "description": "Na jouw akkoord gaan we aan de slag. We bouwen je website en houden je via vaste feedbackrondes op de hoogte. Gemiddeld staat je website binnen 5 werkdagen online."
+        },
+        {
+          "title": "Lancering van je nieuwe website",
+          "description": "Je website gaat live. We lopen samen door het CMS zodat je direct zelfstandig content kunt beheren. Vanaf dat moment ben je online."
+        }
+      ],
+      "ctaSection": {
+        "title": "Klaar om te starten?",
+        "description": "We kijken ernaar uit om samen met jou een krachtige digitale ervaring te bouwen. Plan vandaag nog je gratis kennismakingsgesprek in.",
+        "primaryCta": "Plan een afspraak",
+        "secondaryCta": "Onze projecten"
+      }
+    },
+    "projectHighlight": {
+      "eyebrow": "Geliefde projecten",
+      "heading": {
+        "beforeHighlight": "Project",
+        "highlight": "Highlights"
+      },
+      "testimonials": [
+        {
+          "content": "Samenwerken met WebDirect was een keerpunt. Het design tilde ons merk en de gebruikerservaring naar een hoger niveau. De aandacht voor detail is ongeëvenaard.",
+          "author": "Alex Rivera",
+          "role": "CEO, GrowthLabs",
+          "rating": 5.0
+        },
+        {
+          "content": "De expertise in zowel UX als visueel design maakte het traject super soepel. Deadlines werden gehaald en de verwachtingen werden overtroffen.",
+          "author": "Nina Patel",
+          "role": "Director, PixelCraft",
+          "rating": 5.0
+        },
+        {
+          "content": "Een uitzonderlijke partner met een strategische blik. WebDirect hielp ons om onze volledige productervaring opnieuw te bedenken.",
+          "author": "Marcus Webb",
+          "role": "VP Product, Velocity",
+          "rating": 5.0
+        }
+      ]
+    },
+    "marqueeTestimonials": {
+      "reviews": [
+        {
+          "description": "Professioneel, kundig en prettig in de samenwerking. Maakte complexe zaken eenvoudig en helder."
+        },
+        {
+          "description": "Een game‑changer voor onze startup. Regelde zowel strategie als uitvoering van A tot Z."
+        },
+        {
+          "description": "Regelde alles van UX tot backend zonder problemen."
+        },
+        {
+          "description": "Een game‑changer voor ons bedrijf. Bracht strategie en uitvoering perfect samen."
+        },
+        {
+          "description": "Alles staat nu op één plek en de ervaring is extreem soepel."
+        },
+        {
+          "description": "Als je op zoek bent naar een design dat er geweldig uitziet en nog beter presteert."
+        },
+        {
+          "description": "We voelden ons gehoord bij elke stap en het eindresultaat overtrof de verwachtingen."
+        },
+        {
+          "description": "De website die zij bouwden verhoogde ons conversiepercentage significant in de eerste maand."
+        }
+      ]
+    },
+    "footer": {
+      "brandDescription": "Bij WebDirect ontwerpen we digitale ervaringen die boeien, verbinden en inspireren. Van moderne websites tot innovatieve applicaties.",
+      "navigationTitle": "Navigatie",
+      "nav": {
+        "home": "Home",
+        "about": "Over ons",
+        "process": "Proces",
+        "projects": "Projecten",
+        "faq": "Vragen"
+      },
+      "planTitle": "Plan & contact",
+      "plan": {
+        "book": "Plan een afspraak",
+        "about": "Over ons",
+        "faq": "Veelgestelde vragen",
+        "contact": "Contact"
+      },
+      "socialLabel": "Volg ons",
+      "allRightsReserved": "Alle rechten voorbehouden",
+      "privacy": "Privacy",
+      "terms": "Voorwaarden"
+    },
+    "header": {
+      "nav": {
+        "about": "Over ons",
+        "process": "Proces",
+        "faq": "Vragen"
+      },
+      "cta": {
+        "primary": "Gratis webdesign",
+        "mobileGetStarted": "Get started"
+      }
+    },
+    "whyChoose": {
+      "heading": {
+        "beforeHighlight": "Waarom bedrijven kiezen voor",
+        "highlight": "WebDirect."
+      },
+      "description": "Wij bouwen conversion‑first websites in code. Geen WordPress of Webflow templates. Sneller, krachtiger en schaalbaar zonder beperkingen.",
+      "cards": {
+        "conversion-design": {
+          "title": "Conversion‑first design",
+          "description": "Wij ontwerpen websites die gemaakt zijn om klanten binnen te halen, niet om alleen “mooi” te zijn."
+        },
+        "custom-code": {
+          "title": "100% maatwerk in code",
+          "description": "Alles wordt custom gebouwd in React en Next.js. Geen builders, geen templates, geen beperkingen."
+        },
+        "fast-performance": {
+          "title": "Supersnelle performance",
+          "description": "Snelle laadtijden zorgen voor betere SEO, meer vertrouwen en hogere conversie."
+        },
+        "scalable": {
+          "title": "Gebouwd om te schalen",
+          "description": "Nieuwe pagina’s, campagnes of funnels toevoegen zonder dat je website opnieuw gebouwd moet worden."
+        },
+        "seo-ready": {
+          "title": "SEO‑ready structuur",
+          "description": "Technische SEO zit standaard ingebouwd. Schone code, sterke structuur en goede indexatie in Google."
+        },
+        "premium-quality": {
+          "title": "Premium uitstraling, zonder agency prijzen",
+          "description": "Door onze AI‑gedreven workflow leveren we high‑end kwaliteit sneller en vaak goedkoper dan traditionele bureaus."
+        },
+        "mobile-first": {
+          "title": "Perfect op mobiel",
+          "description": "Mobile‑first design zodat je site op elk scherm strak, snel en professioneel aanvoelt."
+        },
+        "support": {
+          "title": "Support en optimalisatie",
+          "description": "Geen “website opleveren en klaar”. We blijven betrokken en optimaliseren waar nodig."
+        }
+      }
+    }
+  }
+}
+

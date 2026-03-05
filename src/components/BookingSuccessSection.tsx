@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Calendar, Clock, Mail, Phone, Download, Plus, Monitor } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { FluidBackground } from './FluidBackground';
+import { useTranslations } from 'next-intl';
 
 // Timeline Step Component
 const TimelineStep = ({
@@ -28,7 +29,7 @@ const TimelineStep = ({
     delay
   }} className="flex gap-4 group">
       {/* Icon Container */}
-      <div className="relative flex-shrink-0">
+      <div className="relative shrink-0">
         <motion.div initial={{
         scale: 0
       }} animate={{
@@ -37,7 +38,7 @@ const TimelineStep = ({
         duration: 0.5,
         delay: delay + 0.2,
         type: "spring"
-      }} className="w-12 h-12 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center shadow-lg shadow-[#6a49ff]/30">
+      }} className="w-12 h-12 rounded-full bg-linear-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center shadow-lg shadow-[#6a49ff]/30">
           <Icon className="w-6 h-6 text-white" />
         </motion.div>
         
@@ -49,7 +50,7 @@ const TimelineStep = ({
       }} transition={{
         duration: 0.5,
         delay: delay + 0.4
-      }} className="absolute left-1/2 top-12 w-[2px] h-full -translate-x-1/2 bg-gradient-to-b from-[#6a49ff] to-transparent" />
+      }} className="absolute left-1/2 top-12 w-[2px] h-full -translate-x-1/2 bg-linear-to-b from-[#6a49ff] to-transparent" />
       </div>
 
       {/* Content */}
@@ -233,10 +234,12 @@ export interface BookingSuccessSectionProps {
   email?: string;
   name?: string;
   selectedDateTime?: string | null;
+  mode?: 'full' | 'intake';
 }
 
 // @component: BookingSuccessSection
-export const BookingSuccessSection = ({ email, name, selectedDateTime }: BookingSuccessSectionProps) => {
+export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'full' }: BookingSuccessSectionProps) => {
+  const t = useTranslations('booking.success');
   const { dateLabel, timeLabel, duration } = formatBookingDateTime(selectedDateTime ?? undefined);
   
   // Derive start and end dates from selectedDateTime
@@ -254,39 +257,54 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime }: Booking
   };
   
   const hasDate = !!selectedDateTime;
+  const isIntakeOnly = mode === 'intake';
   
-  const timelineSteps = [{
-    icon: Mail,
-    title: 'Bevestigingsmail',
-    description: 'Je ontvangt direct een e-mail met alle details van je afspraak en een link naar de videoconferentie.'
-  }, {
-    icon: Calendar,
-    title: 'Webdesign concept',
-    description: 'Op basis van jouw ingevulde vragenlijst maken we alvast een eerste webdesign dat we tijdens de call presenteren.'
-  }, {
-    icon: Monitor,
-    title: 'De meeting',
-    description: 'Op het afgesproken tijdstip komen we samen voor een gesprek van 20 minuten. We lopen door het design, bespreken je wensen en bepalen de volgende stappen.'
-  }] as any[];
+  const timelineSteps = isIntakeOnly
+    ? [{
+        icon: Mail,
+        title: t('intake.timeline.confirmation.title'),
+        description: t('intake.timeline.confirmation.description')
+      }, {
+        icon: Calendar,
+        title: t('intake.timeline.concept.title'),
+        description: t('intake.timeline.concept.description')
+      }, {
+        icon: Monitor,
+        title: t('intake.timeline.contact.title'),
+        description: t('intake.timeline.contact.description')
+      }]
+    : [{
+        icon: Mail,
+        title: t('full.timeline.confirmation.title'),
+        description: t('full.timeline.confirmation.description')
+      }, {
+        icon: Calendar,
+        title: t('full.timeline.concept.title'),
+        description: t('full.timeline.concept.description')
+      }, {
+        icon: Monitor,
+        title: t('full.timeline.meeting.title'),
+        description: t('full.timeline.meeting.description')
+      }];
   
   const calendarOptions = [{
     icon: Calendar,
-    name: 'Google Calendar',
+    name: t('calendar.google'),
     href: googleCalendarUrl,
     disabled: !hasDate,
   }, {
     icon: Calendar,
-    name: 'Apple Calendar',
+    name: t('calendar.apple'),
     onClick: handleIcsDownload,
     disabled: !hasDate,
   }, {
     icon: Calendar,
-    name: 'Outlook',
+    name: t('calendar.outlook'),
     href: outlookCalendarUrl,
     disabled: !hasDate,
   }, {
     icon: Download,
-    name: 'iCal File',
+    name: t('calendar.ical'),
     onClick: handleIcsDownload,
     disabled: !hasDate,
   }] as any[];
@@ -294,7 +312,7 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime }: Booking
       {/* Dynamic Glow Background - matching the booking section */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {/* Main Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
+        <div className="absolute inset-0 bg-linear-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
         
         {/* Fluid Background with primary color */}
         <FluidBackground colorHex="#6a49ff" glowSize={0.15} />
@@ -336,7 +354,7 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime }: Booking
           damping: 15
         }} className="inline-block">
             <div className="relative">
-              <motion.div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#41AE96] to-[#2d8a75] flex items-center justify-center shadow-2xl shadow-[#41AE96]/40" animate={{
+              <motion.div className="w-24 h-24 rounded-full bg-linear-to-br from-[#41AE96] to-[#2d8a75] flex items-center justify-center shadow-2xl shadow-[#41AE96]/40" animate={{
               boxShadow: ["0 20px 60px rgba(65, 174, 150, 0.4)", "0 20px 80px rgba(65, 174, 150, 0.6)", "0 20px 60px rgba(65, 174, 150, 0.4)"]
             }} transition={{
               duration: 2,
@@ -369,15 +387,31 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime }: Booking
           duration: 0.6,
           delay: 0.3
         }} className="space-y-3">
-            <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
-              Je afspraak is{' '}
-              <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#41AE96] to-[#6dd5c0] font-serif">
-                bevestigd!
-              </span>
-            </h1>
-            <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
-              We kijken ernaar uit om met je te praten over je digitale strategie.
-            </p>
+            {mode === 'intake' ? (
+              <>
+                <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+                  {t('intake.heading.beforeHighlight')}{' '}
+                  <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#41AE96] to-[#6dd5c0] font-serif">
+                    {t('intake.heading.highlight')}
+                  </span>
+                </h1>
+                <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                  {t('intake.subheading')}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+                  {t('full.heading.beforeHighlight')}{' '}
+                  <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#41AE96] to-[#6dd5c0] font-serif">
+                    {t('full.heading.highlight')}
+                  </span>
+                </h1>
+                <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                  {t('full.subheading')}
+                </p>
+              </>
+            )}
           </motion.div>
         </div>
 
@@ -394,98 +428,126 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime }: Booking
           duration: 0.6,
           delay: 0.4
         }}>
-            {/* Booking Details Card */}
-            <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 shadow-2xl mb-8">
-              {/* Decorative gradient border effect */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#41AE96]/20 to-[#6a49ff]/20 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              
-              <div className="relative z-10 space-y-6">
-                {/* Header */}
-                <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
+            {isIntakeOnly ? (
+              /* Intake-only confirmation card */
+              <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 shadow-2xl mb-8">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#41AE96]/20 to-[#6a49ff]/20 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="relative z-10 space-y-6">
+                  <div className="flex items-center gap-3 pb-4 border-b border-white/10">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold text-lg">{t('intake.card.title')}</h3>
+                      <p className="text-gray-400 text-xs">{t('intake.card.subtitle')}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-white font-semibold text-lg">Je Afspraak</h3>
-                    <p className="text-gray-400 text-xs">Gratis webdesign</p>
+                  <div className="pt-4 border-t border-white/10">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail className="w-4 h-4 text-[#41AE96]" />
+                      <span className="text-gray-400">
+                        {t('confirmation.sentTo', { email: email || t('confirmation.emailPlaceholder') })}
+                      </span>
+                    </div>
+                    {name && (
+                      <p className="text-gray-400 text-sm mt-1">
+                        {t('confirmation.thanks', { name })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* Booking Details Card */}
+                <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 shadow-2xl mb-8">
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#41AE96]/20 to-[#6a49ff]/20 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center gap-3 pb-4 border-b border-white/10">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
+                        <Calendar className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-white font-semibold text-lg">{t('full.card.title')}</h3>
+                        <p className="text-gray-400 text-xs">{t('full.card.subtitle')}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#41AE96]/10 flex items-center justify-center flex-shrink-0">
+                          <Clock className="w-5 h-5 text-[#41AE96]" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white font-semibold">
+                            {t('full.card.dateLabel', { date: dateLabel, time: timeLabel })}
+                          </p>
+                          <p className="text-gray-400 text-sm">{t('full.card.duration', { duration })}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-[#6a49ff]/10 flex items-center justify-center flex-shrink-0">
+                          <Phone className="w-5 h-5 text-[#6a49ff]" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white font-semibold">{t('full.card.meetingTitle')}</p>
+                          <p className="text-gray-400 text-sm">{t('full.card.meetingDescription')}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/10">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Mail className="w-4 h-4 text-[#41AE96]" />
+                        <span className="text-gray-400">
+                          {t('confirmation.sentTo', { email: email || t('confirmation.emailPlaceholder') })}
+                        </span>
+                      </div>
+                      {name && (
+                        <p className="text-gray-400 text-sm mt-1">
+                          {t('confirmation.thanks', { name })}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Details */}
-                <div className="space-y-4">
-                  {/* Date & Time */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#41AE96]/10 flex items-center justify-center flex-shrink-0">
-                      <Clock className="w-5 h-5 text-[#41AE96]" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-white font-semibold">{dateLabel} om {timeLabel}</p>
-                      <p className="text-gray-400 text-sm">{duration}</p>
-                    </div>
-                  </div>
-
-                  {/* Meeting Link */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#6a49ff]/10 flex items-center justify-center flex-shrink-0">
-                      <Phone className="w-5 h-5 text-[#6a49ff]" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-white font-semibold">Online video meeting</p>
-                      <p className="text-gray-400 text-sm">Link wordt per e-mail verstuurd</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Confirmation Note */}
-                <div className="pt-4 border-t border-white/10">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="w-4 h-4 text-[#41AE96]" />
-                    <span className="text-gray-400">
-                      Bevestiging verstuurd naar{' '}
-                      <span className="text-white font-medium">{email || 'jouw e-mailadres'}</span>
-                    </span>
-                  </div>
-                  {name && (
-                    <p className="text-gray-400 text-sm mt-1">
-                      Bedankt, {name}!
-                    </p>
+                {/* Add to Calendar Section */}
+                <motion.div initial={{
+                opacity: 0,
+                y: 20
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} transition={{
+                duration: 0.6,
+                delay: 0.6
+              }} className="space-y-4">
+                  <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-[#41AE96]" />
+                    {t('calendar.heading')}
+                  </h3>
+                  {!hasDate && (
+                    <p className="text-gray-400 text-sm">{t('calendar.noDate')}</p>
                   )}
-                </div>
-              </div>
-            </div>
-
-            {/* Add to Calendar Section */}
-            <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} transition={{
-            duration: 0.6,
-            delay: 0.6
-          }} className="space-y-4">
-              <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-[#41AE96]" />
-                Voeg toe aan je agenda
-              </h3>
-              {!hasDate && (
-                <p className="text-gray-400 text-sm">Geen afspraakdatum beschikbaar</p>
-              )}
-              <div className="grid grid-cols-2 gap-3">
-                {calendarOptions.map((option, index) => (
-                  <CalendarButton
-                    key={index}
-                    icon={option.icon}
-                    name={option.name}
-                    delay={0.7 + index * 0.1}
-                    href={option.href}
-                    onClick={option.onClick}
-                    disabled={option.disabled}
-                  />
-                ))}
-              </div>
-            </motion.div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {calendarOptions.map((option, index) => (
+                      <CalendarButton
+                        key={index}
+                        icon={option.icon}
+                        name={option.name}
+                        delay={0.7 + index * 0.1}
+                        href={option.href}
+                        onClick={option.onClick}
+                        disabled={option.disabled}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              </>
+            )}
           </motion.div>
         </div>
 

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Twitter, Dribbble, Check, Send, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useTranslations } from 'next-intl';
 
 const SocialLink = ({
   href,
@@ -94,7 +95,7 @@ interface FooterProps {
 
 export const Footer = ({
   brandName = "WebDirect",
-  brandDescription = "Bij WebDirect ontwerpen we digitale ervaringen die boeien, verbinden en inspireren. Van moderne websites tot innovatieve applicaties.",
+  brandDescription,
   location = "Amsterdam, Nederland",
   phone = "+31 20 123 4567",
   email = "info@webdirect.nl",
@@ -102,7 +103,9 @@ export const Footer = ({
   newsletterButtonText = "Inschrijven",
   successMessage = "Bedankt voor het inschrijven op onze nieuwsbrief!"
 }: FooterProps) => {
-  
+  const t = useTranslations('home.footer');
+  const resolvedBrandDescription = brandDescription ?? t('brandDescription');
+
   const [emailInput, setEmailInput] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const handleSubmit = (e: React.FormEvent) => {
@@ -186,7 +189,7 @@ export const Footer = ({
                   </div>
                 </div>
                 <p className="text-base leading-relaxed text-white/70 max-w-md text-center lg:text-left px-2 sm:px-0">
-                  {brandDescription}
+                  {resolvedBrandDescription}
                 </p>
               </motion.div>
 
@@ -245,23 +248,23 @@ export const Footer = ({
               {/* Column 1: Main navigation (matches header) */}
               <div className="flex flex-col gap-3 sm:gap-5 items-center sm:items-start">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
-                  Navigatie
+                  {t('navigationTitle')}
                 </h4>
-                <FooterLink href="/" label="Home" />
-                <FooterLink href="#about" label="Over ons" />
-                <FooterLink href="#process" label="Process" />
-                <FooterLink href="#projects" label="Projecten" />
-                <FooterLink href="#faq" label="Vragen" />
+                <FooterLink href="/" label={t('nav.home')} />
+                <FooterLink href="#about" label={t('nav.about')} />
+                <FooterLink href="#process" label={t('nav.process')} />
+                <FooterLink href="#projects" label={t('nav.projects')} />
+                <FooterLink href="#faq" label={t('nav.faq')} />
               </div>
 
               {/* Column 2: Booking & contact */}
               <div className="flex flex-col gap-3 sm:gap-5 items-center sm:items-start">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
-                  Plan & contact
+                  {t('planTitle')}
                 </h4>
-                <FooterLink href="/booking" label="Plan een afspraak" />
-                <FooterLink href="#about" label="Over ons" />
-                <FooterLink href="#faq" label="Veelgestelde vragen" />
+                <FooterLink href="/booking" label={t('plan.book')} />
+                <FooterLink href="#about" label={t('plan.about')} />
+                <FooterLink href="#faq" label={t('plan.faq')} />
                 <a
                   href={`mailto:${email}`}
                   className={cn(
@@ -286,24 +289,26 @@ export const Footer = ({
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8">
             {/* Copyright */}
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-              <span className="text-xs uppercase tracking-wider text-white/60 mr-2">Volg ons</span>
+              <span className="text-xs uppercase tracking-wider text-white/60 mr-2">
+                {t('socialLabel')}
+              </span>
               <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
               <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
               <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
               <SocialLink href="https://dribbble.com" icon={Dribbble} label="Dribbble" />
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-white/60 text-sm text-center sm:text-left">
-              <span>© 2026 WebDirect</span>
+              <span>© 2026 {brandName}</span>
               <span className="hidden sm:inline">•</span>
-              <span>Alle rechten voorbehouden</span>
+              <span>{t('allRightsReserved')}</span>
               <span className="hidden sm:inline">•</span>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4">
                 <Link href="/privacy" className="hover:text-white transition-colors">
-                  Privacy
+                  {t('privacy')}
                 </Link>
                 <span>•</span>
                 <Link href="/voorwaarden" className="hover:text-white transition-colors">
-                  Voorwaarden
+                  {t('terms')}
                 </Link>
               </div>
             </div>

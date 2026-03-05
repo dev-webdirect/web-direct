@@ -5,13 +5,14 @@ import type { BookingFormData } from '@/src/components/BookingFormStep';
 const CALENDLY_API_BASE = 'https://api.calendly.com';
 
 interface SubmitRequestBody {
-  selectedDateTime: string;
+  mode: 'full' | 'intake';
+  selectedDateTime?: string | null;
   intakeData: BookingIntakeData | null;
   formData: BookingFormData;
 }
 
 async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
-  const { selectedDateTime, intakeData, formData } = payload;
+  const { mode, selectedDateTime, intakeData, formData } = payload;
   const { name, email } = formData;
 
   // 1. Generate Magic Path prompt via OpenRouter
@@ -69,26 +70,29 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
     }
   }
 
-  // Structured Website Generation Prompt is always built from intake in buildSubtaskDescription (no fallback needed here).
+  // 2. Build full task description
+  const taskDescription = buildSubtaskDescription(intakeData, formData, selectedDateTime || null, generatedPrompt);
 
-  // 2. Build full task description (all user info + structured prompt + optional AI prompt)
-  const taskDescription = buildSubtaskDescription(intakeData, formData, selectedDateTime, generatedPrompt);
-
-  // 3. Create ClickUp task with all information in the task body
+  // 3. Create ClickUp task
   const clickupToken = process.env.CLICKUP_API_TOKEN?.trim();
   const clickupListId = process.env.CLICKUP_LIST_ID?.trim();
 
   if (!clickupToken || !clickupListId) {
     console.log('[booking/submit] ClickUp: skipped (missing CLICKUP_API_TOKEN or CLICKUP_LIST_ID)');
-  } else if (!selectedDateTime) {
-    console.log('[booking/submit] ClickUp: skipped (no selectedDateTime)');
   } else {
     try {
-      const meetingDate = new Date(selectedDateTime);
-      const deadlineDate = new Date(meetingDate);
-      deadlineDate.setDate(deadlineDate.getDate() - 1);
-      deadlineDate.setHours(23, 59, 59, 999);
-      const dueDateMs = deadlineDate.getTime();
+      const taskPayload: Record<string, unknown> = {
+        name: `${name} - ${email}`,
+        description: taskDescription,
+      };
+
+      if (selectedDateTime) {
+        const meetingDate = new Date(selectedDateTime);
+        const deadlineDate = new Date(meetingDate);
+        deadlineDate.setDate(deadlineDate.getDate() - 1);
+        deadlineDate.setHours(23, 59, 59, 999);
+        taskPayload.due_date = deadlineDate.getTime();
+      }
 
       console.log('[booking/submit] ClickUp task: creating with description length:', taskDescription.length);
 
@@ -98,11 +102,7 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
           Authorization: clickupToken,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: `${name} - ${email}`,
-          due_date: dueDateMs,
-          description: taskDescription,
-        }),
+        body: JSON.stringify(taskPayload),
       });
 
       const taskResponseText = await clickupRes.text();
@@ -121,46 +121,44 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
     }
   }
 
-  // 4. Create Calendly invitee
-  // Temporarily commented out
+  // 4. Create Calendly invitee (only for full mode with a selectedDateTime)
+  if (mode === 'full' && selectedDateTime) {
+    const calendlyToken = process.env.CALENDLY_API_TOKEN?.trim();
+    const eventTypeUuid = process.env.CALENDLY_EVENT_TYPE_UUID?.trim();
+    const locationKind = process.env.CALENDLY_LOCATION_KIND?.trim();
 
-  const calendlyToken = process.env.CALENDLY_API_TOKEN?.trim();
-  const eventTypeUuid = process.env.CALENDLY_EVENT_TYPE_UUID?.trim();
-  const locationKind = process.env.CALENDLY_LOCATION_KIND?.trim();
+    if (calendlyToken && eventTypeUuid) {
+      try {
+        const eventTypeUri = `${CALENDLY_API_BASE}/event_types/${eventTypeUuid}`;
+        const requestBody: Record<string, unknown> = {
+          event_type: eventTypeUri,
+          start_time: selectedDateTime,
+          invitee: {
+            email,
+            name,
+            timezone: 'Europe/Amsterdam',
+          },
+        };
 
-  if (calendlyToken && eventTypeUuid && selectedDateTime) {
-    try {
-      const eventTypeUri = `${CALENDLY_API_BASE}/event_types/${eventTypeUuid}`;
-      const requestBody: Record<string, unknown> = {
-        event_type: eventTypeUri,
-        start_time: selectedDateTime,
-        invitee: {
-          email,
-          name,
-          timezone: 'Europe/Amsterdam',
-        },
-      };
+        if (locationKind) {
+          requestBody.location = { kind: locationKind };
+        }
 
-      if (locationKind) {
-        requestBody.location = { kind: locationKind };
+        await fetch(`${CALENDLY_API_BASE}/invitees`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${calendlyToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+      } catch (error) {
+        console.error('Calendly booking error:', error);
       }
-
-      await fetch(`${CALENDLY_API_BASE}/invitees`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${calendlyToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-    } catch (error) {
-      console.error('Calendly booking error:', error);
     }
   }
-
 }
 
-/** Build the structured Website Generation Prompt JSON from intake data (always adapted from actual form data). */
 function buildWebsiteGenerationPromptJson(intake: BookingIntakeData): string {
   const prompt = {
     company: intake.companyName,
@@ -178,25 +176,28 @@ function buildWebsiteGenerationPromptJson(intake: BookingIntakeData): string {
 function buildSubtaskDescription(
   intake: BookingIntakeData | null,
   form: BookingFormData,
-  selectedDateTime: string,
+  selectedDateTime: string | null,
   generatedPrompt: string
 ): string {
   let description = '';
 
-  // Format meeting date/time
-  try {
-    const meetingDate = new Date(selectedDateTime);
-    const formattedDate = meetingDate.toLocaleDateString('nl-NL', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    description += `📅 **Afspraak:** ${formattedDate}\n\n`;
-  } catch {
-    description += `📅 **Afspraak:** ${selectedDateTime}\n\n`;
+  if (selectedDateTime) {
+    try {
+      const meetingDate = new Date(selectedDateTime);
+      const formattedDate = meetingDate.toLocaleDateString('nl-NL', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      description += `📅 **Afspraak:** ${formattedDate}\n\n`;
+    } catch {
+      description += `📅 **Afspraak:** ${selectedDateTime}\n\n`;
+    }
+  } else {
+    description += '📋 **Type:** Intake-only (geen afspraak via website)\n\n';
   }
 
   // Personal Information Section
@@ -274,7 +275,7 @@ function buildSubtaskDescription(
     }
   }
 
-  // Website Generation Prompt – always adapted from intake data (structured JSON)
+  // Website Generation Prompt
   description += '---\n';
   description += '## ✨ Website Generation Prompt\n\n';
   description += 'Deze prompt is gegenereerd op basis van alle ingevulde informatie en kan gebruikt worden voor het genereren van de website:\n\n';
@@ -351,11 +352,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Default mode to 'full' for backwards compatibility
+  if (!body.mode) {
+    body.mode = 'full';
+  }
+
   // Validate required fields
   const missing: string[] = [];
-  if (!body.selectedDateTime || typeof body.selectedDateTime !== 'string') {
-    missing.push('selectedDateTime');
+
+  if (body.mode === 'full') {
+    if (!body.selectedDateTime || typeof body.selectedDateTime !== 'string') {
+      missing.push('selectedDateTime');
+    }
   }
+
   if (!body.formData || typeof body.formData !== 'object') {
     missing.push('formData');
   } else {
@@ -376,9 +386,7 @@ export async function POST(request: NextRequest) {
 
   const origin = request.nextUrl?.origin || request.headers.get('origin') || '';
 
-  // Fire-and-forget: start background tasks without awaiting
   void runBackgroundTasks(body, origin);
 
-  // Return immediately
   return NextResponse.json({ ok: true });
 }

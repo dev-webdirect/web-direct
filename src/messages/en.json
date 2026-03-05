@@ -1,0 +1,634 @@
+{
+  "common": {
+    "language": "English"
+  },
+  "hero": {
+    "badge": "100% Custom Websites",
+    "heading": "Websites built to",
+    "rotatingWords": ["Convert.", "Persuade.", "Sell.", "Grow.", "Scale.", "Perform.", "Dominate."],
+    "subtitle": "We combine strategy, design and technology to help ambitious brands grow with powerful digital experiences that truly make an impact.",
+    "cta": {
+      "primary": "Request FREE web design.",
+      "secondary": "View websites."
+    },
+    "socialProof": "TRUSTED BY 100+ BRANDS",
+    "scrollIndicator": "SCROLL TO DISCOVER"
+  },
+  "booking": {
+    "layout": {
+      "badge": {
+        "intake": "Pre-website intake",
+        "full": "Free strategy session"
+      },
+      "title": {
+        "intake": {
+          "beforeHighlight": "Tell us about your",
+          "highlight": "project"
+        },
+        "full": {
+          "beforeHighlight": "Ready to transform your",
+          "highlight": "online presence",
+          "afterHighlight": "?"
+        }
+      },
+      "description": {
+        "intake": "Fill in the intake so we can prepare your project properly. The more we know, the better we can help.",
+        "full": "Easily book your 20-minute meeting to receive your free web design. During the call we’ll show you how we can help your brand grow with a website that truly converts."
+      },
+      "benefits": {
+        "freeDesign": "Free web design",
+        "noObligation": "No strings attached",
+        "successStories": "100+ success stories"
+      }
+    },
+    "date": {
+      "stepLabel": "Step 1 of 3",
+      "subtitle": "20-minute session • Up to {days} days ahead",
+      "heading": "Select date & time",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "chooseDate": "Choose a date",
+      "availableTimes": "Available times",
+      "noSlots": "No available times for this date",
+      "next": "Next",
+      "errorLoadingSlots": "Couldn't load available times.",
+      "genericError": "Something went wrong. Please try again."
+    },
+    "intake": {
+      "title": "Pre‑website intake",
+      "sections": {
+        "companyProject": "Company & project",
+        "goalsOffer": "Goals & offer",
+        "styleDesign": "Style & design",
+        "budgetOther": "Budget & other"
+      },
+      "back": "Back",
+      "previous": "Previous",
+      "fields": {
+        "companyName": {
+          "label": "Company name",
+          "placeholder": "Your company name"
+        },
+        "logo": {
+          "label": "Logo (optional)",
+          "helper": "Preferably without background (PNG or SVG). Max 10 files, 100 MB per file.",
+          "cta": "Click to upload or drag files here",
+          "formats": "PNG, JPG, SVG, PDF (max 100 MB per file)"
+        },
+        "projectType": {
+          "label": "Is this a new website or an update/replacement?",
+          "new": "New website",
+          "existing": "Update/replace existing website"
+        },
+        "currentWebsiteUrl": {
+          "label": "Current website URL",
+          "placeholder": "https://..."
+        },
+        "mainGoal": {
+          "label": "What is the main goal of the website?"
+        },
+        "primaryAction": {
+          "label": "Primary action you want visitors to take"
+        },
+        "servicesDescription": {
+          "label": "What services or products do you offer?",
+          "placeholder": "Briefly what you offer, for whom, main benefit"
+        },
+        "focusCentral": {
+          "label": "What should be most central on the website?"
+        },
+        "offerExplanation": {
+          "label": "Explain your offer (optional)",
+          "placeholder": "Which services/products, for whom, main benefit"
+        },
+        "primaryAudience": {
+          "label": "Who is your primary audience?"
+        },
+        "colorHex": {
+          "label": "Which colors? (Hex codes, optional)",
+          "placeholder": "#081534"
+        },
+        "style": {
+          "label": "Which style fits your brand best?"
+        },
+        "favoriteWebsites": {
+          "label": "Which websites do you like? (optional)",
+          "placeholder": "Links + why you like them"
+        },
+        "competitors": {
+          "label": "Main competitors (optional)",
+          "placeholder": "Name + website URL"
+        },
+        "doNotMention": {
+          "label": "Things that should (not) be mentioned (optional)",
+          "placeholder": "..."
+        },
+        "budget": {
+          "label": "What is your budget?"
+        }
+      },
+      "errors": {
+        "companyNameRequired": "Company name is required",
+        "currentWebsiteUrlRequired": "Current website URL is required for existing websites",
+        "mainGoalRequired": "Main goal is required",
+        "primaryActionRequired": "Primary action is required",
+        "servicesDescriptionRequired": "Services/products description is required",
+        "focusCentralRequired": "What should be central is required",
+        "primaryAudienceRequired": "Audience is required",
+        "styleRequired": "Style is required",
+        "budgetRequired": "Budget is required",
+        "logo": {
+          "tooManyFiles": "Maximum of 10 files allowed",
+          "tooLarge": "{name} is too large (max {maxMb} MB)",
+          "invalidType": "{name} has an invalid file type. Allowed: PNG, JPG, SVG, PDF"
+        }
+      },
+      "cta": {
+        "next": "Next",
+        "nextToDetails": "Next — to details"
+      }
+    },
+    "form": {
+      "back": "Back",
+      "stepLabel": {
+        "full": "Step 6 of 6",
+        "intake": "Step 5 of 5"
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Your full name"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "you@email.com"
+        },
+        "phone": {
+          "label": "Phone",
+          "placeholder": "+31 6 12345678"
+        }
+      },
+      "errors": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address"
+      },
+      "cta": {
+        "submitting": "Sending...",
+        "submit": "Send and go to confirmation"
+      },
+      "footnote": "Your details are only used to confirm your appointment."
+    },
+    "success": {
+      "intake": {
+        "heading": {
+          "beforeHighlight": "Your intake has been",
+          "highlight": "received!"
+        },
+        "subheading": "Thanks for filling everything in. We'll immediately start preparing your project.",
+        "card": {
+          "title": "Intake received",
+          "subtitle": "We’re on it"
+        },
+        "timeline": {
+          "confirmation": {
+            "title": "Confirmation email",
+            "description": "You’ll immediately receive an email confirming we’ve received your intake."
+          },
+          "concept": {
+            "title": "Web design concept",
+            "description": "Based on your answers, we’ll prepare an initial web design concept."
+          },
+          "contact": {
+            "title": "Personal follow‑up",
+            "description": "We’ll get in touch to review the design, discuss your wishes and define the next steps."
+          }
+        }
+      },
+      "full": {
+        "heading": {
+          "beforeHighlight": "Your meeting is",
+          "highlight": "confirmed!"
+        },
+        "subheading": "We’re looking forward to talking with you about your digital strategy.",
+        "card": {
+          "title": "Your meeting",
+          "subtitle": "Free web design",
+          "dateLabel": "{date} at {time}",
+          "duration": "{duration}",
+          "meetingTitle": "Online video meeting",
+          "meetingDescription": "The link will be sent to you by email."
+        },
+        "timeline": {
+          "confirmation": {
+            "title": "Confirmation email",
+            "description": "You’ll immediately receive an email with all meeting details and the video link."
+          },
+          "concept": {
+            "title": "Web design concept",
+            "description": "Based on your intake, we’ll prepare a first design that we’ll present during the call."
+          },
+          "meeting": {
+            "title": "The meeting",
+            "description": "At the scheduled time, we’ll walk through the design, discuss your goals and define the next steps."
+          }
+        }
+      },
+      "confirmation": {
+        "sentTo": "Confirmation sent to {email}",
+        "emailPlaceholder": "your email address",
+        "thanks": "Thank you, {name}!"
+      },
+      "calendar": {
+        "heading": "Add to your calendar",
+        "noDate": "No meeting date available",
+        "google": "Google Calendar",
+        "apple": "Apple Calendar",
+        "outlook": "Outlook",
+        "ical": "iCal file"
+      },
+      "timelineSection": {
+        "heading": "What to expect",
+        "subheading": "The next steps in your journey to a stronger online presence"
+      },
+      "footer": {
+        "contact": "Questions? Send us a message at",
+        "email": "projects@webdirect.nl"
+      }
+    },
+    "faq": {
+      "badgeLabel": "Frequently asked questions",
+      "heading": {
+        "beforeHighlight": "Everything you need to",
+        "highlight": "know."
+      },
+      "description": "Still have questions about the strategy call? We’ve collected the most common ones for you.",
+      "categories": [
+        {
+          "title": "General",
+          "items": [
+            {
+              "question": "How much does a website cost at WebDirect?",
+              "answer": "Our websites start from €695 for a one‑pager. Most clients end up between €1,000 and €2,000, depending on the number of pages and required features. During a no‑obligation call we look together at what fits your situation and budget."
+            },
+            {
+              "question": "How quickly will my website be ready?",
+              "answer": "We deliver a standard business website within 5 working days, provided content and assets are delivered on time. For webshops or more complex projects we’ll define a separate timeline together."
+            },
+            {
+              "question": "Can I update my website myself after delivery?",
+              "answer": "Yes. We set up an easy‑to‑use CMS so you can add content such as blog posts and images yourself. For larger changes to the design or structure you can always submit a request to our team."
+            },
+            {
+              "question": "What if I don’t have content yet – texts or photos?",
+              "answer": "No problem. Based on a short questionnaire or your current website we write the texts for you. We use stock or AI‑generated images if you don’t have your own visuals. This can be added as an optional extra."
+            },
+            {
+              "question": "Am I tied to a contract or subscription?",
+              "answer": "No. You pay once for the development of your website. We strongly recommend our own hosting — it’s optimised for speed, security and uptime. If you prefer to host elsewhere, we provide a full handover of your website."
+            }
+          ]
+        },
+        {
+          "title": "Approach & process",
+          "items": [
+            {
+              "question": "What does the process look like?",
+              "answer": "We start with a short introduction call (online, 20 minutes) to understand your goals and wishes. Then we work in five phases: intake & analysis, design, development, testing and launch. You’re involved in every phase and can give feedback at any time."
+            },
+            {
+              "question": "Do you work with fixed packages or custom solutions?",
+              "answer": "Both. We first look at what you really need and what fits your budget. Some clients start with a clean one‑pager, others want a fully developed website with multiple pages and functionalities. We think along with you and give honest advice."
+            },
+            {
+              "question": "Can I request changes during the process?",
+              "answer": "Yes. We work with fixed feedback rounds during the project, so you always know where things stand. Feedback within the agreed scope is processed without extra costs. Larger changes are discussed first in terms of time and budget."
+            },
+            {
+              "question": "Do you offer a free preview?",
+              "answer": "Yes. Before you commit, we show you a design concept based on your brand and goals. That way you know exactly what you’ll get before the project starts."
+            }
+          ]
+        },
+        {
+          "title": "Design & technology",
+          "items": [
+            {
+              "question": "Do I get a unique design or a template?",
+              "answer": "Every design is custom made. We don’t use off‑the‑shelf templates, but create a look & feel that fits your brand, audience and goals."
+            },
+            {
+              "question": "Is my website optimised for mobile?",
+              "answer": "Always. We build mobile‑first: your website works perfectly on smartphone, tablet and desktop. Before launch we test on multiple screen sizes and browsers."
+            },
+            {
+              "question": "Will my website be fast and SEO‑friendly?",
+              "answer": "Yes. Technical SEO is included by default: fast loading times, clean code, correct meta tags, structured data and mobile‑friendly design. On average our websites score 90+ on Google PageSpeed Insights."
+            },
+            {
+              "question": "Which technology do you use?",
+              "answer": "We work with modern technologies like React, Next.js and TypeScript, combined with reliable cloud hosting. We always choose the stack that best fits your project and needs."
+            },
+            {
+              "question": "Is my website GDPR compliant?",
+              "answer": "We build in line with GDPR requirements: cookie consent, privacy policy, secure data storage and opt‑in mechanisms. We advise you on what’s legally required, but final responsibility lies with you as the business owner."
+            }
+          ]
+        },
+        {
+          "title": "Price & payment",
+          "items": [
+            {
+              "question": "How much does a website cost at WebDirect?",
+              "answer": "Websites start from €695 for a one‑pager. Most projects fall between €1,000 and €2,000. For larger websites or web applications we use higher rates depending on complexity. You’ll always receive a tailored quote."
+            },
+            {
+              "question": "Are there any hidden costs?",
+              "answer": "No. We’re transparent about all costs from day one. You pay once for the development. Any hosting or maintenance fees are discussed and agreed upfront."
+            },
+            {
+              "question": "Can I pay in instalments?",
+              "answer": "Yes. For larger projects we work with a phased payment schedule: a part at the start, a part after design approval and the remaining amount upon delivery. We align this in the intake call."
+            },
+            {
+              "question": "What are the costs for hosting and maintenance?",
+              "answer": "Hosting and maintenance are optional and quoted separately. They typically include: SSL certificate, daily backups, security monitoring, software updates and small content changes. For larger changes we create a separate quote."
+            }
+          ]
+        },
+        {
+          "title": "Ownership & management",
+          "items": [
+            {
+              "question": "Do I own my website?",
+              "answer": "Yes. All content, designs and assets belong to you. The source code is clean and documented. You can always decide to host elsewhere – we’ll then provide all files, database and documentation."
+            },
+            {
+              "question": "What if I want to switch to another provider later?",
+              "answer": "No problem. We deliver a complete export of the website including all files and credentials."
+            },
+            {
+              "question": "Do you make backups?",
+              "answer": "Yes. Automatic daily backups are standard. We keep multiple restore points so we can roll back quickly in case of issues. Backups are stored off‑site."
+            }
+          ]
+        },
+        {
+          "title": "Support & scalability",
+          "items": [
+            {
+              "question": "What support do you offer after launch?",
+              "answer": "After launch we offer a post‑launch period for bug fixes and small adjustments. Clients with a maintenance plan have a dedicated point of contact. For critical issues (site down) we respond within 1 hour; other questions within 24 hours on working days."
+            },
+            {
+              "question": "Can I expand or add new features later?",
+              "answer": "Absolutely. Many clients continue working with us after launch for new pages, features or optimisations. We’re ready to grow with your business."
+            },
+            {
+              "question": "Can you build integrations with other systems?",
+              "answer": "Yes. We regularly integrate with CRM systems, accounting tools, payment providers, marketing tools and custom APIs. We discuss your integration needs during the intake."
+            },
+            {
+              "question": "Can you build a webshop or client portal?",
+              "answer": "Yes. We build e‑commerce solutions with product catalogues, cart, payment integrations (iDEAL/Wero, PayPal, credit card) and stock management. Secure client portals with login and personal dashboards are also possible."
+            }
+          ]
+        }
+      ],
+      "support": {
+        "title": "Didn’t find your answer?",
+        "description": "Our team is ready to help you with any question.",
+        "cards": [
+          {
+            "title": "Email us",
+            "description": "Send us a message and we’ll respond within 24 hours."
+          },
+          {
+            "title": "Live chat",
+            "description": "Talk directly with our team during business hours."
+          },
+          {
+            "title": "Call us",
+            "description": "Speak directly with a specialist."
+          }
+        ]
+      },
+      "cta": {
+        "title": {
+          "beforeHighlight": "Ready for your free",
+          "highlight": "web design?"
+        },
+        "description": "Book your call now and receive a completely non‑binding web design for your business.",
+        "button": "Schedule your call"
+      },
+      "trust": {
+        "items": [
+          "100% no obligation",
+          "20 minutes",
+          "Immediately applicable insights"
+        ]
+      }
+    }
+  },
+  "home": {
+    "brandStatement": {
+      "lines": [
+        [
+          { "text": "We" },
+          { "text": "create" },
+          { "text": "conversion-first", "isAlt": true },
+          { "text": "solutions" }
+        ],
+        [
+          { "text": "that" },
+          { "text": "help", "isAlt": true },
+          { "text": "brands" },
+          { "text": "stand", "isAlt": true },
+          { "text": "out" }
+        ],
+        [
+          { "text": "and", "isAlt": true },
+          { "text": "grow" },
+          { "text": "in" },
+          { "text": "the", "isAlt": true },
+          { "text": "digital", "isAlt": true },
+          { "text": "age.", "isAlt": true }
+        ]
+      ]
+    },
+    "gallery": {
+      "centerCard": {
+        "title": "Websites in custom code",
+        "cta": "Discover our projects"
+      }
+    },
+    "process": {
+      "badge": "Our process",
+      "heading": {
+        "beforeHighlight": "This is how the",
+        "highlight": "process",
+        "afterHighlight": "works"
+      },
+      "description": "In five simple steps from first introduction to a modern, results-driven website.",
+      "steps": [
+        {
+          "title": "Book a free call",
+          "duration": "20 min",
+          "description": "Choose a time that works for you and fill out the short questionnaire. That way we already know who you are and what you need."
+        },
+        {
+          "title": "Free web design concept",
+          "description": "Based on your answers we create an initial web design. No obligations – you see what’s possible before you make a decision."
+        },
+        {
+          "title": "The meeting",
+          "description": "We meet for a 20‑minute strategy call. We present the design, discuss your goals and decide on the best approach for your website."
+        },
+        {
+          "title": "Website development",
+          "description": "After your approval we start building. We keep you updated via fixed feedback rounds. On average your website is online within 5 working days."
+        },
+        {
+          "title": "Launch of your new website",
+          "description": "Your website goes live. Together we walk through the CMS so you can manage content yourself. From that moment your brand is online."
+        }
+      ],
+      "ctaSection": {
+        "title": "Ready to get started?",
+        "description": "We look forward to building a powerful digital experience together. Book your free introduction call today.",
+        "primaryCta": "Book a meeting",
+        "secondaryCta": "Our projects"
+      }
+    },
+    "projectHighlight": {
+      "eyebrow": "Loved projects",
+      "heading": {
+        "beforeHighlight": "Project",
+        "highlight": "Highlights"
+      },
+      "testimonials": [
+        {
+          "content": "Working with WebDirect was transformative. The design elevated our brand and user experience to new heights. Their attention to detail is unmatched.",
+          "author": "Alex Rivera",
+          "role": "CEO, GrowthLabs",
+          "rating": 5.0
+        },
+        {
+          "content": "The team’s expertise in both UX and visual design made our project seamless. They delivered beyond expectations and hit every milestone on time.",
+          "author": "Nina Patel",
+          "role": "Director, PixelCraft",
+          "rating": 5.0
+        },
+        {
+          "content": "Exceptional partner with a strategic mindset. WebDirect helped us rethink our entire product experience from the ground up.",
+          "author": "Marcus Webb",
+          "role": "VP Product, Velocity",
+          "rating": 5.0
+        }
+      ]
+    },
+    "marqueeTestimonials": {
+      "reviews": [
+        {
+          "description": "Professional, skilled and great to work with. Turned complex ideas into something simple and clear."
+        },
+        {
+          "description": "A real game‑changer for our startup. Took care of both strategy and execution from A to Z."
+        },
+        {
+          "description": "Handled everything from UX to backend without any issues."
+        },
+        {
+          "description": "A game‑changer for our company. Brought strategy and execution together perfectly."
+        },
+        {
+          "description": "Everything now lives in one place and the experience is incredibly smooth."
+        },
+        {
+          "description": "If you’re looking for a design that looks amazing and performs even better."
+        },
+        {
+          "description": "We felt heard at every step and the final result exceeded expectations."
+        },
+        {
+          "description": "The website they built increased our conversion rate significantly in the first month."
+        }
+      ]
+    },
+    "footer": {
+      "brandDescription": "At WebDirect we design digital experiences that engage, connect and inspire. From modern websites to innovative applications.",
+      "navigationTitle": "Navigation",
+      "nav": {
+        "home": "Home",
+        "about": "About us",
+        "process": "Process",
+        "projects": "Projects",
+        "faq": "Questions"
+      },
+      "planTitle": "Book & contact",
+      "plan": {
+        "book": "Book a meeting",
+        "about": "About us",
+        "faq": "Frequently asked questions",
+        "contact": "Contact"
+      },
+      "socialLabel": "Follow us",
+      "allRightsReserved": "All rights reserved",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "header": {
+      "nav": {
+        "about": "About us",
+        "process": "Process",
+        "faq": "Questions"
+      },
+      "cta": {
+        "primary": "Free web design",
+        "mobileGetStarted": "Get started"
+      }
+    },
+    "whyChoose": {
+      "heading": {
+        "beforeHighlight": "Why companies choose",
+        "highlight": "WebDirect."
+      },
+      "description": "We build conversion‑first websites in code. No WordPress or Webflow templates. Faster, more powerful and scalable without limitations.",
+      "cards": {
+        "conversion-design": {
+          "title": "Conversion‑first design",
+          "description": "We design websites that are built to bring in customers, not just to “look nice”."
+        },
+        "custom-code": {
+          "title": "100% custom code",
+          "description": "Everything is built custom in React and Next.js. No builders, no templates, no limits."
+        },
+        "fast-performance": {
+          "title": "Super fast performance",
+          "description": "Fast load times improve SEO, build trust and lead to higher conversion."
+        },
+        "scalable": {
+          "title": "Built to scale",
+          "description": "Add new pages, campaigns or funnels without needing to rebuild your site."
+        },
+        "seo-ready": {
+          "title": "SEO‑ready structure",
+          "description": "Technical SEO is built‑in by default. Clean code, strong structure and great indexation in Google."
+        },
+        "premium-quality": {
+          "title": "Premium look without agency pricing",
+          "description": "Our AI‑driven workflow lets us deliver high‑end quality faster and often cheaper than traditional agencies."
+        },
+        "mobile-first": {
+          "title": "Perfect on mobile",
+          "description": "Mobile‑first design so your site feels sharp, fast and professional on every screen."
+        },
+        "support": {
+          "title": "Support and optimisation",
+          "description": "Not just “deliver a website and done”. We stay involved and optimise where needed."
+        }
+      }
+    }
+  }
+}
+

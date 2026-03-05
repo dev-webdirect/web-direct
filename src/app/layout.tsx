@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SEOJsonLD } from "./SEOJsonLD";
-import { WebDirectHeader } from '../components/WebDirectHeader';
 
 /* -------------------------------
    Fonts setup
@@ -85,6 +84,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   other: {
     "geo.region": "NL",
+    google: "notranslate",
   },
 };
 
@@ -106,7 +106,7 @@ export default function RootLayout({
 }>) {
   // ✅ FIX: Make sure <html> has only <body> as direct child (no newlines/whitespace)
   return (
-    <html lang="nl">
+    <html >
       <head>
         <link
           rel="preload"
@@ -117,7 +117,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SEOJsonLD />
         <div className="m-0 min-h-screen bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
-          <WebDirectHeader />
           {children}
         </div>
         <Script

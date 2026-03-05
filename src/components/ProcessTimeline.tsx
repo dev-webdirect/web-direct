@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Palette, Code2, Settings2, Rocket, ChevronRight, CheckCircle2, Clock } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useTranslations } from 'next-intl';
 interface ProcessStep {
   id: number;
   title: string;
@@ -12,41 +13,34 @@ interface ProcessStep {
   icon: React.ReactNode;
   color: string;
 }
-const steps: ProcessStep[] = [{
-  id: 1,
-  title: "Plan een gratis gesprek!",
-  duration: '20 min',
-  description: 'Kies een moment dat jou uitkomt en vul de korte vragenlijst in. Zo weten we alvast wie je bent en wat je nodig hebt.',
-  icon: <MessageSquare className="w-6 h-6" />,
-  color: '#6a49ff'
-}, {
-  id: 2,
-  title: "Gratis webdesign concept.",
-  description: 'Op basis van de ingevulde vragenlijst bouwen we alvast een eerste webdesign. Geen verplichtingen, je ziet wat mogelijk is voordat je een beslissing maakt.',
-  icon: <Palette className="w-6 h-6" />,
-  color: '#a78bfa'
-}, {
-  id: 3,
-  title: "De meeting.",
-  description: 'We komen samen voor een gesprek van 20 minuten. We presenteren het design, bespreken je wensen en kijken samen wat de beste aanpak is voor jouw website.',
-  icon: <Code2 className="w-6 h-6" />,
-  color: '#41AE96'
-}, {
-  id: 4,
-  title: "Website ontwikkeling.",
-  description: 'Na jouw akkoord gaan we aan de slag. We bouwen je website en houden je via vaste feedbackrondes op de hoogte. Gemiddeld staat je website binnen 5 werkdagen online.',
-  icon: <Settings2 className="w-6 h-6" />,
-  color: '#8b5cf6'
-}, {
-  id: 5,
-  title: "Lancering van je nieuwe website!",
-  description: 'Je website gaat live. We lopen samen door het CMS zodat je direct zelfstandig content kunt beheren. Vanaf dat moment ben je online.',
-  icon: <Rocket className="w-6 h-6" />,
-  color: '#6366f1'
-}];
+const STEP_ICONS: React.ReactNode[] = [
+  <MessageSquare className="w-6 h-6" />,
+  <Palette className="w-6 h-6" />,
+  <Code2 className="w-6 h-6" />,
+  <Settings2 className="w-6 h-6" />,
+  <Rocket className="w-6 h-6" />
+];
+
+const STEP_COLORS = ['#6a49ff', '#a78bfa', '#41AE96', '#8b5cf6', '#6366f1'];
 
 // @component: ProcessTimeline
 export const ProcessTimeline = () => {
+  const t = useTranslations('home.process');
+  const stepsContent = t.raw('steps') as Array<{
+    title: string;
+    duration?: string;
+    description: string;
+  }>;
+
+  const steps: ProcessStep[] = stepsContent.map((step, index) => ({
+    id: index + 1,
+    title: step.title,
+    duration: step.duration,
+    description: step.description,
+    icon: STEP_ICONS[index],
+    color: STEP_COLORS[index] ?? STEP_COLORS[STEP_COLORS.length - 1]
+  }));
+
   const [activeStep, setActiveStep] = useState<number>(1);
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
 
@@ -67,7 +61,7 @@ export const ProcessTimeline = () => {
         }}>
             <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#41AE96]/10 text-[#41AE96] border border-[#41AE96]/20 backdrop-blur-md">
               <Clock className="w-3 h-3 mr-2" />
-              Ons Proces
+              {t('badge')}
             </span>
           </motion.div>
 
@@ -81,10 +75,11 @@ export const ProcessTimeline = () => {
           duration: 0.6,
           delay: 0.1
         }} className="font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
-            Zo werkt het{' '}
+            {t('heading.beforeHighlight')}{' '}
             <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
-              proces
+              {t('heading.highlight')}
             </span>
+            {t('heading.afterHighlight')}
           </motion.h2>
 
           <motion.p initial={{
@@ -97,7 +92,7 @@ export const ProcessTimeline = () => {
           duration: 0.6,
           delay: 0.2
         }} className="text-base sm:text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto px-0 sm:px-2">
-            In vijf eenvoudige stappen van een eerste kennismaking naar een resultaatgerichte, moderne website.
+            {t('description')}
           </motion.p>
         </div>
 
@@ -283,11 +278,10 @@ export const ProcessTimeline = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8">
             <div className="text-center lg:text-left">
               <h3 className="text-white font-bold text-2xl sm:text-3xl mb-2 sm:mb-3">
-                Klaar om te starten?
+                {t('ctaSection.title')}
               </h3>
               <p className="text-white/90 text-base sm:text-lg leading-relaxed max-w-xl">
-                We kijken ernaar uit om samen met jou een fantastische digitale ervaring te bouwen. 
-                Plan vandaag nog je gratis kennismakingsgesprek in.
+                {t('ctaSection.description')}
               </p>
             </div>
 
@@ -301,7 +295,7 @@ export const ProcessTimeline = () => {
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold text-sm sm:text-base shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 transition-all whitespace-nowrap"
               >
-                <span>Plan een afspraak</span>
+                <span>{t('ctaSection.primaryCta')}</span>
                 <ChevronRight className="w-5 h-5" />
               </motion.a>
               <motion.a
@@ -310,7 +304,7 @@ export const ProcessTimeline = () => {
                 whileTap={{ scale: 0.95 }}
                 className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-all backdrop-blur-sm whitespace-nowrap inline-flex items-center justify-center"
               >
-                Onze projecten
+                {t('ctaSection.secondaryCta')}
               </motion.a>
             </div>
           </div>

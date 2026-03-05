@@ -1,19 +1,15 @@
+import { ImageGalleryCarousel } from '@/src/components/ImageGalleryCarousel';
+import { Footer } from '@/src/components/Footer';
+import { HeroSection } from '@/src/components/HeroSection';
+import { BrandStatementText } from '@/src/components/BrandStatementText';
+import { TestimonialCarousel } from '@/src/components/TestimonialCarousel';
+import { WhyChooseTemplates } from '@/src/components/WhyChooseTemplates';
+import { ProjectHighlight } from '@/src/components/ProjectHighlight';
+import { WorkShowcase } from '@/src/components/WorkShowcase';
+import { BookingFaqSection } from '@/src/components/BookingFaqSection';
+import { ProcessTimeline } from '@/src/components/ProcessTimeline';
 
-import { ImageGalleryCarousel } from '../components/ImageGalleryCarousel';
-import { Footer } from '../components/Footer';
-import { HeroSection } from '../components/HeroSection';
-import { BrandStatementText } from '../components/BrandStatementText';
-import { TestimonialCarousel } from '../components/TestimonialCarousel';
-import { FAQSection } from '../components/FAQSection';
-import { WhyChooseTemplates } from '../components/WhyChooseTemplates';
-import { ProjectHighlight } from '../components/ProjectHighlight';
-import { HeroCTASection } from '../components/HeroCTASection';
-import { WorkShowcase } from '../components/WorkShowcase';
-import { FeatureGridSection } from '../components/FeatureGridSection';
-import { BookingFaqSection } from '../components/BookingFaqSection';
-import { ProcessTimeline } from '../components/ProcessTimeline';
-
-export default function Home() {
+export default function HomeLocalePage() {
   return (
     <>
       {/* Hero – unchanged, keeps its own gradient */}
@@ -32,7 +28,7 @@ export default function Home() {
           aria-hidden
         />
         <div className="relative z-10">
-          <div >
+          <div>
             <ImageGalleryCarousel />
           </div>
           <div id="about">
@@ -55,7 +51,7 @@ export default function Home() {
             <FeatureGridSection />
           </div>
           */}
-          <div >
+          <div>
             <TestimonialCarousel />
           </div>
           <div id="faq">
@@ -67,3 +63,4 @@ export default function Home() {
     </>
   );
 }
+

@@ -1,59 +1,25 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 type WordData = {
   text: string;
   isAlt?: boolean;
 };
-const wordsLine1: WordData[] = [{
-  text: "Wij"
-}, {
-  text: "creëren"
-}, {
-  text: "conversion-first",
-  isAlt: true
-}, {
-  text: "oplossingen"
-}];
-const wordsLine2: WordData[] = [{
-  text: "die"
-}, {
-  text: "merken",
-  isAlt: true
-}, {
-  text: "helpen"
-}, {
-  text: "opvallen",
-  isAlt: true
-}, {
-  text: "en"
-}];
-const wordsLine3: WordData[] = [{
-  text: "groeien",
-  isAlt: true
-}, {
-  text: "in"
-}, {
-  text: "het"
-}, {
-  text: "digitale",
-  isAlt: true
-}, {
-  text: "tijdperk.",
-  isAlt: true
-}];
-const allLines = [wordsLine1, wordsLine2, wordsLine3];
 
 // @component: BrandStatementText
 export const BrandStatementText = () => {
+  const t = useTranslations('home.brandStatement');
+  const allLines = t.raw('lines') as WordData[][];
   const containerRef = useRef<HTMLDivElement>(null);
   const [wordStyles, setWordStyles] = useState<Array<{
     opacity: number;
     blur: number;
   }>>([]);
   useEffect(() => {
-    const totalWords = allLines.flat().length;
+    const flatWords = allLines.flat();
+    const totalWords = flatWords.length;
     const words = Array(totalWords).fill(null).map(() => ({
       opacity: 0,
       blur: 10
@@ -93,7 +59,7 @@ export const BrandStatementText = () => {
     handleScroll(); // Initial calculation
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [allLines]);
   let flatIndex = 0;
   return (
     <div

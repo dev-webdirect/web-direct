@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useLocale, useTranslations } from 'next-intl';
 
 const DATETIME_STORAGE_KEY = 'webdirect_booking_datetime';
 const TIMEZONE = 'Europe/Paris'; // Central European Time (CET/CEST) — same as Calendly
@@ -52,23 +53,25 @@ function getDatePartsInTz(date: Date, timeZone: string): { year: number; month: 
   return { year: y, month: m, day: d };
 }
 
-function formatSlotTime(iso: string): string {
+function formatSlotTime(iso: string, locale: string): string {
   const d = new Date(iso);
-  return d.toLocaleTimeString('nl-NL', {
+  const localeTag = locale === 'nl' ? 'nl-NL' : 'en-US';
+  return d.toLocaleTimeString(localeTag, {
     timeZone: TIMEZONE,
     hour: '2-digit',
     minute: '2-digit',
   });
 }
 
-function formatDateLabel(date: Date): string {
+function formatDateLabel(date: Date, locale: string, todayLabel: string, tomorrowLabel: string): string {
   const parts = getDatePartsInTz(date, TIMEZONE);
   const todayParts = getDatePartsInTz(new Date(), TIMEZONE);
-  if (parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day) return 'Vandaag';
+  if (parts.year === todayParts.year && parts.month === todayParts.month && parts.day === todayParts.day) return todayLabel;
   const tomorrowStart = startOfDayInTz(todayParts.year, todayParts.month, todayParts.day + 1, TIMEZONE);
   const tomorrowParts = getDatePartsInTz(tomorrowStart, TIMEZONE);
-  if (parts.year === tomorrowParts.year && parts.month === tomorrowParts.month && parts.day === tomorrowParts.day) return 'Morgen';
-  return date.toLocaleDateString('nl-NL', {
+  if (parts.year === tomorrowParts.year && parts.month === tomorrowParts.month && parts.day === tomorrowParts.day) return tomorrowLabel;
+  const localeTag = locale === 'nl' ? 'nl-NL' : 'en-US';
+  return date.toLocaleDateString(localeTag, {
     timeZone: TIMEZONE,
     weekday: 'short',
     day: 'numeric',
@@ -119,6 +122,10 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
   const dates = getSelectableDates();
+  const t = useTranslations('booking.date');
+  const locale = useLocale();
+  const todayLabel = t('today');
+  const tomorrowLabel = t('tomorrow');
 
   const fetchSlots = useCallback(async (date: Date) => {
     setLoading(true);
@@ -146,16 +153,16 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
       const json = await res.json();
 
       if (!res.ok) {
-        throw new Error(json.error || 'Kon beschikbare tijden niet laden');
+        throw new Error(json.error || t('errorLoadingSlots'));
       }
 
       setSlots(json.collection || []);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Er ging iets mis');
+      setError(e instanceof Error ? e.message : t('genericError'));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (selectedDate) {
@@ -179,25 +186,27 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
       className="relative"
     >
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-xs text-gray-500">Stap 1 van 3</span>
+        <span className="text-xs text-gray-500">{t('stepLabel')}</span>
       </div>
 
       <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-4 sm:p-5 md:p-6 shadow-2xl">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <div className="relative z-10 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-lg">Kies datum en tijd</h3>
-              <p className="text-gray-400 text-xs">20-minuten sessie • Max {MAX_DAYS_AHEAD} dagen vooruit</p>
+              <h3 className="text-white font-semibold text-lg">{t('heading')}</h3>
+              <p className="text-gray-400 text-xs">
+                {t('subtitle', { minutes: 20, days: MAX_DAYS_AHEAD })}
+              </p>
             </div>
           </div>
 
           <div>
-            <p className="text-sm text-gray-400 font-medium mb-2">Kies een datum</p>
+            <p className="text-sm text-gray-400 font-medium mb-2">{t('chooseDate')}</p>
             <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
               {dates.map((d) => {
                 const selParts = selectedDate && getDatePartsInTz(selectedDate, TIMEZONE);
@@ -218,7 +227,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
                         : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
                     )}
                   >
-                    {formatDateLabel(d)}
+                    {formatDateLabel(d, locale, todayLabel, tomorrowLabel)}
                   </button>
                 );
               })}
@@ -226,8 +235,8 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
           </div>
 
           <div>
-            <p className="text-sm text-gray-400 font-medium mb-2">Beschikbare tijden</p>
-            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/[0.02] border border-white/5 p-4">
+            <p className="text-sm text-gray-400 font-medium mb-2">{t('availableTimes')}</p>
+            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/[0.02 border border-white/5 p-4">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-[#41AE96]" />
@@ -236,7 +245,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
                 <p className="text-red-400 text-sm py-4 text-center">{error}</p>
               ) : slots.length === 0 ? (
                 <p className="text-gray-500 text-sm py-4 text-center">
-                  Geen beschikbare tijden voor deze datum
+                  {t('noSlots')}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -256,7 +265,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
                         )}
                       >
                         <span className="font-medium text-white">
-                          {formatSlotTime(slot.start_time)}
+                          {formatSlotTime(slot.start_time, locale)}
                         </span>
                         <ArrowRight
                           className={cn(
@@ -286,11 +295,11 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
             }
             whileTap={selectedSlot ? { scale: 0.98 } : {}}
             className={cn(
-              'w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
+                'w-full flex items-center justify-center gap-3 bg-linear-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
               !selectedSlot && 'opacity-50 cursor-not-allowed'
             )}
           >
-            <span>Volgende</span>
+            <span>{t('next')}</span>
             <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </motion.button>
         </div>

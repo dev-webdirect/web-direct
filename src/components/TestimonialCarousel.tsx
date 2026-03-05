@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, useAnimationControls } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 type Review = {
   id: string;
   name: string;
@@ -117,6 +118,13 @@ const ReviewPopup = ({
 
 // @component: ReviewMarquee
 export const TestimonialCarousel= () => {
+  const t = useTranslations('home.marqueeTestimonials');
+  const translated = t.raw('reviews') as Array<{ description: string }>;
+  const reviews = DEFAULT_REVIEWS.map((review, index) => ({
+    ...review,
+    description: translated[index]?.description ?? review.description
+  }));
+
   const containerRef = useRef<HTMLDivElement>(null);
   const controls1 = useAnimationControls();
   const controls2 = useAnimationControls();
@@ -133,8 +141,8 @@ export const TestimonialCarousel= () => {
   const animationStartTime2 = useRef(0);
 
   // Triple copy for seamless loop: no gap when animation resets (animate by 1/3 so reset shows same content)
-  const firstSet = DEFAULT_REVIEWS.slice(0, 4);
-  const secondSet = DEFAULT_REVIEWS.slice(4);
+  const firstSet = reviews.slice(0, 4);
+  const secondSet = reviews.slice(4);
   const firstRow = [...firstSet, ...firstSet, ...firstSet];
   const secondRow = [...secondSet, ...secondSet, ...secondSet];
   const oneThird = 100 / 3;

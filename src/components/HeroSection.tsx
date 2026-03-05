@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { cn } from '../lib/utils';
 import { CTAButtonGroup } from './CTAButtonGroup';
 
@@ -21,6 +22,9 @@ const BrandLogo = ({ className }: { className?: string }) => (
 );
 
 export const HeroSection = () => {
+  const t = useTranslations('hero');
+  const rotatingWords = useMemo(() => t.raw('rotatingWords') as string[], [t]);
+
   const containerRef = useRef<HTMLElement>(null);
   const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const { scrollY } = useScroll();
@@ -68,16 +72,6 @@ export const HeroSection = () => {
   // Scroll indicator opacity - fade out when scrolling down
   const scrollIndicatorOpacity = useTransform(scrollY, [0, 200], [1, 0]);
 
-  // Rotating words state
-  const rotatingWords = [
-    'Converteren.',
-    'Overtuigen.',
-    'Verkopen.',
-    'Groeien.',
-    'Schalen.',
-    'Presteren.',
-    'Domineren.'
-  ];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -154,12 +148,12 @@ export const HeroSection = () => {
         (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
         setMouseEventTarget(el);
       }}
-      className="relative min-h-screen w-full flex flex-col overflow-hidden px-3 sm:px-4 lg:px-8"
+      className="relative sm:min-h-screen w-full flex flex-col overflow-hidden py-1 px-3 sm:px-4 lg:px-8"
     >
         {/* Dynamic Glow Background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           {/* Main Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
+          <div className="absolute inset-0 bg-linear-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f]" />
           
           {/* Fluid Background - deferred so LCP can paint first */}
           {shouldAnimate && showFluid && (
@@ -204,7 +198,7 @@ export const HeroSection = () => {
         {/* Mouse Follower Glow - On top of background */}
         {shouldAnimate && (
           <motion.div
-            className="absolute z-[5] pointer-events-none"
+            className="absolute z-5 pointer-events-none"
             style={{
               x: smoothMouseX,
               y: smoothMouseY,
@@ -232,7 +226,7 @@ export const HeroSection = () => {
             />
             
             {/* Center highlight */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/10 to-transparent blur-[40px]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/10 to-transparent blur-2xl" />
           </motion.div>
         )}
 
@@ -245,14 +239,14 @@ export const HeroSection = () => {
                 <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-[#6a49ff] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6a49ff]"></span>
               </span>
-              100% Custom Websites
+              {t('badge')}
             </span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="max-w-[1000px] font-bold text-4xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-6 sm:mb-8 lg:mb-10 leading-[1.15] tracking-tight">
-            Websites die gemaakt zijn om te{' '}
-            <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
+          <h1 className="max-w-[1000px] font-bold text-5xl sm:text-6xl lg:text-7xl xl:text-8xl text-white mb-6 sm:mb-8 lg:mb-10 leading-[1.15] tracking-tight">
+            {t('heading')}{' '}
+            <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-linear-to-r from-[#6a49ff] to-[#a78bfa] font-serif">
               {displayedText}
               <span className="animate-pulse inline-block ml-1 text-white opacity-50 italic font-serif text-[0.7em]">
                 |
@@ -262,15 +256,15 @@ export const HeroSection = () => {
 
           {/* Subtitle */}
           <p className="max-w-3xl mx-auto text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed my-2 sm:my-4 font-light px-1 sm:px-0">
-          Wij combineren strategie, design en technologie om ambitieuze merken te helpen groeien met krachtige digitale ervaringen die écht impact maken.
+          {t('subtitle')}
           </p>
 
           {/* CTAs */}
           <div>
             <CTAButtonGroup
-              primaryText="Vraag GRATIS webdesign aan."
+              primaryText={t('cta.primary')}
               primaryHref="/booking"
-              secondaryText="Bekijk websites."
+              secondaryText={t('cta.secondary')}
               secondaryHref="#projects"
             />
           </div>
@@ -278,7 +272,7 @@ export const HeroSection = () => {
           {/* Social Proof */}
           <div className="w-full flex flex-col items-center mt-6 sm:mt-8 lg:mt-10">
             <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase text-gray-500 mb-4 sm:mb-6">
-              VERTROUWD DOOR 100+ MERKEN
+              {t('socialProof')}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-10 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
               <BrandLogo />
@@ -294,7 +288,7 @@ export const HeroSection = () => {
             className="mt-6 sm:mt-8 lg:mt-10 flex flex-col items-center gap-2 cursor-pointer"
           >
             <p className="text-[10px] text-gray-500 font-medium uppercase tracking-[0.15em]">
-              SCROLL OM TE ONTDEKKEN
+              {t('scrollIndicator')}
             </p>
             <div className="w-6 h-10 border-2 border-white/20 rounded-full flex items-start justify-center p-1.5">
               {shouldAnimate ? (
@@ -315,7 +309,7 @@ export const HeroSection = () => {
         </div>
 
         {/* Decorative bottom border */}
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 };

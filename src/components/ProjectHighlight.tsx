@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Quote, Star } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { GradientOverlay } from './GradientOverlay';
+import { useTranslations } from 'next-intl';
 interface Testimonial {
   id: number;
   content: string;
@@ -15,37 +16,51 @@ interface Testimonial {
   rotation: number;
   delay: number;
 }
-const testimonials: Testimonial[] = [{
-  id: 1,
-  content: "Working with Jin was transformative. The design elevated our brand and user experience to new heights. Their attention to detail is unmatched.",
-  author: "Alex Rivera",
-  role: "CEO, GrowthLabs",
-  rating: 5.0,
-  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
-  rotation: -10,
-  delay: 0.1
-}, {
-  id: 2,
-  content: "Jin's expertise in both UX and visual design made our project seamless. They delivered beyond expectations and on time every milestone.",
-  author: "Nina Patel",
-  role: "Director, PixelCraft",
-  rating: 5.0,
-  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
-  rotation: -6,
-  delay: 0.2
-}, {
-  id: 3,
-  content: "Exceptional designer with a strategic mindset. Jin helped us rethink our entire product experience from the ground up.",
-  author: "Marcus Webb",
-  role: "VP Product, Velocity",
-  rating: 5.0,
-  avatar: "https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg",
-  rotation: 0,
-  delay: 0.3
-}];
+const BASE_TESTIMONIALS_META: Array<Pick<Testimonial, 'id' | 'avatar' | 'rotation' | 'delay'>> = [
+  {
+    id: 1,
+    avatar: 'https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg',
+    rotation: -10,
+    delay: 0.1
+  },
+  {
+    id: 2,
+    avatar: 'https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg',
+    rotation: -6,
+    delay: 0.2
+  },
+  {
+    id: 3,
+    avatar: 'https://framerusercontent.com/images/T2mfWqIsv4Kpdf5hFk22cxmmg78.svg',
+    rotation: 0,
+    delay: 0.3
+  }
+];
 
 // @component: ClientTestimonials
 export const ProjectHighlight = () => {
+  const t = useTranslations('home.projectHighlight');
+  const testimonialContent = t.raw('testimonials') as Array<{
+    content: string;
+    author: string;
+    role: string;
+    rating: number;
+  }>;
+
+  const testimonials: Testimonial[] = BASE_TESTIMONIALS_META.map((meta, index) => {
+    const content = testimonialContent[index];
+    return {
+      id: meta.id,
+      avatar: meta.avatar,
+      rotation: meta.rotation,
+      delay: meta.delay,
+      content: content?.content ?? '',
+      author: content?.author ?? '',
+      role: content?.role ?? '',
+      rating: content?.rating ?? 5.0
+    };
+  });
+
   // @return
   return <section className="relative w-full py-10 sm:py-16 md:py-24 bg-[#0f0a1f] overflow-hidden">
       {/* Gradient Overlay matching Why Choose Templates */}
@@ -53,24 +68,41 @@ export const ProjectHighlight = () => {
       
       <div className="container mx-auto px-3 sm:px-4 relative z-10">
         {/* Header Section */}
-        <motion.div initial={{
-        opacity: 0,
-        y: 20
-      }} whileInView={{
-        opacity: 1,
-        y: 0
-      }} viewport={{
-        once: true
-      }} transition={{
-        duration: 0.6
-      }} className="mb-8 sm:mb-10 md:mb-12 text-center">
-          <p className="text-xs uppercase text-muted-foreground tracking-[0.2em] mb-3 font-sans font-semibold">Geliefde projecten<br /></p>
-          <h2 className="text-4xl sm:text-5xl font-heading tracking-tight font-medium text-foreground">Project <span className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif" style={{
-            marginTop: "50px",
-            height: "0px",
-            translate: "-0.1px 7px",
-            fontSize: "50px"
-          }}>Highlights</span></h2>
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 20
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0
+          }}
+          viewport={{
+            once: true
+          }}
+          transition={{
+            duration: 0.6
+          }}
+          className="mb-8 sm:mb-10 md:mb-12 text-center"
+        >
+          <p className="text-xs uppercase text-muted-foreground tracking-[0.2em] mb-3 font-sans font-semibold">
+            {t('eyebrow')}
+            <br />
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-heading tracking-tight font-medium text-foreground">
+            {t('heading.beforeHighlight')}{' '}
+            <span
+              className="italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] font-serif"
+              style={{
+                marginTop: '50px',
+                height: '0px',
+                translate: '-0.1px 7px',
+                fontSize: '50px'
+              }}
+            >
+              {t('heading.highlight')}
+            </span>
+          </h2>
         </motion.div>
 
         {/* Testimonials Stack */}

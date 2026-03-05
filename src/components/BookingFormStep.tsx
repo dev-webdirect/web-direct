@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Mail, Phone, Building2, MessageSquare, ArrowRight, Loader2, ChevronLeft } from 'lucide-react';
 import type { BookingIntakeData } from './BookingIntakeStep';
+import { useTranslations } from 'next-intl';
 
 export interface BookingFormData {
   name: string;
@@ -12,7 +13,7 @@ export interface BookingFormData {
 }
 
 interface BookingFormStepProps {
-  selectedDateTime: string;
+  selectedDateTime: string | null;
   intakeData: BookingIntakeData | null;
   onBack: () => void;
 }
@@ -55,13 +56,14 @@ export const BookingFormStep = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const t = useTranslations('booking.form');
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = 'Naam is verplicht';
-    if (!email.trim()) newErrors.email = 'E-mail is verplicht';
+    if (!name.trim()) newErrors.name = t('errors.nameRequired');
+    if (!email.trim()) newErrors.email = t('errors.emailRequired');
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Voer een geldig e-mailadres in';
+      newErrors.email = t('errors.emailInvalid');
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,11 +77,13 @@ export const BookingFormStep = ({
     setSubmitting(true);
     setSubmitError(null);
     try {
+      const mode = selectedDateTime ? 'full' : 'intake';
       const res = await fetch('/api/booking/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          selectedDateTime,
+          mode,
+          selectedDateTime: selectedDateTime || undefined,
           intakeData,
           formData,
         }),
@@ -87,6 +91,9 @@ export const BookingFormStep = ({
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(json.error || 'Versturen mislukt');
+      }
+      if (!selectedDateTime) {
+        sessionStorage.setItem('webdirect_booking_mode', 'intake');
       }
       window.location.href = '/booking/success';
     } catch (err) {
@@ -111,35 +118,37 @@ export const BookingFormStep = ({
           className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors disabled:opacity-50"
         >
           <ChevronLeft className="w-4 h-4" />
-          Terug
+          {t('back')}
         </button>
-        <span className="text-xs text-gray-500">Stap 3 van 3</span>
+        <span className="text-xs text-gray-500">
+          {selectedDateTime ? t('stepLabel.full') : t('stepLabel.intake')}
+        </span>
       </div>
       <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-4 sm:p-5 md:p-6 shadow-2xl">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <div className="relative z-10 space-y-3 sm:space-y-4">
           <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
               <User className="w-5 h-5 text-white" />
             </div>
             <div>
               <h3 className="text-white font-semibold text-lg">Jouw gegevens</h3>
-              <p className="text-gray-400 text-xs">Stap 3 van 3 • Vul je gegevens in</p>
+              <p className="text-gray-400 text-xs">Vul je gegevens in</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="booking-name" className="block text-sm font-medium text-gray-400 mb-1.5">
-                Naam *
+                {t('fields.name.label')} *
               </label>
               <input
                 id="booking-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Je volledige naam"
+                placeholder={t('fields.name.placeholder')}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:border-[#41AE96]/50 focus:outline-none transition-colors"
               />
               {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
@@ -147,14 +156,14 @@ export const BookingFormStep = ({
 
             <div>
               <label htmlFor="booking-email" className="block text-sm font-medium text-gray-400 mb-1.5">
-                E-mail *
+                {t('fields.email.label')} *
               </label>
               <input
                 id="booking-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="je@email.nl"
+                placeholder={t('fields.email.placeholder')}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:border-[#41AE96]/50 focus:outline-none transition-colors"
               />
               {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
@@ -162,14 +171,14 @@ export const BookingFormStep = ({
 
             <div>
               <label htmlFor="booking-phone" className="block text-sm font-medium text-gray-400 mb-1.5">
-                Telefoon
+                {t('fields.phone.label')}
               </label>
               <input
                 id="booking-phone"
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="+31 6 12345678"
+                placeholder={t('fields.phone.placeholder')}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:border-[#41AE96]/50 focus:outline-none transition-colors"
               />
             </div>
@@ -191,16 +200,16 @@ export const BookingFormStep = ({
                   : {}
               }
               whileTap={!submitting ? { scale: 0.98 } : {}}
-              className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-3 bg-linear-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Versturen...</span>
+                  <span>{t('cta.submitting')}</span>
                 </>
               ) : (
                 <>
-                  <span>Verstuur en ga naar bevestiging</span>
+                  <span>{t('cta.submit')}</span>
                   <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </>
               )}

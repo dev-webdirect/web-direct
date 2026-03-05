@@ -180,12 +180,12 @@ export const BookingCalendlyStep = ({ formData, onBack }: BookingCalendlyStepPro
       </div>
 
       <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-4 sm:p-5 md:p-6 shadow-2xl">
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-[#6a49ff]/20 to-[#41AE96]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <div className="relative z-10 space-y-3 sm:space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-white/10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -226,7 +226,7 @@ export const BookingCalendlyStep = ({ formData, onBack }: BookingCalendlyStepPro
           {/* Time slots */}
           <div>
             <p className="text-sm text-gray-400 font-medium mb-2">Beschikbare tijden</p>
-            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/[0.02] border border-white/5 p-4">
+            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/2 border border-white/5 p-4">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-[#41AE96]" />
@@ -296,7 +296,7 @@ export const BookingCalendlyStep = ({ formData, onBack }: BookingCalendlyStepPro
             }
             whileTap={selectedSlot && !booking ? { scale: 0.98 } : {}}
             className={cn(
-              'w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
+              'w-full flex items-center justify-center gap-3 bg-linear-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
               (!selectedSlot || booking) && 'opacity-50 cursor-not-allowed'
             )}
           >

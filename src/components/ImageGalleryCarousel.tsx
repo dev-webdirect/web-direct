@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Layout } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 interface GalleryImage {
   id: string;
   url: string;
@@ -83,7 +84,11 @@ const TickerRow = ({
     </div>;
 };
 export const ImageGalleryCarousel = () => {
-    return <section className="relative w-full min-h-[360px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[580px] flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-[30px] overflow-hidden bg-background py-2 sm:py-2.5 px-2 sm:px-4 md:px-0 z-10">
+  const t = useTranslations('home.gallery');
+  const title = t('centerCard.title');
+  const cta = t('centerCard.cta');
+
+  return <section className="relative w-full min-h-[360px] sm:min-h-[420px] md:min-h-[520px] lg:min-h-[580px] flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-[30px] overflow-hidden bg-background py-2 sm:py-2.5 px-2 sm:px-4 md:px-0 z-10">
       {/* Top & Bottom Background Dividers */}
       <div className="absolute top-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
       <div className="absolute bottom-0 left-[-20px] right-[-20px] h-5 bg-[#0f0a1f] border-y border-border z-10 pointer-events-none" />
@@ -118,15 +123,23 @@ export const ImageGalleryCarousel = () => {
 
             {/* Content */}
             <div className="max-w-[220px]">
-              <h2 className="text-[32px] font-medium leading-[1.2] tracking-[-1px] text-foreground font-heading antialiased">Websites in Custom Code</h2>
+              <h2 className="text-[32px] font-medium leading-[1.2] tracking-[-1px] text-foreground font-heading antialiased">
+                {title}
+              </h2>
             </div>
 
             {/* Button */}
-            <motion.button whileHover={{
-            scale: 1.02
-          }} whileTap={{
-            scale: 0.98
-          }} className="relative w-[189px] h-[39.2px] bg-primary text-primary-foreground rounded-lg font-medium text-sm flex items-center justify-center shadow-md cursor-pointer group hover:bg-primary/90 transition-colors">Ontdek onze projecten</motion.button>
+            <motion.button
+              whileHover={{
+                scale: 1.02
+              }}
+              whileTap={{
+                scale: 0.98
+              }}
+              className="relative w-[189px] h-[39.2px] bg-primary text-primary-foreground rounded-lg font-medium text-sm flex items-center justify-center shadow-md cursor-pointer group hover:bg-primary/90 transition-colors"
+            >
+              {cta}
+            </motion.button>
           </div>
         </div>
       </motion.div>
