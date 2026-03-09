@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         name: `${name} - ${email}`,
         due_date: dueDateMs,
+        //status: 'IN DESIGN',
       }),
     });
 
