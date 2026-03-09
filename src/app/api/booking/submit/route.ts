@@ -384,7 +384,7 @@ export async function POST(request: NextRequest) {
 
   const origin = request.nextUrl?.origin || request.headers.get('origin') || '';
 
-  void runBackgroundTasks(body, origin);
+  await runBackgroundTasks(body, origin);
 
   return NextResponse.json({ ok: true });
 }
