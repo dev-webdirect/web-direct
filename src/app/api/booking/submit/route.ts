@@ -26,7 +26,6 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
   } else {
     try {
       const promptPayload = buildPromptPayload(intakeData, formData);
-      console.log('[booking/submit] OpenRouter: sending request (payload length:', promptPayload.length, ')');
 
       const openRouterRes = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
@@ -58,7 +57,6 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
         try {
           const openRouterData = JSON.parse(responseText);
           generatedPrompt = openRouterData.choices?.[0]?.message?.content || '';
-          console.log('[booking/submit] OpenRouter: success, prompt length:', generatedPrompt.length);
         } catch (parseErr) {
           console.error('[booking/submit] OpenRouter: response parse error', parseErr);
         }
