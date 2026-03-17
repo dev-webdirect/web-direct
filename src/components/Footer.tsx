@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Twitter, Dribbble, Check, Send, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
+import { Check, Send, Mail, MapPin, Phone, ArrowRight, MessageCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useTranslations } from 'next-intl';
 
@@ -22,7 +22,7 @@ const SocialLink = ({
   scale: 0.95
 }}>
     <Icon className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
-    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#41AE96]/0 to-[#41AE96]/0 group-hover:from-[#41AE96]/10 group-hover:to-[#6A49FF]/10 transition-all duration-300" />
+    <div className="absolute inset-0 rounded-xl bg-linear-to-br from-[#41AE96]/0 to-[#41AE96]/0 group-hover:from-[#41AE96]/10 group-hover:to-[#6A49FF]/10 transition-all duration-300" />
     <span className="sr-only">{label}</span>
   </motion.a>;
 
@@ -44,7 +44,7 @@ const FooterLink = ({
   const content = (
     <>
       {label}
-      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
+      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
     </>
   );
   if (href === '/' || (!isHash && !href.startsWith('http'))) {
@@ -97,8 +97,8 @@ export const Footer = ({
   brandName = "WebDirect",
   brandDescription,
   location = "Amsterdam, Nederland",
-  phone = "+31 20 123 4567",
-  email = "info@webdirect.nl",
+  phone = "+31 658016569",
+  email = "project@webdirect.nl",
   newsletterPlaceholder = "Jouw e-mailadres",
   newsletterButtonText = "Inschrijven",
   successMessage = "Bedankt voor het inschrijven op onze nieuwsbrief!"
@@ -129,7 +129,7 @@ export const Footer = ({
       />
 
       {/* Arc with Curved Gradient Shadow */}
-      <div className="absolute top-0 left-0 right-0 h-20 sm:h-24 md:h-28 lg:h-[7.5rem] overflow-hidden pointer-events-none z-50">
+      <div className="absolute top-0 left-0 right-0 h-20 sm:h-24 md:h-28 lg:h-30 overflow-hidden pointer-events-none z-50">
         <svg
           className="absolute top-0 left-0 w-full h-full"
           viewBox="0 0 1200 160"
@@ -161,7 +161,7 @@ export const Footer = ({
       </div>
 
       {/* Content Container */}
-      <div className="relative bg-[#0f0a1f] w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-10 sm:py-12 md:py-16 lg:py-20 mt-16 sm:mt-20 md:mt-24 lg:mt-[7.5rem] max-w-[1600px]">
+      <div className="relative bg-[#0f0a1f] w-full mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-10 sm:py-12 md:py-16 lg:py-20 mt-16 sm:mt-20 md:mt-24 lg:mt-30 max-w-[1600px]">
           {/* Top section with CTA and links */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 md:gap-12 lg:gap-16 mt-0">
             {/* Brand & Newsletter Section */}
@@ -273,7 +273,7 @@ export const Footer = ({
                 >
                   <motion.span className="inline-flex items-center" whileHover={{ x: 4 }}>
                     Contact
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-linear-to-r from-[#41AE96] to-[#6A49FF] group-hover:w-full transition-all duration-300" />
                   </motion.span>
                 </a>
               </div>
@@ -282,20 +282,41 @@ export const Footer = ({
 
           {/* Divider */}
           <div className="relative h-px my-6 sm:my-8 md:my-10">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent" />
           </div>
 
           {/* Bottom Section */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 md:gap-8">
             {/* Copyright */}
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+              
               <span className="text-xs uppercase tracking-wider text-white/60 mr-2">
                 {t('socialLabel')}
               </span>
+              {/* Social links 
               <SocialLink href="https://facebook.com" icon={Facebook} label="Facebook" />
               <SocialLink href="https://instagram.com" icon={Instagram} label="Instagram" />
               <SocialLink href="https://twitter.com" icon={Twitter} label="Twitter" />
               <SocialLink href="https://dribbble.com" icon={Dribbble} label="Dribbble" />
+              */}
+              <div className="flex items-center gap-3 sm:gap-4">
+              <a
+                href={`https://wa.me/${phone.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 text-xs sm:text-sm text-white/80 hover:bg-[#41AE96]/15 hover:border-[#41AE96]/60 transition-all"
+              >
+                <MessageCircle className="w-4 h-4 text-[#41AE96]" />
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href={`mailto:${email}`}
+                className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 text-xs sm:text-sm text-white/80 hover:bg-[#41AE96]/15 hover:border-[#41AE96]/60 transition-all"
+              >
+                <Mail className="w-4 h-4 text-[#41AE96]" />
+                <span>{email}</span>
+              </a>
+            </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-white/60 text-sm text-center sm:text-left">
               <span>© 2026 {brandName}</span>

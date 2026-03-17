@@ -59,8 +59,8 @@ export const BrandStatementText = () => {
       ref={containerRef}
       className="relative w-full h-auto selection:bg-[#6a49ff]/20"
     >
-      <div className="sticky top-0 h-auto py-30 sm:h-screen flex items-center justify-center overflow-hidden px-3 sm:px-4 md:px-6">
-        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+      <div className="sticky top-0 h-auto py-30 sm:h-screen flex items-center justify-center px-6 sm:px-8 md:px-12">
+        <div className="max-w-[1200px] w-full flex flex-col items-center justify-center gap-4 sm:gap-5 md:gap-6 lg:gap-8 pb-6">
           {allLines.map((line, lineIndex) => (
             <div
               key={`line-${lineIndex}`}
@@ -69,25 +69,41 @@ export const BrandStatementText = () => {
               {line.map((word, wordIndex) => {
                 const currentIndex = flatIndex++;
                 const style = wordStyles[currentIndex] || { opacity: 0, blur: 10 };
+                const alpha = style.opacity / 100;
 
                 return (
                   <span
                     key={`${lineIndex}-${wordIndex}`}
-                    style={{
-                      opacity: style.opacity / 100,
-                      filter: `blur(${style.blur}px)`,
-                      margin: '0 0.18em',
-                    }}
-                    className={[
-                      'inline-block whitespace-nowrap',
-                      'text-[clamp(2.5rem,10vw,4rem)] leading-[1.1] tracking-[-0.04em]',
-                      'transition-[opacity,filter] duration-150 ease-out',
-                      word.isAlt
-                        ? 'font-serif italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#6a49ff] to-[#a78bfa] scale-[1.05]'
-                        : 'font-medium text-white'
-                    ].join(' ')}
+                    style={{ margin: '0 0.18em' }}
+                    className="inline-block whitespace-nowrap text-[clamp(2.5rem,10vw,4rem)] leading-[1.25] tracking-[-0.04em] transition-[opacity,filter] duration-150 ease-out"
                   >
-                    {word.text}
+                    {word.isAlt ? (
+                      <span
+                        className="font-serif italic font-medium inline-block scale-[1.05]"
+                        style={{
+                          backgroundImage: `linear-gradient(to right, rgba(106,73,255,${alpha}), rgba(167,139,250,${alpha}))`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                          filter: `blur(${style.blur}px)`,
+                          paddingInline: '0.15em',
+                          marginInline: '-0.15em',
+                          paddingBottom: '0.1em',
+                        }}
+                      >
+                        {word.text}
+                      </span>
+                    ) : (
+                      <span
+                        className="font-medium text-white"
+                        style={{
+                          opacity: alpha,
+                          filter: `blur(${style.blur}px)`,
+                        }}
+                      >
+                        {word.text}
+                      </span>
+                    )}
                   </span>
                 );
               })}

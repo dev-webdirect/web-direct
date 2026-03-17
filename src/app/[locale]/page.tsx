@@ -4,16 +4,17 @@ import { HeroSection } from '@/src/components/HeroSection';
 import { BrandStatementText } from '@/src/components/BrandStatementText';
 import { TestimonialCarousel } from '@/src/components/TestimonialCarousel';
 import { WhyChooseTemplates } from '@/src/components/WhyChooseTemplates';
-import { ProjectHighlight } from '@/src/components/ProjectHighlight';
-import { WorkShowcase } from '@/src/components/WorkShowcase';
 import { BookingFaqSection } from '@/src/components/BookingFaqSection';
 import { ProcessTimeline } from '@/src/components/ProcessTimeline';
+import { WebDirectHeader } from '@/src/components/WebDirectHeader';
 
 export default function HomeLocalePage() {
   return (
     <>
+    
       {/* Hero – unchanged, keeps its own gradient */}
       <div id="hero" className="relative">
+      <WebDirectHeader />
         <HeroSection />
       </div>
 
