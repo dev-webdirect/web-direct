@@ -146,6 +146,48 @@
       "cta": {
         "next": "Next",
         "nextToDetails": "Next — to details"
+      },
+      "options": {
+        "mainGoal": {
+          "new_clients": "Get new customers",
+          "appointments": "Generate appointments",
+          "quotes": "Request quotes",
+          "information": "Provide information",
+          "other": "Other"
+        },
+        "primaryAction": {
+          "appointment": "Book an appointment",
+          "call": "Call",
+          "whatsapp": "Send a WhatsApp message",
+          "form": "Fill out contact form",
+          "other": "Other"
+        },
+        "focusCentral": {
+          "single_service": "One specific service or product",
+          "multiple_services": "Multiple services or products",
+          "action_offer": "A promotion or offer",
+          "general_intro": "General introduction"
+        },
+        "audience": {
+          "consumers": "Consumers",
+          "businesses": "Businesses",
+          "both": "Both"
+        },
+        "style": {
+          "sleek_modern": "Sleek and modern",
+          "professional": "Professional and businesslike",
+          "warm": "Warm and personal",
+          "luxury": "Luxury",
+          "playful": "Playful",
+          "other": "Other"
+        },
+        "budget": {
+          "<1000": "< €1000",
+          "1000-2000": "€1000 - €2000",
+          "2000-3500": "€2000 - €3500",
+          "3500-5000": "€3500 - €5000",
+          "5000+": "€5000+"
+        }
       }
     },
     "form": {

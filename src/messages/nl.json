@@ -146,6 +146,48 @@
       "cta": {
         "next": "Volgende",
         "nextToDetails": "Volgende — naar gegevens"
+      },
+      "options": {
+        "mainGoal": {
+          "new_clients": "Nieuwe klanten krijgen",
+          "appointments": "Afspraken genereren",
+          "quotes": "Offerte aanvragen",
+          "information": "Informatie verstrekken",
+          "other": "Anders"
+        },
+        "primaryAction": {
+          "appointment": "Afspraak plannen",
+          "call": "Bellen",
+          "whatsapp": "WhatsApp-bericht sturen",
+          "form": "Contactformulier invullen",
+          "other": "Anders"
+        },
+        "focusCentral": {
+          "single_service": "Eén specifieke dienst of product",
+          "multiple_services": "Meerdere diensten of producten",
+          "action_offer": "Een actie of aanbod",
+          "general_intro": "Algemene kennismaking"
+        },
+        "audience": {
+          "consumers": "Consumenten",
+          "businesses": "Bedrijven",
+          "both": "Beide"
+        },
+        "style": {
+          "sleek_modern": "Strak en modern",
+          "professional": "Zakelijk en professioneel",
+          "warm": "Warm en persoonlijk",
+          "luxury": "Luxe",
+          "playful": "Speels",
+          "other": "Anders"
+        },
+        "budget": {
+          "<1000": "< €1000",
+          "1000-2000": "€1000 - €2000",
+          "2000-3500": "€2000 - €3500",
+          "3500-5000": "€3500 - €5000",
+          "5000+": "€5000+"
+        }
       }
     },
     "form": {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, FileText, ArrowRight, Upload, X, Image as ImageIcon, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -49,50 +49,46 @@ export function getBookingIntakeData(): BookingIntakeData | null {
   return null;
 }
 
-const MAIN_GOAL_OPTIONS = [
-  { value: 'new_clients', label: 'Nieuwe klanten krijgen' },
-  { value: 'appointments', label: 'Afspraken genereren' },
-  { value: 'quotes', label: 'Offerte aanvragen' },
-  { value: 'information', label: 'Informatie verstrekken' },
-  { value: 'other', label: 'Other' },
-];
+const MAIN_GOAL_VALUES = [
+  'new_clients',
+  'appointments',
+  'quotes',
+  'information',
+  'other',
+] as const;
 
-const PRIMARY_ACTION_OPTIONS = [
-  { value: 'appointment', label: 'Afspraak plannen' },
-  { value: 'call', label: 'Bellen' },
-  { value: 'whatsapp', label: 'WhatsApp bericht sturen' },
-  { value: 'form', label: 'Contactformulier invullen' },
-  { value: 'other', label: 'Other' },
-];
+const PRIMARY_ACTION_VALUES = [
+  'appointment',
+  'call',
+  'whatsapp',
+  'form',
+  'other',
+] as const;
 
-const FOCUS_CENTRAL_OPTIONS = [
-  { value: 'single_service', label: 'Eén specifieke dienst of product' },
-  { value: 'multiple_services', label: 'Meerdere diensten of producten' },
-  { value: 'action_offer', label: 'Een actie of aanbod' },
-  { value: 'general_intro', label: 'Algemene kennismaking' },
-];
+const FOCUS_CENTRAL_VALUES = [
+  'single_service',
+  'multiple_services',
+  'action_offer',
+  'general_intro',
+] as const;
 
-const AUDIENCE_OPTIONS = [
-  { value: 'consumers', label: 'Consumenten' },
-  { value: 'businesses', label: 'Bedrijven' },
-  { value: 'both', label: 'Beide' },
-];
+const AUDIENCE_VALUES = ['consumers', 'businesses', 'both'] as const;
 
-const STYLE_OPTIONS = [
-  { value: 'sleek_modern', label: 'Strak en modern' },
-  { value: 'professional', label: 'Zakelijk en professioneel' },
-  { value: 'warm', label: 'Warm en persoonlijk' },
-  { value: 'luxury', label: 'Luxe' },
-  { value: 'playful', label: 'Speels' },
-  { value: 'other', label: 'Other' },
-];
+const STYLE_VALUES = [
+  'sleek_modern',
+  'professional',
+  'warm',
+  'luxury',
+  'playful',
+  'other',
+] as const;
 
-const BUDGET_OPTIONS: { value: BudgetOption; label: string }[] = [
-  { value: '<1000', label: '< €1000' },
-  { value: '1000-2000', label: '€1000 - €2000' },
-  { value: '2000-3500', label: '€2000 - €3500' },
-  { value: '3500-5000', label: '€3500 - €5000' },
-  { value: '5000+', label: '€5000+' },
+const BUDGET_VALUES: readonly BudgetOption[] = [
+  '<1000',
+  '1000-2000',
+  '2000-3500',
+  '3500-5000',
+  '5000+',
 ];
 
 export const INTAKE_SECTION_COUNT = 4;
@@ -172,6 +168,55 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
   const containerRef = useRef<HTMLDivElement>(null);
   const [sectionIndex, setSectionIndex] = useState(0);
   const t = useTranslations("booking.intake");
+
+  const mainGoalOptions = useMemo(
+    () =>
+      MAIN_GOAL_VALUES.map((value) => ({
+        value,
+        label: t(`options.mainGoal.${value}`),
+      })),
+    [t],
+  );
+  const primaryActionOptions = useMemo(
+    () =>
+      PRIMARY_ACTION_VALUES.map((value) => ({
+        value,
+        label: t(`options.primaryAction.${value}`),
+      })),
+    [t],
+  );
+  const focusCentralOptions = useMemo(
+    () =>
+      FOCUS_CENTRAL_VALUES.map((value) => ({
+        value,
+        label: t(`options.focusCentral.${value}`),
+      })),
+    [t],
+  );
+  const audienceOptions = useMemo(
+    () =>
+      AUDIENCE_VALUES.map((value) => ({
+        value,
+        label: t(`options.audience.${value}`),
+      })),
+    [t],
+  );
+  const styleOptions = useMemo(
+    () =>
+      STYLE_VALUES.map((value) => ({
+        value,
+        label: t(`options.style.${value}`),
+      })),
+    [t],
+  );
+  const budgetOptions = useMemo(
+    () =>
+      BUDGET_VALUES.map((value) => ({
+        value,
+        label: t(`options.budget.${value}`),
+      })),
+    [t],
+  );
 
   // Section 1: Bedrijf & Project
   const [companyName, setCompanyName] = useState('');
@@ -528,13 +573,13 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                   {/* Main Goal */}
                   <div data-field="mainGoal">
                     <label className={labelClass}>{t("fields.mainGoal.label")} *</label>
-                    <RadioGroup name="mainGoal" options={MAIN_GOAL_OPTIONS} value={mainGoal} onChange={setMainGoal} error={errors.mainGoal} />
+                    <RadioGroup name="mainGoal" options={mainGoalOptions} value={mainGoal} onChange={setMainGoal} error={errors.mainGoal} />
                   </div>
 
                   {/* Primary Action */}
                   <div data-field="primaryAction">
                     <label className={labelClass}>{t("fields.primaryAction.label")} *</label>
-                    <RadioGroup name="primaryAction" options={PRIMARY_ACTION_OPTIONS} value={primaryAction} onChange={setPrimaryAction} error={errors.primaryAction} />
+                    <RadioGroup name="primaryAction" options={primaryActionOptions} value={primaryAction} onChange={setPrimaryAction} error={errors.primaryAction} />
                   </div>
 
                   {/* Services Description */}
@@ -553,7 +598,7 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                   {/* Focus Central */}
                   <div data-field="focusCentral">
                     <label className={labelClass}>{t("fields.focusCentral.label")} *</label>
-                    <RadioGroup name="focusCentral" options={FOCUS_CENTRAL_OPTIONS} value={focusCentral} onChange={setFocusCentral} error={errors.focusCentral} />
+                    <RadioGroup name="focusCentral" options={focusCentralOptions} value={focusCentral} onChange={setFocusCentral} error={errors.focusCentral} />
                   </div>
 
                   {/* Offer Explanation */}
@@ -582,7 +627,7 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                   {/* Primary Audience */}
                   <div data-field="primaryAudience">
                     <label className={labelClass}>{t("fields.primaryAudience.label")} *</label>
-                    <RadioGroup name="primaryAudience" options={AUDIENCE_OPTIONS} value={primaryAudience} onChange={setPrimaryAudience} error={errors.primaryAudience} />
+                    <RadioGroup name="primaryAudience" options={audienceOptions} value={primaryAudience} onChange={setPrimaryAudience} error={errors.primaryAudience} />
                   </div>
 
                   {/* Color Hex */}
@@ -600,7 +645,7 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                   {/* Style */}
                   <div data-field="style">
                     <label className={labelClass}>{t("fields.style.label")} *</label>
-                    <RadioGroup name="style" options={STYLE_OPTIONS} value={style} onChange={setStyle} error={errors.style} />
+                    <RadioGroup name="style" options={styleOptions} value={style} onChange={setStyle} error={errors.style} />
                   </div>
 
                   {/* Favorite Websites */}
@@ -653,7 +698,7 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                   {/* Budget */}
                   <div data-field="budget">
                     <label className={labelClass}>{t("fields.budget.label")} *</label>
-                    <RadioGroup name="budget" options={BUDGET_OPTIONS} value={budget} onChange={(v) => setBudget(v as BudgetOption)} error={errors.budget} />
+                    <RadioGroup name="budget" options={budgetOptions} value={budget} onChange={(v) => setBudget(v as BudgetOption)} error={errors.budget} />
                   </div>
                 </motion.div>
               )}
