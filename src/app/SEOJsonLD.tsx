@@ -51,7 +51,7 @@ export function SEOJsonLD() {
   const professionalService = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    name: "WebDirect — Webdesign Bureau",
+    name: "WebDirect - Webdesign Bureau",
     url: SITE_URL,
     description:
       "Webdesign en website ontwikkeling in Nederland. Custom websites voor bedrijven die willen groeien en verkopen.",

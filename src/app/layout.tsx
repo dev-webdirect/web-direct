@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
     : undefined,
   title: {
-    default: "WebDirect | Webdesign Bureau Nederland — Professionele Websites",
+    default: "WebDirect | Webdesign Bureau Nederland - Professionele Websites",
     template: "%s | WebDirect",
   },
   description:
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   authors: [{ name: "WebDirect", url: process.env.NEXT_PUBLIC_SITE_URL }],
   creator: "WebDirect",
   openGraph: {
-    title: "WebDirect | Webdesign Bureau Nederland — Professionele Websites",
+    title: "WebDirect | Webdesign Bureau Nederland - Professionele Websites",
     description:
       "Webdesign bureau in Nederland. Professionele websites die converteren en verkopen. Strategie, design en technologie voor ambitieuze merken.",
     url: process.env.NEXT_PUBLIC_SITE_URL,
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
         url: "/images/seo-preview.png",
         width: 1200,
         height: 630,
-        alt: "WebDirect — Webdesign bureau Nederland",
+        alt: "WebDirect - Webdesign bureau Nederland",
       },
     ],
   },
