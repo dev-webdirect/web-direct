@@ -180,10 +180,9 @@ export function BriefingWizard({ accessToken }: Props) {
   return (
     <div className="min-h-screen w-full px-4 sm:px-6 py-10 sm:py-14 text-white max-w-3xl mx-auto">
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-wider text-[#41AE96] font-semibold mb-2">Private client briefing</p>
         <h1 className="text-2xl sm:text-3xl font-bold">Website briefing questionnaire</h1>
         <p className="text-white/60 text-sm mt-2">
-          Step {step + 1} of {BRIEFING_TOTAL_STEPS}. Complete all sections to submit.
+          Step {step + 1} of {BRIEFING_TOTAL_STEPS}.
         </p>
         <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
           <motion.div
