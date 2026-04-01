@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
   const name = briefingTaskName(data);
   const description = briefingToClickUpDescription(data);
-  const deadlineMs = Date.parse(data.deadline);
+  const deadlineMs = data.deadline ? Date.parse(data.deadline) : NaN;
 
   const briefingStatus =
     process.env.CLICKUP_BRIEFING_TASK_STATUS?.trim() || 'briefing done';
@@ -64,19 +64,19 @@ export async function POST(request: NextRequest) {
 
     if (!res.ok) {
       const errText = await res.text();
-      let details: unknown = errText;
-      try {
-        details = JSON.parse(errText);
-      } catch {
-        /* keep string */
-      }
-      return NextResponse.json({ error: 'ClickUp task creation failed', details }, { status: res.status });
+      console.error(
+        '[api/briefing] ClickUp task creation failed',
+        `status=${res.status}`,
+        `body=${errText}`,
+        `briefing=${name}`,
+      );
+    } else {
+      const task = await res.json();
+      console.log('[api/briefing] ClickUp task created', task.id);
     }
-
-    const task = await res.json();
-    return NextResponse.json({ ok: true, taskId: task.id });
   } catch (e) {
-    console.error('[api/briefing] ClickUp error', e);
-    return NextResponse.json({ error: 'Failed to create briefing task' }, { status: 500 });
+    console.error('[api/briefing] ClickUp network error', e);
   }
+
+  return NextResponse.json({ ok: true });
 }

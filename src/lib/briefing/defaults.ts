@@ -25,6 +25,7 @@ export const briefingDefaultValues: BriefingFormValues = {
 
   websiteType: 'marketing',
   pagesNeeded: [],
+  pageDescriptions: {},
   customPagesDescription: '',
   homepageContent: {
     heroTitle: '',
@@ -42,6 +43,5 @@ export const briefingDefaultValues: BriefingFormValues = {
   languages: [],
 
   deadline: '',
-  budget: 0,
   revisions: 2,
 };

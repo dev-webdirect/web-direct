@@ -30,17 +30,27 @@ function section(title: string, rows: string[]): string {
   return `# ${title}\n\n${body}`;
 }
 
-function formatFaq(items: NonNullable<BriefingFormValues['faq']>): string | null {
+function formatFaq(items: BriefingFormValues['faq'] | undefined): string | null {
   if (!items?.length) return null;
   const blocks = items.map((f, i) => {
-    const parts = [
-      `**Q${i + 1}: ${f.question}**`,
-      f.answer.trim(),
-      `📎 Document: ${f.documentUrl}`,
-    ];
+    const parts: string[] = [`**Q${i + 1}: ${f.question || '(no question)'}**`];
+    if (f.answer?.trim()) parts.push(f.answer.trim());
+    if (f.documentUrl?.trim()) parts.push(`📎 Document: ${f.documentUrl}`);
     return parts.join('\n');
   });
   return `**FAQ:**\n\n${blocks.join('\n\n')}`;
+}
+
+function formatPages(
+  pages: string[] | undefined,
+  descriptions: Record<string, string> | undefined,
+): string | null {
+  if (!pages?.length) return null;
+  const lines = pages.map((p) => {
+    const desc = descriptions?.[p]?.trim();
+    return desc ? `- **${p}**\n  ${desc}` : `- ${p}`;
+  });
+  return `**Pages / Sections required:**\n${lines.join('\n')}`;
 }
 
 export function briefingToClickUpDescription(data: BriefingFormValues): string {
@@ -89,28 +99,28 @@ export function briefingToClickUpDescription(data: BriefingFormValues): string {
     ])
   );
 
-  const pagesLabel = data.pagesNeeded.join(', ');
   const hasCustomPages =
-    data.pagesNeeded.includes(BRIEFING_CUSTOM_PAGES_LABEL) &&
+    data.pagesNeeded?.includes(BRIEFING_CUSTOM_PAGES_LABEL) &&
     data.customPagesDescription?.trim();
 
-  const homepageSections = Array.isArray(data.homepageContent.sections)
-    ? data.homepageContent.sections.length
-      ? data.homepageContent.sections.map((s) => `- ${s}`).join('\n')
+  const hpSections = data.homepageContent?.sections;
+  const homepageSections = Array.isArray(hpSections)
+    ? hpSections.length
+      ? hpSections.map((s) => `- ${s}`).join('\n')
       : '—'
-    : data.homepageContent.sections?.trim() || '—';
+    : (typeof hpSections === 'string' && hpSections.trim()) || '—';
 
   const content = section(
     'Content & Site Map',
     keep([
       field('Website type', data.websiteType),
-      field('Pages / Sections required', pagesLabel),
+      formatPages(data.pagesNeeded, data.pageDescriptions),
       hasCustomPages
         ? multilineField('Custom pages — description', data.customPagesDescription!)
         : null,
-      field('Homepage — Main headline', data.homepageContent.heroTitle),
-      field('Homepage — Supporting line', data.homepageContent.heroSubtitle),
-      field('Homepage — Primary CTA', data.homepageContent.ctaText),
+      field('Homepage — Main headline', data.homepageContent?.heroTitle),
+      field('Homepage — Supporting line', data.homepageContent?.heroSubtitle),
+      field('Homepage — Primary CTA', data.homepageContent?.ctaText),
       `**Homepage — Structure / Notes:**\n${homepageSections}`,
       formatFaq(data.faq),
       data.images?.length
@@ -140,12 +150,10 @@ export function briefingToClickUpDescription(data: BriefingFormValues): string {
   const scope = section(
     'Project Scope & Timeline',
     keep([
-      field(
-        'Target delivery date',
-        new Date(data.deadline).toISOString().slice(0, 10)
-      ),
-      field('Indicative budget', String(data.budget)),
-      field('Revision rounds (requested)', String(data.revisions)),
+      data.deadline?.trim()
+        ? field('Target delivery date', new Date(data.deadline).toISOString().slice(0, 10))
+        : null,
+      data.revisions != null ? field('Revision rounds (requested)', String(data.revisions)) : null,
     ])
   );
 
@@ -153,5 +161,5 @@ export function briefingToClickUpDescription(data: BriefingFormValues): string {
 }
 
 export function briefingTaskName(data: BriefingFormValues): string {
-  return `${data.businessName} — Website Briefing`;
+  return `${data.businessName || 'Unnamed'} — Website Briefing`;
 }

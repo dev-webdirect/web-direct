@@ -28,183 +28,156 @@ const urlOrImageDataUrl = z.string().refine(
 );
 
 const competitorSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  website: z.string().url('Valid website URL required'),
+  name: z.string().default(''),
+  website: z.string().default(''),
 });
 
 const homepageContentSchema = z.object({
-  heroTitle: z.string().min(1, 'Hero title is required'),
+  heroTitle: z.string().optional().default(''),
   heroSubtitle: z.string().optional().default(''),
   ctaText: z.string().optional().default(''),
   sections: z
-    .union([z.string(), z.array(z.string().min(1))])
+    .union([z.string(), z.array(z.string())])
     .optional()
     .default(''),
 });
 
 const faqItemSchema = z.object({
-  question: z.string().min(1),
-  answer: z.string().min(1),
-  /** Link to supporting doc (Google Docs, Dropbox, etc.) */
-  documentUrl: z
-    .string()
-    .min(1, 'Document link is required')
-    .url('Use a valid URL to your document (e.g. Google Docs, shared PDF)'),
+  question: z.string().default(''),
+  answer: z.string().default(''),
+  documentUrl: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? undefined : v),
+    z.string().url('Use a valid URL to your document').optional(),
+  ),
 });
 
 /** Validated in superRefine when this page type is selected; must match PAGES_NEEDED_OPTIONS. */
 export const BRIEFING_CUSTOM_PAGES_LABEL = 'Custom pages';
 
-/** Validated in superRefine when hasDomain is true */
 const domainInfoSchema = z.object({
-  domain: z.string(),
-  provider: z.string(),
+  domain: z.string().default(''),
+  provider: z.string().default(''),
 });
 
-export const briefingFormSchema = z
-  .object({
-    businessName: z.string().min(1, 'Business name is required'),
-    industry: z.string().min(1, 'Industry is required'),
-    businessEmail: z.string().email('Valid business email required'),
-    personalEmail: optionalEmail,
-    phone: z.string().min(1, 'Phone is required'),
-    address: z.string().min(1, 'Address is required'),
-    googleMapsLink: z.string().url('Valid Google Maps URL required'),
-    socialLinks: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
-          : [],
-      z.array(z.string().url()).default([]),
-    ),
-    website: optionalUrl,
-    tagline: z.string().min(1, 'Tagline is required'),
-    knownFor: z.preprocess(
-      (v) => {
-        if (!Array.isArray(v)) return [];
-        return v.map((s) => String(s).trim()).filter((s) => s.length > 0);
-      },
-      z
-        .array(z.string().min(1))
-        .min(1, 'Add at least one item you are known for')
-        .max(3, 'Maximum 3 items'),
-    ),
-    restrictions: z.string().optional(),
-    targetLocation: z.string().min(1, 'Target location is required'),
-    targetAudience: z.string().min(1, 'Target audience is required'),
-    competitors: z.preprocess(
-      (v) => {
-        if (!Array.isArray(v)) return [];
-        return v.filter(
-          (c: { name?: string; website?: string }) =>
-            typeof c?.name === 'string' &&
-            c.name.trim() !== '' &&
-            typeof c?.website === 'string' &&
-            c.website.trim() !== '',
-        );
-      },
-      z.array(competitorSchema).default([]),
-    ),
+export const briefingFormSchema = z.object({
+  businessName: z.string().optional().default(''),
+  industry: z.string().optional().default(''),
+  businessEmail: optionalEmail,
+  personalEmail: optionalEmail,
+  phone: z.string().optional().default(''),
+  address: z.string().optional().default(''),
+  googleMapsLink: optionalUrl,
+  socialLinks: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
+        : [],
+    z.array(z.string().url()).default([]),
+  ),
+  website: optionalUrl,
+  tagline: z.string().optional().default(''),
+  knownFor: z.preprocess(
+    (v) => {
+      if (!Array.isArray(v)) return [];
+      return v.map((s) => String(s).trim()).filter((s) => s.length > 0);
+    },
+    z.array(z.string()).default([]),
+  ),
+  restrictions: z.string().optional().default(''),
+  targetLocation: z.string().optional().default(''),
+  targetAudience: z.string().optional().default(''),
+  competitors: z.preprocess(
+    (v) => {
+      if (!Array.isArray(v)) return [];
+      return v.filter(
+        (c: { name?: string; website?: string }) =>
+          typeof c?.name === 'string' &&
+          c.name.trim() !== '',
+      );
+    },
+    z.array(competitorSchema).default([]),
+  ),
 
-    logos: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
-          : [],
-      z.array(z.string().url('Each logo must be a valid URL')).default([]),
-    ),
-    brandColors: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
-          : [],
-      z.array(hexColor).default([]),
-    ),
-    fonts: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
-          : [],
-      z.array(z.string().min(1)).default([]),
-    ),
-    brandGuidelines: z.preprocess(
-      (v) => (v === '' || v === null || v === undefined ? undefined : v),
-      urlOrImageDataUrl.optional(),
-    ),
-    toneOfVoice: z.enum(['professional', 'friendly', 'luxury', 'bold']),
+  logos: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
+        : [],
+    z.array(z.string().url('Each logo must be a valid URL')).default([]),
+  ),
+  brandColors: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
+        : [],
+    z.array(hexColor).default([]),
+  ),
+  fonts: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
+        : [],
+    z.array(z.string()).default([]),
+  ),
+  brandGuidelines: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? undefined : v),
+    urlOrImageDataUrl.optional(),
+  ),
+  toneOfVoice: z
+    .enum(['professional', 'friendly', 'luxury', 'bold'])
+    .optional()
+    .default('professional'),
 
-    websiteType: z.enum(['marketing', 'ecommerce', 'portfolio', 'landing', 'blog', 'other']),
-    pagesNeeded: z.array(z.string().min(1)).min(1, 'Select at least one page'),
-    customPagesDescription: z.string().optional().default(''),
-    homepageContent: homepageContentSchema,
-    faq: z.preprocess(
-      (v) => {
-        if (!Array.isArray(v)) return [];
-        return v.filter(
-          (item: { question?: string; answer?: string; documentUrl?: string }) =>
-            String(item?.question ?? '').trim() !== '' &&
-            String(item?.answer ?? '').trim() !== '',
-        );
-      },
-      z.array(faqItemSchema).default([]),
-    ),
-    images: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
-          : [],
-      z.array(z.string().url()).default([]),
-    ),
+  websiteType: z
+    .enum(['marketing', 'ecommerce', 'portfolio', 'landing', 'blog', 'other'])
+    .optional()
+    .default('marketing'),
+  pagesNeeded: z.array(z.string()).default([]),
+  pageDescriptions: z.record(z.string(), z.string()).optional().default({}),
+  customPagesDescription: z.string().optional().default(''),
+  homepageContent: homepageContentSchema.optional().default({
+    heroTitle: '',
+    heroSubtitle: '',
+    ctaText: '',
+    sections: '',
+  }),
+  faq: z.preprocess(
+    (v) => {
+      if (!Array.isArray(v)) return [];
+      return v.filter(
+        (item: { question?: string; answer?: string }) =>
+          String(item?.question ?? '').trim() !== '' ||
+          String(item?.answer ?? '').trim() !== '',
+      );
+    },
+    z.array(faqItemSchema).default([]),
+  ),
+  images: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.filter((s) => typeof s === 'string' && s.trim() !== '')
+        : [],
+    z.array(z.string().url()).default([]),
+  ),
 
-    hasDomain: z.boolean(),
-    domainInfo: domainInfoSchema.optional(),
-    contentEditor: z
-      .string()
-      .min(1, 'Describe who will edit content after launch (and how, if known)'),
-    multiLanguage: z.boolean(),
-    languages: z.preprocess(
-      (v) =>
-        Array.isArray(v)
-          ? v.map((s) => String(s).trim()).filter((s) => s.length > 0)
-          : [],
-      z.array(z.string().min(1)).default([]),
-    ),
+  hasDomain: z.boolean().optional().default(false),
+  domainInfo: domainInfoSchema.optional(),
+  contentEditor: z.string().optional().default(''),
+  multiLanguage: z.boolean().optional().default(false),
+  languages: z.preprocess(
+    (v) =>
+      Array.isArray(v)
+        ? v.map((s) => String(s).trim()).filter((s) => s.length > 0)
+        : [],
+    z.array(z.string()).default([]),
+  ),
 
-    deadline: z
-      .string()
-      .min(1, 'Deadline is required')
-      .refine((s) => !Number.isNaN(Date.parse(s)), 'Invalid date'),
-    budget: z.coerce.number().positive('Budget must be a positive number'),
-    revisions: z.coerce.number().int().min(0).max(99),
-  })
-  .superRefine((data, ctx) => {
-    if (data.hasDomain) {
-      if (!data.domainInfo?.domain?.trim() || !data.domainInfo?.provider?.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Domain and provider are required when you already have a domain',
-          path: ['domainInfo', 'domain'],
-        });
-      }
-    }
-    if (data.multiLanguage && data.languages.length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Add at least one language for multilingual sites',
-        path: ['languages'],
-      });
-    }
-    if (
-      data.pagesNeeded.includes(BRIEFING_CUSTOM_PAGES_LABEL) &&
-      !data.customPagesDescription?.trim()
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Describe the custom pages you need',
-        path: ['customPagesDescription'],
-      });
-    }
-  });
+  deadline: z.string().optional().default(''),
+  revisions: z.preprocess(
+    (v) => (v === '' || v === null || v === undefined ? 0 : v),
+    z.coerce.number().int().min(0).max(99).default(0),
+  ),
+});
 
 export type BriefingFormValues = z.infer<typeof briefingFormSchema>;
 
@@ -228,16 +201,16 @@ export const BRIEFING_STEP_FIELDS: (keyof BriefingFormValues)[][] = [
     'competitors',
   ],
   ['logos', 'brandColors', 'fonts', 'brandGuidelines', 'toneOfVoice'],
-  ['websiteType', 'pagesNeeded', 'customPagesDescription', 'homepageContent', 'faq', 'images'],
+  ['websiteType', 'pagesNeeded', 'pageDescriptions', 'customPagesDescription', 'homepageContent', 'faq', 'images'],
   ['hasDomain', 'domainInfo', 'contentEditor', 'multiLanguage', 'languages'],
-  ['deadline', 'budget', 'revisions'],
+  ['deadline', 'revisions'],
 ];
 
 export const BRIEFING_TOTAL_STEPS = BRIEFING_STEP_FIELDS.length;
 
-export const WEBSITE_TYPE_OPTIONS: { value: BriefingFormValues['websiteType']; label: string }[] = [
+export const WEBSITE_TYPE_OPTIONS: { value: NonNullable<BriefingFormValues['websiteType']>; label: string }[] = [
   { value: 'marketing', label: 'Marketing / corporate' },
-  { value: 'ecommerce', label: 'E‑commerce' },
+  { value: 'ecommerce', label: 'E\u2011commerce' },
   { value: 'portfolio', label: 'Portfolio' },
   { value: 'landing', label: 'Landing page' },
   { value: 'blog', label: 'Blog / content' },

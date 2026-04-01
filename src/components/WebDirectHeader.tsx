@@ -131,7 +131,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
             >
               {/* Logo Section */}
               <motion.div
-                className="flex items-center gap-2 sm:gap-3 flex-shrink-0"
+                className="flex items-center gap-2 sm:gap-3 shrink-0"
                 animate={{
                   gap: isScrolled ? 8 : 12,
                 }}
@@ -169,7 +169,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
               </div>
 
               {/* Right Actions */}
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 {/* Language switcher (desktop, only when not scrolled) */}
                 {!isScrolled && (
                   <div className="hidden sm:flex items-center gap-1 px-1 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-medium text-white/70">

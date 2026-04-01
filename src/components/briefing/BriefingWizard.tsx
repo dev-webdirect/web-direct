@@ -160,6 +160,11 @@ export function BriefingWizard({ accessToken }: Props) {
     if (label === BRIEFING_CUSTOM_PAGES_LABEL && !nextPages.includes(BRIEFING_CUSTOM_PAGES_LABEL)) {
       setValue('customPagesDescription', '', { shouldValidate: true, shouldDirty: true });
     }
+    if (!nextPages.includes(label)) {
+      const current = getValues('pageDescriptions') ?? {};
+      const { [label]: _, ...rest } = current;
+      setValue('pageDescriptions', rest, { shouldDirty: true });
+    }
     setValue('pagesNeeded', nextPages, { shouldValidate: true, shouldDirty: true });
   };
 
@@ -214,18 +219,18 @@ export function BriefingWizard({ accessToken }: Props) {
             {step === 0 && (
               <div className="space-y-5">
                 <div>
-                  <label className={labelClass}>Business name *</label>
+                  <label className={labelClass}>Business name</label>
                   <input {...register('businessName')} className={inputClass} />
                   <FieldError message={errors.businessName?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Industry *</label>
+                  <label className={labelClass}>Industry</label>
                   <input {...register('industry')} className={inputClass} placeholder="e.g. Dental, SaaS, Retail" />
                   <FieldError message={errors.industry?.message} />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className={labelClass}>Business email *</label>
+                    <label className={labelClass}>Business email</label>
                     <input type="email" {...register('businessEmail')} className={inputClass} />
                     <FieldError message={errors.businessEmail?.message} />
                   </div>
@@ -236,17 +241,17 @@ export function BriefingWizard({ accessToken }: Props) {
                   </div>
                 </div>
                 <div>
-                  <label className={labelClass}>Phone *</label>
+                  <label className={labelClass}>Phone</label>
                   <input {...register('phone')} className={inputClass} />
                   <FieldError message={errors.phone?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Address *</label>
+                  <label className={labelClass}>Address</label>
                   <textarea {...register('address')} rows={2} className={inputClass} />
                   <FieldError message={errors.address?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Google Maps link *</label>
+                  <label className={labelClass}>Google Maps link</label>
                   <input {...register('googleMapsLink')} className={inputClass} placeholder="https://maps.google.com/..." />
                   <FieldError message={errors.googleMapsLink?.message} />
                 </div>
@@ -256,12 +261,12 @@ export function BriefingWizard({ accessToken }: Props) {
                   <FieldError message={errors.website?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Tagline *</label>
+                  <label className={labelClass}>Tagline</label>
                   <input {...register('tagline')} className={inputClass} />
                   <FieldError message={errors.tagline?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Known for (1-3 short items) *</label>
+                  <label className={labelClass}>Known for (1-3 short items)</label>
                   <Controller
                     control={control}
                     name="knownFor"
@@ -298,12 +303,12 @@ export function BriefingWizard({ accessToken }: Props) {
                   <textarea {...register('restrictions')} rows={2} className={inputClass} />
                 </div>
                 <div>
-                  <label className={labelClass}>Target location *</label>
+                  <label className={labelClass}>Target location</label>
                   <input {...register('targetLocation')} className={inputClass} />
                   <FieldError message={errors.targetLocation?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Target audience *</label>
+                  <label className={labelClass}>Target audience</label>
                   <textarea {...register('targetAudience')} rows={3} className={inputClass} />
                   <FieldError message={errors.targetAudience?.message} />
                 </div>
@@ -535,7 +540,7 @@ export function BriefingWizard({ accessToken }: Props) {
                   <FieldError message={errors.brandGuidelines?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Tone of voice *</label>
+                  <label className={labelClass}>Tone of voice</label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {TONE_OF_VOICE_OPTIONS.map((opt) => (
                       <button
@@ -566,7 +571,7 @@ export function BriefingWizard({ accessToken }: Props) {
             {step === 2 && (
               <div className="space-y-5">
                 <div>
-                  <label className={labelClass}>Website type *</label>
+                  <label className={labelClass}>Website type</label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {WEBSITE_TYPE_OPTIONS.map((opt) => (
                       <button
@@ -592,7 +597,7 @@ export function BriefingWizard({ accessToken }: Props) {
                   <FieldError message={errors.websiteType?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Pages needed *</label>
+                  <label className={labelClass}>Pages needed</label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {PAGES_NEEDED_OPTIONS.map((page) => (
                       <label
@@ -615,22 +620,51 @@ export function BriefingWizard({ accessToken }: Props) {
                   </div>
                   <FieldError message={errors.pagesNeeded?.message} />
                 </div>
+
+                {pagesNeeded.filter((p) => p !== BRIEFING_CUSTOM_PAGES_LABEL && p !== 'Home').length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-sm text-white/60">Describe what you need on each page:</p>
+                    {pagesNeeded
+                      .filter((p) => p !== BRIEFING_CUSTOM_PAGES_LABEL && p !== 'Home')
+                      .map((page) => (
+                        <div key={page} className="border border-white/10 rounded-xl p-4">
+                          <label className={labelClass}>{page}</label>
+                          <textarea
+                            rows={2}
+                            className={cn(inputClass, 'resize-none')}
+                            placeholder={`What should the ${page} page include?`}
+                            value={watch('pageDescriptions')?.[page] ?? ''}
+                            onChange={(e) => {
+                              const current = getValues('pageDescriptions') ?? {};
+                              setValue(
+                                'pageDescriptions',
+                                { ...current, [page]: e.target.value },
+                                { shouldDirty: true },
+                              );
+                            }}
+                          />
+                        </div>
+                      ))}
+                  </div>
+                )}
+
                 {pagesNeeded.includes(BRIEFING_CUSTOM_PAGES_LABEL) && (
-                  <div data-field="customPagesDescription">
-                    <label className={labelClass}>Custom pages — describe what you need *</label>
+                  <div data-field="customPagesDescription" className="border border-white/10 rounded-xl p-4">
+                    <label className={labelClass}>Custom pages — describe what you need</label>
                     <textarea
                       {...register('customPagesDescription')}
                       rows={4}
                       className={cn(inputClass, 'resize-none')}
-                      placeholder="e.g. Team page with bios, case study template, landing page for a campaign, pricing calculator…"
+                      placeholder="e.g. Team page with bios, case study template, landing page for a campaign, pricing calculator..."
                     />
                     <FieldError message={errors.customPagesDescription?.message} />
                   </div>
                 )}
+                {pagesNeeded.includes('Home') && (
                 <div className="space-y-3 border border-white/10 rounded-xl p-4">
-                  <p className="text-sm font-medium text-white">Homepage content</p>
+                  <p className="text-sm font-medium text-white">Home — page content</p>
                   <div>
-                    <label className={labelClass}>Hero title *</label>
+                    <label className={labelClass}>Hero title</label>
                     <input {...register('homepageContent.heroTitle')} className={inputClass} />
                     <FieldError message={errors.homepageContent?.heroTitle?.message} />
                   </div>
@@ -647,6 +681,7 @@ export function BriefingWizard({ accessToken }: Props) {
                     <textarea {...register('homepageContent.sections')} rows={4} className={inputClass} />
                   </div>
                 </div>
+                )}
                 <div>
                   <label className={labelClass}>FAQ items</label>
                 
@@ -709,18 +744,18 @@ export function BriefingWizard({ accessToken }: Props) {
                 {hasDomain && (
                   <div className="grid sm:grid-cols-2 gap-4 pl-2 border-l-2 border-[#41AE96]/40">
                     <div>
-                      <label className={labelClass}>Domain *</label>
+                      <label className={labelClass}>Domain</label>
                       <input {...register('domainInfo.domain')} className={inputClass} placeholder="example.com" />
                     </div>
                     <div>
-                      <label className={labelClass}>Provider / registrar *</label>
+                      <label className={labelClass}>Provider / registrar</label>
                       <input {...register('domainInfo.provider')} className={inputClass} placeholder="e.g. TransIP, Cloudflare" />
                     </div>
                     <FieldError message={errors.domainInfo?.message} />
                   </div>
                 )}
                 <div>
-                  <label className={labelClass}>Who will edit content after launch? *</label>
+                  <label className={labelClass}>Who will edit content after launch?</label>
                   <textarea
                     {...register('contentEditor')}
                     rows={3}
@@ -782,17 +817,12 @@ export function BriefingWizard({ accessToken }: Props) {
             {step === 4 && (
               <div className="space-y-5">
                 <div>
-                  <label className={labelClass}>Desired deadline *</label>
+                  <label className={labelClass}>Desired deadline</label>
                   <input type="date" {...register('deadline')} className={inputClass} />
                   <FieldError message={errors.deadline?.message} />
                 </div>
                 <div>
-                  <label className={labelClass}>Budget (number) *</label>
-                  <input type="number" step="1" min="1" {...register('budget', { valueAsNumber: true })} className={inputClass} />
-                  <FieldError message={errors.budget?.message} />
-                </div>
-                <div>
-                  <label className={labelClass}>Requested revision rounds *</label>
+                  <label className={labelClass}>Requested revision rounds</label>
                   <input type="number" min="0" max="99" {...register('revisions', { valueAsNumber: true })} className={inputClass} />
                   <FieldError message={errors.revisions?.message} />
                 </div>
