@@ -137,7 +137,7 @@ const SupportCard = ({
 // @component: BookingFaqSection
 export const BookingFaqSection = () => {
   const router = useRouter();
-  const goToBooking = () => router.push('/booking');
+  const goToBooking = () => router.push('/afspraak');
   const t = useTranslations('booking.faq');
 
   const [activeCategory, setActiveCategory] = useState(0);

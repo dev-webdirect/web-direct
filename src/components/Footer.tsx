@@ -262,7 +262,7 @@ export const Footer = ({
                 <h4 className="text-sm font-bold uppercase tracking-wider text-white/60 mb-2">
                   {t('planTitle')}
                 </h4>
-                <FooterLink href="/booking" label={t('plan.book')} />
+                <FooterLink href="/afspraak" label={t('plan.book')} />
                 <FooterLink href="#about" label={t('plan.about')} />
                 <FooterLink href="#faq" label={t('plan.faq')} />
                 <a

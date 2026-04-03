@@ -60,7 +60,7 @@
         "companyProject": "Bedrijf & Project",
         "goalsOffer": "Doelen & Aanbod",
         "styleDesign": "Stijl & Design",
-        "budgetOther": "Budget & Overig"
+        "other": "Overig"
       },
       "back": "Terug",
       "previous": "Vorige",
@@ -122,9 +122,6 @@
         "doNotMention": {
           "label": "Dingen die wel/niet benoemd moeten worden (optioneel)",
           "placeholder": "..."
-        },
-        "budget": {
-          "label": "Wat is je budget?"
         }
       },
       "errors": {
@@ -136,7 +133,6 @@
         "focusCentralRequired": "Wat moet centraal staan is verplicht",
         "primaryAudienceRequired": "Doelgroep is verplicht",
         "styleRequired": "Stijl is verplicht",
-        "budgetRequired": "Budget is verplicht",
         "logo": {
           "tooManyFiles": "Maximum 10 bestanden toegestaan",
           "tooLarge": "{name} is te groot (max {maxMb} MB)",
@@ -180,13 +176,6 @@
           "luxury": "Luxe",
           "playful": "Speels",
           "other": "Anders"
-        },
-        "budget": {
-          "<1000": "< €1000",
-          "1000-2000": "€1000 - €2000",
-          "2000-3500": "€2000 - €3500",
-          "3500-5000": "€3500 - €5000",
-          "5000+": "€5000+"
         }
       }
     },

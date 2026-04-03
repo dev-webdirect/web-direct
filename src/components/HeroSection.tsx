@@ -263,7 +263,7 @@ export const HeroSection = () => {
           <div>
             <CTAButtonGroup
               primaryText={t('cta.primary')}
-              primaryHref="/booking"
+              primaryHref="/afspraak"
               secondaryText={t('cta.secondary')}
               secondaryHref="#projects"
             />

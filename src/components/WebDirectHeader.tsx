@@ -212,7 +212,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
-                  onClick={() => router.push('/booking')}
+                  onClick={() => router.push('/afspraak')}
                 >
                   <span className="hidden sm:inline">{t('cta.primary')}</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -262,7 +262,7 @@ export const WebDirectHeader = (_props: WebDirectHeaderProps) => {
                           whileTap={{ scale: 0.95 }}
                           onClick={() => {
                             setIsMobileMenuOpen(false);
-                            router.push('/booking');
+                            router.push('/afspraak');
                           }}
                         >
                           {t('cta.mobileGetStarted')}

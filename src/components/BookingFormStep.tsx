@@ -95,7 +95,7 @@ export const BookingFormStep = ({
       if (!selectedDateTime) {
         sessionStorage.setItem('webdirect_booking_mode', 'intake');
       }
-      window.location.href = '/booking/success';
+      window.location.href = '/afspraak/success';
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Er ging iets mis');
     } finally {

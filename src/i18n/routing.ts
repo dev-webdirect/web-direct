@@ -7,7 +7,7 @@ export const routing = defineRouting({
   // Default locale (Dutch)
   defaultLocale: 'nl',
 
-  // Omit locale prefix for the default locale (`/booking` for nl, `/en/booking` for en)
+  // Omit locale prefix for the default locale (`/afspraak` for nl, `/en/afspraak` for en)
   localePrefix: 'as-needed',
 });
 

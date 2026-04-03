@@ -6,8 +6,6 @@ import { ChevronLeft, FileText, ArrowRight, Upload, X, Image as ImageIcon, Check
 import { useTranslations } from "next-intl";
 import { cn } from "../lib/utils";
 
-export type BudgetOption = '<1000' | '1000-2000' | '2000-3500' | '3500-5000' | '5000+';
-
 export interface BookingIntakeData {
   companyName: string;
   contactPerson: string;
@@ -25,7 +23,6 @@ export interface BookingIntakeData {
   favoriteWebsites?: string;
   competitors?: string;
   doNotMention?: string;
-  budget: BudgetOption;
 }
 
 const INTAKE_STORAGE_KEY = 'webdirect_booking_intake';
@@ -83,21 +80,13 @@ const STYLE_VALUES = [
   'other',
 ] as const;
 
-const BUDGET_VALUES: readonly BudgetOption[] = [
-  '<1000',
-  '1000-2000',
-  '2000-3500',
-  '3500-5000',
-  '5000+',
-];
-
 export const INTAKE_SECTION_COUNT = 4;
 
 const SECTION_TITLES_KEYS: [string, string, string, string] = [
   "sections.companyProject",
   "sections.goalsOffer",
   "sections.styleDesign",
-  "sections.budgetOther",
+  "sections.other",
 ];
 
 interface BookingIntakeStepProps {
@@ -209,15 +198,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
       })),
     [t],
   );
-  const budgetOptions = useMemo(
-    () =>
-      BUDGET_VALUES.map((value) => ({
-        value,
-        label: t(`options.budget.${value}`),
-      })),
-    [t],
-  );
-
   // Section 1: Bedrijf & Project
   const [companyName, setCompanyName] = useState('');
   const [logoFiles, setLogoFiles] = useState<File[]>([]);
@@ -243,7 +223,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
   // Section 4: Budget & Overig
   const [competitors, setCompetitors] = useState('');
   const [doNotMention, setDoNotMention] = useState('');
-  const [budget, setBudget] = useState<BudgetOption | ''>('');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -342,8 +321,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
     } else if (idx === 2) {
       if (!primaryAudience) newErrors.primaryAudience = t("errors.primaryAudienceRequired");
       if (!style) newErrors.style = t("errors.styleRequired");
-    } else if (idx === 3) {
-      if (!budget) newErrors.budget = t("errors.budgetRequired");
     }
 
     setErrors(newErrors);
@@ -384,7 +361,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
         favoriteWebsites: favoriteWebsites.trim() || undefined,
         competitors: competitors.trim() || undefined,
         doNotMention: doNotMention.trim() || undefined,
-        budget: budget as BudgetOption,
       };
       storeBookingIntakeData(data);
       onComplete(data);
@@ -693,12 +669,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                       rows={2}
                       className={cn(inputClass, 'resize-none')}
                     />
-                  </div>
-
-                  {/* Budget */}
-                  <div data-field="budget">
-                    <label className={labelClass}>{t("fields.budget.label")} *</label>
-                    <RadioGroup name="budget" options={budgetOptions} value={budget} onChange={(v) => setBudget(v as BudgetOption)} error={errors.budget} />
                   </div>
                 </motion.div>
               )}

@@ -7,7 +7,7 @@ import { cn } from '../lib/utils';
 import { useLocale, useTranslations } from 'next-intl';
 
 const DATETIME_STORAGE_KEY = 'webdirect_booking_datetime';
-const TIMEZONE = 'Europe/Paris'; // Central European Time (CET/CEST) — same as Calendly
+const TIMEZONE = 'Europe/Amsterdam';
 const MAX_DAYS_AHEAD = 14;
 const MIN_NOTICE_HOURS = 4;
 
@@ -148,7 +148,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
 
     try {
       const res = await fetch(
-        `/api/calendly/available-times?start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`
+        `/api/ghl/slots?start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`
       );
       const json = await res.json();
 

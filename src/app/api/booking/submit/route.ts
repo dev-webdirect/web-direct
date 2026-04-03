@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import type { BookingIntakeData } from '@/src/components/BookingIntakeStep';
 import type { BookingFormData } from '@/src/components/BookingFormStep';
 
-const CALENDLY_API_BASE = 'https://api.calendly.com';
+const GHL_BASE = 'https://services.leadconnectorhq.com';
 
 interface SubmitRequestBody {
   mode: 'full' | 'intake';
@@ -16,6 +16,8 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
   const { name, email } = formData;
 
   // 1. Generate Magic Path prompt via OpenRouter
+  
+  
   let generatedPrompt = '';
   const openRouterKey = process.env.OPENROUTER_API_KEY?.trim();
 
@@ -119,39 +121,76 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
     }
   }
 
-  // 4. Create Calendly invitee (only for full mode with a selectedDateTime)
+  // 4. Create GHL appointment (only for full mode with a selectedDateTime)
   if (mode === 'full' && selectedDateTime) {
-    const calendlyToken = process.env.CALENDLY_API_TOKEN?.trim();
-    const eventTypeUuid = process.env.CALENDLY_EVENT_TYPE_UUID?.trim();
-    const locationKind = process.env.CALENDLY_LOCATION_KIND?.trim();
+    const ghlApiKey    = process.env.GHL_API_KEY?.trim();
+    const ghlCalendarId = process.env.GHL_CALENDAR_ID?.trim();
+    const ghlLocationId = process.env.GHL_LOCATION_ID?.trim();
 
-    if (calendlyToken && eventTypeUuid) {
+    if (ghlApiKey && ghlCalendarId && ghlLocationId) {
+      const ghlHeaders = {
+        'Authorization': `Bearer ${ghlApiKey}`,
+        'Version':       '2021-07-28',
+        'Content-Type':  'application/json',
+        'Accept':        'application/json',
+      };
+
       try {
-        const eventTypeUri = `${CALENDLY_API_BASE}/event_types/${eventTypeUuid}`;
-        const requestBody: Record<string, unknown> = {
-          event_type: eventTypeUri,
-          start_time: selectedDateTime,
-          invitee: {
-            email,
-            name,
-            timezone: 'Europe/Amsterdam',
-          },
-        };
+        // 4a. Upsert contact in GHL to get a contactId
+        const nameParts = name.trim().split(/\s+/);
+        const firstName = nameParts[0] || name;
+        const lastName  = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
 
-        if (locationKind) {
-          requestBody.location = { kind: locationKind };
-        }
-
-        await fetch(`${CALENDLY_API_BASE}/invitees`, {
+        const upsertRes = await fetch(`${GHL_BASE}/contacts/upsert`, {
           method: 'POST',
-          headers: {
-            Authorization: `Bearer ${calendlyToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(requestBody),
+          headers: ghlHeaders,
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            phone: formData.phone || undefined,
+            locationId: ghlLocationId,
+          }),
         });
+
+        if (!upsertRes.ok) {
+          const errText = await upsertRes.text();
+          console.error('[booking/submit] GHL contact upsert failed:', upsertRes.status, errText);
+        } else {
+          const contactData = await upsertRes.json();
+          const contactId = contactData?.contact?.id;
+
+          if (contactId) {
+            // 4b. Create the appointment
+            const startTime = new Date(selectedDateTime);
+            const endTime   = new Date(startTime.getTime() + 30 * 60 * 1000);
+
+            const appointmentRes = await fetch(`${GHL_BASE}/calendars/events/appointments`, {
+              method: 'POST',
+              headers: ghlHeaders,
+              body: JSON.stringify({
+                calendarId: ghlCalendarId,
+                locationId: ghlLocationId,
+                contactId,
+                startTime: startTime.toISOString(),
+                endTime:   endTime.toISOString(),
+                title: `WebDirect – ${name}`,
+                appointmentStatus: 'confirmed',
+              }),
+            });
+
+            if (!appointmentRes.ok) {
+              const errText = await appointmentRes.text();
+              console.error('[booking/submit] GHL appointment creation failed:', appointmentRes.status, errText);
+            } else {
+              console.log('[booking/submit] GHL appointment created for', email);
+            }
+          } else {
+            console.error('[booking/submit] GHL contact upsert returned no contactId');
+          }
+        }
       } catch (error) {
-        console.error('Calendly booking error:', error);
+        console.error('[booking/submit] GHL booking error:', error);
       }
     }
   }
@@ -166,7 +205,6 @@ function buildWebsiteGenerationPromptJson(intake: BookingIntakeData): string {
     audience: intake.primaryAudience,
     style: intake.style,
     colors: intake.colorHex?.trim() || 'Niet opgegeven',
-    budget: intake.budget,
   };
   return JSON.stringify(prompt, null, 2);
 }
@@ -226,7 +264,6 @@ function buildSubtaskDescription(
     description += `**Wat centraal staat:** ${intake.focusCentral}\n`;
     description += `**Doelgroep:** ${intake.primaryAudience}\n`;
     description += `**Stijl:** ${intake.style}\n`;
-    description += `**Budget:** ${intake.budget}\n`;
     
     if (intake.colorHex) {
       description += `**Kleuren (Hex):** ${intake.colorHex.trim()}\n`;
@@ -333,8 +370,6 @@ function buildPromptPayload(intake: BookingIntakeData, form: BookingFormData): s
   if (intake.doNotMention) {
     payload += `Vermijd te benoemen: ${intake.doNotMention}\n`;
   }
-
-  payload += `Budget: ${intake.budget}\n`;
 
   return payload;
 }

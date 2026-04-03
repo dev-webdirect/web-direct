@@ -287,7 +287,7 @@ export const ProcessTimeline = () => {
 
             <div className="flex flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
               <motion.a
-                href="/booking"
+                href="/afspraak"
                 whileHover={{
                   scale: 1.05,
                   boxShadow: "0 20px 25px -5px rgba(106, 73, 255, 0.3), 0 10px 10px -5px rgba(106, 73, 255, 0.2)"

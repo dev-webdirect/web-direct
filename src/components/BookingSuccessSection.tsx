@@ -201,7 +201,7 @@ function createIcsContent(start: Date, end: Date): string {
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//WebDirect//Booking//NL',
+    'PRODID:-//WebDirect//Afspraak//NL',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',

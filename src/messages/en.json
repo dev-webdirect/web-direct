@@ -60,7 +60,7 @@
         "companyProject": "Company & project",
         "goalsOffer": "Goals & offer",
         "styleDesign": "Style & design",
-        "budgetOther": "Budget & other"
+        "other": "Other"
       },
       "back": "Back",
       "previous": "Previous",
@@ -122,9 +122,6 @@
         "doNotMention": {
           "label": "Things that should (not) be mentioned (optional)",
           "placeholder": "..."
-        },
-        "budget": {
-          "label": "What is your budget?"
         }
       },
       "errors": {
@@ -136,7 +133,6 @@
         "focusCentralRequired": "What should be central is required",
         "primaryAudienceRequired": "Audience is required",
         "styleRequired": "Style is required",
-        "budgetRequired": "Budget is required",
         "logo": {
           "tooManyFiles": "Maximum of 10 files allowed",
           "tooLarge": "{name} is too large (max {maxMb} MB)",
@@ -180,13 +176,6 @@
           "luxury": "Luxury",
           "playful": "Playful",
           "other": "Other"
-        },
-        "budget": {
-          "<1000": "< €1000",
-          "1000-2000": "€1000 - €2000",
-          "2000-3500": "€2000 - €3500",
-          "3500-5000": "€3500 - €5000",
-          "5000+": "€5000+"
         }
       }
     },
