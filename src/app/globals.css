@@ -240,3 +240,41 @@ img.broken-image-fallback {
     opacity: 1;
   }
 }
+
+/* Briefing wizard: native date field + dark-friendly picker where the browser supports it */
+@layer components {
+  input[type='date'].briefing-date-input {
+    color-scheme: dark;
+  }
+
+  input[type='date'].briefing-date-input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    margin-inline-start: 0.25rem;
+    padding: 0.35rem;
+    border-radius: 0.5rem;
+    opacity: 0.9;
+    filter: invert(1) brightness(1.15);
+    transition: opacity 0.15s ease, background-color 0.15s ease;
+  }
+
+  input[type='date'].briefing-date-input:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    background-color: rgb(65 174 150 / 0.18);
+  }
+
+  input[type='date'].briefing-date-input::-webkit-datetime-edit,
+  input[type='date'].briefing-date-input::-webkit-datetime-edit-fields-wrapper,
+  input[type='date'].briefing-date-input::-webkit-datetime-edit-text {
+    color: inherit;
+    padding: 0;
+  }
+
+  input[type='date'].briefing-date-input::-webkit-datetime-edit-day-field:focus,
+  input[type='date'].briefing-date-input::-webkit-datetime-edit-month-field:focus,
+  input[type='date'].briefing-date-input::-webkit-datetime-edit-year-field:focus {
+    background-color: rgb(65 174 150 / 0.35);
+    color: #fff;
+    outline: none;
+    border-radius: 0.25rem;
+  }
+}

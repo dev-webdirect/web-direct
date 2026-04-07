@@ -213,7 +213,8 @@
     "success": {
       "intake": {
         "heading": {
-          "beforeHighlight": "Your intake has been",
+          "thanksLine": "Thank you {firstName},",
+          "beforeHighlight": "Your request has been",
           "highlight": "received!"
         },
         "subheading": "Thanks for filling everything in. We'll immediately start preparing your project.",
@@ -298,10 +299,7 @@
         {
           "title": "General",
           "items": [
-            {
-              "question": "How much does a website cost at WebDirect?",
-              "answer": "Our websites start from €695 for a one‑pager. Most clients end up between €1,000 and €2,000, depending on the number of pages and required features. During a no‑obligation call we look together at what fits your situation and budget."
-            },
+            
             {
               "question": "How quickly will my website be ready?",
               "answer": "We deliver a standard business website within 5 working days, provided content and assets are delivered on time. For webshops or more complex projects we’ll define a separate timeline together."

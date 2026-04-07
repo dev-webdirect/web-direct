@@ -206,14 +206,15 @@
       },
       "cta": {
         "submitting": "Versturen...",
-        "submit": "Verstuur en ga naar bevestiging"
+        "submit": "Aanvraag versturen"
       },
       "footnote": "Je gegevens worden alleen gebruikt om je afspraak te bevestigen"
     },
     "success": {
       "intake": {
         "heading": {
-          "beforeHighlight": "Je intake is",
+          "thanksLine": "Bedankt {firstName},",
+          "beforeHighlight": "Je aanvraag is",
           "highlight": "ontvangen!"
         },
         "subheading": "Bedankt voor het invullen. We gaan direct aan de slag met de voorbereiding van je project.",
@@ -298,10 +299,6 @@
         {
           "title": "Algemeen",
           "items": [
-            {
-              "question": "Wat kost een website bij WebDirect?",
-              "answer": "Onze websites starten vanaf €695 voor een one-pager. De meeste klanten zitten tussen €1.000 en €2.000, afhankelijk van het aantal pagina's en gewenste functionaliteiten. Tijdens een vrijblijvend gesprek kijken we samen wat past bij jouw situatie en budget."
-            },
             {
               "question": "Hoe snel is mijn website klaar?",
               "answer": "Een standaard bedrijfswebsite leveren we binnen 5 werkdagen op, mits content en materialen snel worden aangeleverd. Voor webshops of complexere projecten spreken we een apart traject af."

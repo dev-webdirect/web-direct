@@ -236,7 +236,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
 
           <div>
             <p className="text-sm text-gray-400 font-medium mb-2">{t('availableTimes')}</p>
-            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/[0.02 border border-white/5 p-4">
+            <div className="min-h-[140px] overflow-hidden rounded-xl bg-white/[0.02] border border-white/5 p-4">
               {loading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="w-8 h-8 animate-spin text-[#41AE96]" />

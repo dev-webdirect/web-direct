@@ -17,8 +17,8 @@ export const BookingProgressBar = ({
   const progressPercent = Math.min(((currentStep - 1) / (totalSteps - 1)) * 100, 100);
 
   return (
-    <div className="w-full mb-6">
-      <div className="relative flex items-center justify-between">
+    <div className="w-full min-w-0 mb-6">
+      <div className="relative flex min-w-0 items-center justify-between">
         {/* Background track */}
         <div className="absolute top-3 left-0 right-0 h-0.5 bg-white/10 rounded-full" />
 

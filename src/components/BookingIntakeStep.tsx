@@ -154,7 +154,6 @@ function RadioGroup({
 }
 
 export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: BookingIntakeStepProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [sectionIndex, setSectionIndex] = useState(0);
   const t = useTranslations("booking.intake");
 
@@ -229,9 +228,8 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
   const changeSectionTo = (index: number) => {
     setSectionIndex(index);
     onSectionChange?.(index);
-    setTimeout(() => {
-      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
+    // Avoid scrollIntoView: on iOS Safari it fights touch scrolling and scroll anchoring
+    // when navigating long intake steps (e.g. global “step 5”).
   };
 
   // --- File handling ---
@@ -380,7 +378,6 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
 
   return (
     <motion.div
-      ref={containerRef}
       initial={{ opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6 }}

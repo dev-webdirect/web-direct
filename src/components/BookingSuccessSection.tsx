@@ -258,6 +258,7 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
   
   const hasDate = !!selectedDateTime;
   const isIntakeOnly = mode === 'intake';
+  const firstName = name?.trim().split(/\s+/)[0] ?? '';
   
   const timelineSteps = isIntakeOnly
     ? [{
@@ -337,9 +338,9 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 max-w-5xl mx-auto w-full">
-        {/* Success Animation & Header */}
-        <div className="text-center mb-12 space-y-6">
+      <div className="relative z-10 max-w-5xl mx-auto w-full min-w-0 px-3 sm:px-4 md:px-0">
+        {/* Success Animation & Header — centered column, responsive gutters */}
+        <div className="flex flex-col items-center justify-center text-center mb-12 sm:mb-16 space-y-5 sm:space-y-6 w-full">
           {/* Animated Success Icon */}
           <motion.div initial={{
           scale: 0,
@@ -386,28 +387,33 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
         }} transition={{
           duration: 0.6,
           delay: 0.3
-        }} className="space-y-3">
+        }} className="w-full max-w-[min(100%,40rem)] sm:max-w-2xl md:max-w-3xl mx-auto space-y-3 sm:space-y-4 text-center flex flex-col items-center">
             {mode === 'intake' ? (
               <>
-                <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+                {firstName ? (
+                  <p className="w-full text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white/95 font-semibold tracking-tight text-balance wrap-break-word px-1">
+                    {t('intake.heading.thanksLine', { firstName })}
+                  </p>
+                ) : null}
+                <h1 className="w-full font-bold text-3xl leading-[1.12] sm:text-4xl sm:leading-tight md:text-5xl lg:text-6xl text-white tracking-tight text-balance break-words px-0.5">
                   {t('intake.heading.beforeHighlight')}{' '}
                   <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#41AE96] to-[#6dd5c0] font-serif">
                     {t('intake.heading.highlight')}
                   </span>
                 </h1>
-                <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                <p className="w-full text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed max-w-xl sm:max-w-2xl mx-auto text-pretty px-1 sm:px-0">
                   {t('intake.subheading')}
                 </p>
               </>
             ) : (
               <>
-                <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight">
+                <h1 className="font-bold text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight text-balance">
                   {t('full.heading.beforeHighlight')}{' '}
                   <span className="relative inline-block italic font-medium text-transparent bg-clip-text bg-gradient-to-r from-[#41AE96] to-[#6dd5c0] font-serif">
                     {t('full.heading.highlight')}
                   </span>
                 </h1>
-                <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
+                <p className="text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto text-pretty">
                   {t('full.subheading')}
                 </p>
               </>
@@ -416,7 +422,7 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-1 gap-8 mb-12">
+        <div className="grid lg:grid-cols-1 gap-8 mb-2">
           {/* Left Column - Booking Summary */}
           <motion.div initial={{
           opacity: 0,
@@ -428,36 +434,7 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
           duration: 0.6,
           delay: 0.4
         }}>
-            {isIntakeOnly ? (
-              /* Intake-only confirmation card */
-              <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 shadow-2xl mb-8">
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#41AE96]/20 to-[#6a49ff]/20 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-3 pb-4 border-b border-white/10">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6a49ff] to-[#5839e6] flex items-center justify-center">
-                      <Mail className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-semibold text-lg">{t('intake.card.title')}</h3>
-                      <p className="text-gray-400 text-xs">{t('intake.card.subtitle')}</p>
-                    </div>
-                  </div>
-                  <div className="pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Mail className="w-4 h-4 text-[#41AE96]" />
-                      <span className="text-gray-400">
-                        {t('confirmation.sentTo', { email: email || t('confirmation.emailPlaceholder') })}
-                      </span>
-                    </div>
-                    {name && (
-                      <p className="text-gray-400 text-sm mt-1">
-                        {t('confirmation.thanks', { name })}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
+              {!isIntakeOnly && (
               <>
                 {/* Booking Details Card */}
                 <div className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 shadow-2xl mb-8">
@@ -498,15 +475,15 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-white/10">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Mail className="w-4 h-4 text-[#41AE96]" />
+                    <div className="pt-4 border-t border-white/10 text-center">
+                      <div className="flex items-center justify-center gap-2 text-sm flex-wrap">
+                        <Mail className="w-4 h-4 shrink-0 text-[#41AE96]" />
                         <span className="text-gray-400">
                           {t('confirmation.sentTo', { email: email || t('confirmation.emailPlaceholder') })}
                         </span>
                       </div>
                       {name && (
-                        <p className="text-gray-400 text-sm mt-1">
+                        <p className="text-gray-400 text-sm mt-2 mx-auto max-w-lg">
                           {t('confirmation.thanks', { name })}
                         </p>
                       )}
@@ -561,12 +538,16 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
       }} transition={{
         duration: 0.6,
         delay: 0.7
-      }} className="relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 p-8 lg:p-12 shadow-2xl">
+      }} className="relative rounded-3xl bg-white/5 backdrop-blur-xl border mt-8 border-white/10 p-8 lg:p-12 shadow-2xl">
           <div className="space-y-8">
             {/* Header */}
-            <div className="text-center space-y-2">
-              <h2 className="text-white font-bold text-3xl">Wat kun je verwachten?</h2>
-              <p className="text-gray-400">De volgende stappen in je reis naar een betere digitale aanwezigheid</p>
+            <div className="text-center space-y-2 px-2 sm:px-0">
+              <h2 className="text-white font-bold text-2xl sm:text-3xl text-balance">
+                {t('timelineSection.heading')}
+              </h2>
+              <p className="text-gray-400 text-sm sm:text-base text-pretty max-w-2xl mx-auto">
+                {t('timelineSection.subheading')}
+              </p>
             </div>
 
             {/* Timeline */}
@@ -583,10 +564,13 @@ export const BookingSuccessSection = ({ email, name, selectedDateTime, mode = 'f
             duration: 0.6,
             delay: 1.8
           }} className="text-center pt-8 border-t border-white/10">
-              <p className="text-gray-400 text-sm">
-                Heb je vragen? Stuur ons een bericht op{' '}
-                <a href="mailto:projects@webdirect.nl" className="text-[#41AE96] hover:text-[#6dd5c0] transition-colors font-medium">
-                projects@webdirect.nl
+              <p className="text-gray-400 text-sm wrap-break-word">
+                {t('footer.contact')}{' '}
+                <a
+                  href={`mailto:${t('footer.email')}`}
+                  className="text-[#41AE96] hover:text-[#6dd5c0] transition-colors font-medium"
+                >
+                  {t('footer.email')}
                 </a>
               </p>
             </motion.div>

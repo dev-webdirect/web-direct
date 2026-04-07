@@ -28,6 +28,14 @@ const inputClass =
   'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-500 focus:border-[#41AE96]/50 focus:outline-none transition-colors';
 const labelClass = 'block text-sm font-medium text-gray-400 mb-1.5';
 
+/** YYYY-MM-DD in local timezone, for `<input type="date" min="...">`. */
+function localDateInputMin(date = new Date()): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
 type Props = {
   accessToken: string;
 };
@@ -74,6 +82,14 @@ export function BriefingWizard({ accessToken }: Props) {
   const hasDomain = watch('hasDomain');
   const multiLanguage = watch('multiLanguage');
   const pagesNeeded = watch('pagesNeeded') ?? [];
+  /** Per-page description fields in the same order as the “Pages needed” chips */
+  const standardPageDescriptionsOrdered = PAGES_NEEDED_OPTIONS.filter(
+    (page) =>
+      page !== BRIEFING_CUSTOM_PAGES_LABEL &&
+      page !== 'Home' &&
+      pagesNeeded.includes(page),
+  );
+  const deadlineMin = localDateInputMin();
   const draftKey = `briefing-draft-${accessToken}`;
 
   const persistDraft = useCallback(() => {
@@ -89,7 +105,16 @@ export function BriefingWizard({ accessToken }: Props) {
       const raw = localStorage.getItem(draftKey);
       if (!raw) return;
       const parsed = JSON.parse(raw) as Partial<BriefingFormValues>;
-      reset({ ...briefingDefaultValues, ...parsed });
+      const merged = { ...briefingDefaultValues, ...parsed };
+      const todayYmd = localDateInputMin();
+      if (
+        merged.deadline?.trim() &&
+        /^\d{4}-\d{2}-\d{2}$/.test(merged.deadline.trim()) &&
+        merged.deadline.trim() < todayYmd
+      ) {
+        merged.deadline = '';
+      }
+      reset(merged);
     } catch {
       /* ignore */
     }
@@ -621,30 +646,51 @@ export function BriefingWizard({ accessToken }: Props) {
                   <FieldError message={errors.pagesNeeded?.message} />
                 </div>
 
-                {pagesNeeded.filter((p) => p !== BRIEFING_CUSTOM_PAGES_LABEL && p !== 'Home').length > 0 && (
+                {pagesNeeded.includes('Home') && (
+                  <div className="space-y-3 border border-white/10 rounded-xl p-4">
+                    <p className="text-sm font-medium text-white">Home — page content</p>
+                    <div>
+                      <label className={labelClass}>Hero title</label>
+                      <input {...register('homepageContent.heroTitle')} className={inputClass} />
+                      <FieldError message={errors.homepageContent?.heroTitle?.message} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Hero subtitle</label>
+                      <input {...register('homepageContent.heroSubtitle')} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>CTA button text</label>
+                      <input {...register('homepageContent.ctaText')} className={inputClass} />
+                    </div>
+                    <div>
+                      <label className={labelClass}>Sections / notes (one per line or free text)</label>
+                      <textarea {...register('homepageContent.sections')} rows={4} className={inputClass} />
+                    </div>
+                  </div>
+                )}
+
+                {standardPageDescriptionsOrdered.length > 0 && (
                   <div className="space-y-3">
                     <p className="text-sm text-white/60">Describe what you need on each page:</p>
-                    {pagesNeeded
-                      .filter((p) => p !== BRIEFING_CUSTOM_PAGES_LABEL && p !== 'Home')
-                      .map((page) => (
-                        <div key={page} className="border border-white/10 rounded-xl p-4">
-                          <label className={labelClass}>{page}</label>
-                          <textarea
-                            rows={2}
-                            className={cn(inputClass, 'resize-none')}
-                            placeholder={`What should the ${page} page include?`}
-                            value={watch('pageDescriptions')?.[page] ?? ''}
-                            onChange={(e) => {
-                              const current = getValues('pageDescriptions') ?? {};
-                              setValue(
-                                'pageDescriptions',
-                                { ...current, [page]: e.target.value },
-                                { shouldDirty: true },
-                              );
-                            }}
-                          />
-                        </div>
-                      ))}
+                    {standardPageDescriptionsOrdered.map((page) => (
+                      <div key={page} className="border border-white/10 rounded-xl p-4">
+                        <label className={labelClass}>{page}</label>
+                        <textarea
+                          rows={2}
+                          className={cn(inputClass, 'resize-none')}
+                          placeholder={`What should the ${page} page include?`}
+                          value={watch('pageDescriptions')?.[page] ?? ''}
+                          onChange={(e) => {
+                            const current = getValues('pageDescriptions') ?? {};
+                            setValue(
+                              'pageDescriptions',
+                              { ...current, [page]: e.target.value },
+                              { shouldDirty: true },
+                            );
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 )}
 
@@ -659,28 +705,6 @@ export function BriefingWizard({ accessToken }: Props) {
                     />
                     <FieldError message={errors.customPagesDescription?.message} />
                   </div>
-                )}
-                {pagesNeeded.includes('Home') && (
-                <div className="space-y-3 border border-white/10 rounded-xl p-4">
-                  <p className="text-sm font-medium text-white">Home — page content</p>
-                  <div>
-                    <label className={labelClass}>Hero title</label>
-                    <input {...register('homepageContent.heroTitle')} className={inputClass} />
-                    <FieldError message={errors.homepageContent?.heroTitle?.message} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Hero subtitle</label>
-                    <input {...register('homepageContent.heroSubtitle')} className={inputClass} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>CTA button text</label>
-                    <input {...register('homepageContent.ctaText')} className={inputClass} />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Sections / notes (one per line or free text)</label>
-                    <textarea {...register('homepageContent.sections')} rows={4} className={inputClass} />
-                  </div>
-                </div>
                 )}
                 <div>
                   <label className={labelClass}>FAQ items</label>
@@ -817,8 +841,21 @@ export function BriefingWizard({ accessToken }: Props) {
             {step === 4 && (
               <div className="space-y-5">
                 <div>
-                  <label className={labelClass}>Desired deadline</label>
-                  <input type="date" {...register('deadline')} className={inputClass} />
+                  <label className={labelClass} htmlFor="briefing-deadline">
+                    Desired deadline{' '}
+                    <span className="text-[#41AE96]" aria-hidden>
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="briefing-deadline"
+                    type="date"
+                    min={deadlineMin}
+                    required
+                    aria-required="true"
+                    {...register('deadline')}
+                    className={inputClass}
+                  />
                   <FieldError message={errors.deadline?.message} />
                 </div>
                 <div>

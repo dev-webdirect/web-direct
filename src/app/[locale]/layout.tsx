@@ -94,7 +94,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#0f0a1f",
 };
 
 type Props = {
@@ -121,7 +121,7 @@ export default async function LocaleLayout({children, params}: Props) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <SEOJsonLD />
-        <div className="m-0 min-h-screen bg-linear-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
+        <div className="m-0 min-h-screen overflow-x-hidden max-w-[100vw] bg-linear-to-br from-[#1a0f2e] via-[#2d1b4e] to-[#0f0a1f] font-sans transition-colors duration-300 top-0">
           {children}
         </div>
         <Script

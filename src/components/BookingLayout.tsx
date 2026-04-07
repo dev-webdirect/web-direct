@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Clock, TrendingUp, Zap, Award } from 'lucide-react';
@@ -35,6 +35,11 @@ export const BookingLayout = ({ children, mode = 'full' }: BookingLayoutProps) =
   const [mouseEventTarget, setMouseEventTarget] = useState<HTMLElement | null>(null);
   const t = useTranslations('booking.layout');
 
+  const bindSectionRef = useCallback((el: HTMLElement | null) => {
+    containerRef.current = el;
+    setMouseEventTarget((prev) => (prev === el ? prev : el));
+  }, []);
+
   const benefits = [
     { icon: TrendingUp, text: t('benefits.freeDesign') },
     { icon: Zap, text: t('benefits.noObligation') },
@@ -43,11 +48,8 @@ export const BookingLayout = ({ children, mode = 'full' }: BookingLayoutProps) =
 
   return (
     <section
-      ref={(el) => {
-        (containerRef as React.MutableRefObject<HTMLElement | null>).current = el;
-        setMouseEventTarget(el);
-      }}
-      className="relative min-h-screen w-full flex flex-col items-center justify-start bg-[#0f0a1f] pt-6 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-10 xl:px-12"
+      ref={bindSectionRef}
+      className="relative min-h-screen w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center justify-start bg-[#0f0a1f] pt-6 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 lg:pb-24 px-4 sm:px-6 lg:px-10 xl:px-12"
     >
       {/* Dynamic Glow Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -78,14 +80,14 @@ export const BookingLayout = ({ children, mode = 'full' }: BookingLayoutProps) =
       </div>
 
       {/* Content Container - centered, max width for readability */}
-      <div className="relative z-10 w-full max-w-6xl xl:max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-start">
+      <div className="relative z-10 w-full min-w-0 max-w-6xl xl:max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-start min-w-0">
           {/* Left Column - 1/3 width: Copy & Benefits */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="space-y-5 sm:space-y-6 lg:col-span-1 lg:sticky lg:top-10"
+            className="space-y-5 sm:space-y-6 lg:col-span-1 lg:sticky lg:top-10 min-w-0"
           >
             <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-[#41AE96]/10 text-[#41AE96] border border-[#41AE96]/20 backdrop-blur-md">
               <span className="mr-2 flex h-2 w-2">
@@ -132,7 +134,7 @@ export const BookingLayout = ({ children, mode = 'full' }: BookingLayoutProps) =
           </motion.div>
 
           {/* Right Column - 2/3 width: Step Content */}
-          <div className="relative lg:col-span-2">{children}</div>
+          <div className="relative lg:col-span-2 min-w-0">{children}</div>
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />

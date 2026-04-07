@@ -59,6 +59,14 @@ const domainInfoSchema = z.object({
   provider: z.string().default(''),
 });
 
+/** YYYY-MM-DD in the environment's local timezone (browser or Node). */
+function ymdLocal(d = new Date()): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export const briefingFormSchema = z.object({
   businessName: z.string().optional().default(''),
   industry: z.string().optional().default(''),
@@ -172,7 +180,12 @@ export const briefingFormSchema = z.object({
     z.array(z.string()).default([]),
   ),
 
-  deadline: z.string().optional().default(''),
+  deadline: z
+    .string()
+    .trim()
+    .min(1, 'Please choose a desired deadline')
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Enter a valid date')
+    .refine((s) => s >= ymdLocal(), { message: 'Deadline must be today or in the future' }),
   revisions: z.preprocess(
     (v) => (v === '' || v === null || v === undefined ? 0 : v),
     z.coerce.number().int().min(0).max(99).default(0),

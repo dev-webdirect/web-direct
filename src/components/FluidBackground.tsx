@@ -63,7 +63,12 @@ export const FluidBackground: React.FC<FluidBackgroundProps> = ({
       COLOR_RANGE: [colorHex, colorHex]
     };
 
-    const dispose = initFluidSim(config);
+    let dispose: (() => void) | undefined;
+    try {
+      dispose = initFluidSim(config);
+    } catch {
+      return undefined;
+    }
     return dispose;
   }, [colorHex, glowSize, mouseEventTarget]);
   return <div ref={containerRef} className="glow-background w-full h-full" style={{
