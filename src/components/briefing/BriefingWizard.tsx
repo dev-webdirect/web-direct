@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, useFieldArray, Controller, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight, Check, Loader2, Plus, Trash2 } from 'lucide-react';
@@ -58,6 +58,8 @@ export function BriefingWizard({ accessToken }: Props) {
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  /** Stops autosave immediately on successful submit (avoids a stale interval tick re-writing localStorage). */
+  const draftPersistenceEnabledRef = useRef(true);
 
   const form = useForm<BriefingFormValues>({
     resolver: zodResolver(briefingFormSchema) as Resolver<BriefingFormValues>,
@@ -93,12 +95,13 @@ export function BriefingWizard({ accessToken }: Props) {
   const draftKey = `briefing-draft-${accessToken}`;
 
   const persistDraft = useCallback(() => {
+    if (done || !draftPersistenceEnabledRef.current) return;
     try {
       localStorage.setItem(draftKey, JSON.stringify(getValues()));
     } catch {
       /* ignore quota */
     }
-  }, [draftKey, getValues]);
+  }, [draftKey, done, getValues]);
 
   useEffect(() => {
     try {
@@ -120,23 +123,25 @@ export function BriefingWizard({ accessToken }: Props) {
     }
   }, [draftKey, reset]);
 
+  /** Only autosave while the form is in progress; never after a successful submit (`done`). */
   useEffect(() => {
+    if (done) return;
     const t = window.setInterval(persistDraft, 4000);
     return () => window.clearInterval(t);
-  }, [persistDraft]);
+  }, [done, persistDraft]);
 
   const next = async () => {
     setApiError(null);
     const fields = BRIEFING_STEP_FIELDS[step];
     const ok = await trigger(fields, { shouldFocus: true });
     if (!ok) return;
-    persistDraft();
+    if (!done) persistDraft();
     setStep((s) => Math.min(s + 1, BRIEFING_TOTAL_STEPS - 1));
   };
 
   const back = () => {
     setApiError(null);
-    persistDraft();
+    if (!done) persistDraft();
     setStep((s) => Math.max(s - 1, 0));
   };
 
@@ -165,6 +170,7 @@ export function BriefingWizard({ accessToken }: Props) {
         );
         return;
       }
+      draftPersistenceEnabledRef.current = false;
       try {
         localStorage.removeItem(draftKey);
       } catch {
