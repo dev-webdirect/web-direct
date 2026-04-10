@@ -43,13 +43,16 @@
     },
     "date": {
       "stepLabel": "Stap 1 van 3",
-      "subtitle": "20-minuten sessie • Max {days} dagen vooruit",
+      "subtitle": "{minutes} minuten sessie • Max. {days} dagen vooruit • Volgt je online agenda",
       "heading": "Kies datum en tijd",
       "today": "Vandaag",
       "tomorrow": "Morgen",
       "chooseDate": "Kies een datum",
       "availableTimes": "Beschikbare tijden",
       "noSlots": "Geen beschikbare tijden voor deze datum",
+      "noAvailability": "Er zijn in deze periode geen beschikbare momenten. Probeer het later opnieuw of neem contact op.",
+      "noAvailabilityHint": "Kies eerst een datum met beschikbaarheid.",
+      "pickDateAfterError": "Herlaad de beschikbaarheid en kies een datum.",
       "next": "Volgende",
       "errorLoadingSlots": "Kon beschikbare tijden niet laden.",
       "genericError": "Er ging iets mis. Probeer het opnieuw."

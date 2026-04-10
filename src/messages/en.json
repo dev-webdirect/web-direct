@@ -43,13 +43,16 @@
     },
     "date": {
       "stepLabel": "Step 1 of 3",
-      "subtitle": "20-minute session • Up to {days} days ahead",
+      "subtitle": "{minutes}-minute session • Up to {days} days ahead • Follows your live calendar",
       "heading": "Select date & time",
       "today": "Today",
       "tomorrow": "Tomorrow",
       "chooseDate": "Choose a date",
       "availableTimes": "Available times",
       "noSlots": "No available times for this date",
+      "noAvailability": "There are no open slots in this period. Try again later or contact us.",
+      "noAvailabilityHint": "Choose a date that has availability first.",
+      "pickDateAfterError": "Reload availability and pick a date.",
       "next": "Next",
       "errorLoadingSlots": "Couldn't load available times.",
       "genericError": "Something went wrong. Please try again."

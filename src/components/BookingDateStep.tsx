@@ -8,13 +8,18 @@ import { useLocale, useTranslations } from 'next-intl';
 
 const DATETIME_STORAGE_KEY = 'webdirect_booking_datetime';
 const TIMEZONE = 'Europe/Amsterdam';
-const MAX_DAYS_AHEAD = 14;
-const MIN_NOTICE_HOURS = 4;
 
 interface TimeSlot {
   start_time: string;
   invitees_remaining?: number;
 }
+
+type AvailabilityResponse = {
+  dates: string[];
+  slotsByDate: Record<string, TimeSlot[]>;
+  maxDaysAhead?: number;
+  meta?: { slotDurationMinutes: number | null; name: string | null };
+};
 
 /** Get offset in ms for a timezone at a given date (e.g. Paris = UTC+1 or UTC+2). */
 function getTimezoneOffsetMs(date: Date, timeZone: string): number {
@@ -33,24 +38,21 @@ function getTimezoneOffsetMs(date: Date, timeZone: string): number {
   return diffMinutes * 60 * 1000;
 }
 
-/** Start of the given calendar day in the given timezone, as a UTC Date. */
 function startOfDayInTz(year: number, month: number, day: number, timeZone: string): Date {
   const noonUtc = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
   const offsetMs = getTimezoneOffsetMs(noonUtc, timeZone);
   return new Date(Date.UTC(year, month - 1, day, 0, 0, 0) - offsetMs);
 }
 
-/** End of the given calendar day in the given timezone (last ms), as a UTC Date. */
-function endOfDayInTz(year: number, month: number, day: number, timeZone: string): Date {
-  const start = startOfDayInTz(year, month, day, timeZone);
-  return new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1);
-}
-
-/** Current calendar date (y, m, d) in the given timezone. */
 function getDatePartsInTz(date: Date, timeZone: string): { year: number; month: number; day: number } {
   const str = date.toLocaleDateString('en-CA', { timeZone });
   const [y, m, d] = str.split('-').map(Number);
   return { year: y, month: m, day: d };
+}
+
+function dateFromCalendarKey(key: string): Date {
+  const [y, m, d] = key.split('-').map(Number);
+  return startOfDayInTz(y, m, d, TIMEZONE);
 }
 
 function formatSlotTime(iso: string, locale: string): string {
@@ -79,22 +81,6 @@ function formatDateLabel(date: Date, locale: string, todayLabel: string, tomorro
   });
 }
 
-function getSelectableDates(): Date[] {
-  const now = new Date();
-  const minStart = new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
-  const minParts = getDatePartsInTz(minStart, TIMEZONE);
-  const maxAllowed = new Date(now.getTime() + MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000);
-  const dates: Date[] = [];
-  for (let i = 0; i < MAX_DAYS_AHEAD; i++) {
-    const nextDay = new Date(Date.UTC(minParts.year, minParts.month - 1, minParts.day + i, 12, 0, 0));
-    const parts = getDatePartsInTz(nextDay, TIMEZONE);
-    const startOfDay = startOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
-    if (startOfDay.getTime() > maxAllowed.getTime()) break;
-    dates.push(startOfDay);
-  }
-  return dates;
-}
-
 export function getStoredBookingDateTime(): string | null {
   if (typeof window === 'undefined') return null;
   try {
@@ -115,68 +101,63 @@ interface BookingDateStepProps {
 }
 
 export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [slots, setSlots] = useState<TimeSlot[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [dates, setDates] = useState<string[]>([]);
+  const [slotsByDate, setSlotsByDate] = useState<Record<string, TimeSlot[]>>({});
+  const [slotDurationMinutes, setSlotDurationMinutes] = useState<number | null>(null);
+  const [maxDaysAhead, setMaxDaysAhead] = useState(14);
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
 
-  const dates = getSelectableDates();
   const t = useTranslations('booking.date');
   const locale = useLocale();
   const todayLabel = t('today');
   const tomorrowLabel = t('tomorrow');
 
-  const fetchSlots = useCallback(async (date: Date) => {
+  const fetchAvailability = useCallback(async () => {
     setLoading(true);
     setError(null);
-    setSlots([]);
     setSelectedSlot(null);
 
-    const parts = getDatePartsInTz(date, TIMEZONE);
-    let start = startOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
-    let end = endOfDayInTz(parts.year, parts.month, parts.day, TIMEZONE);
-
-    const now = new Date();
-    const minStart = new Date(now.getTime() + MIN_NOTICE_HOURS * 60 * 60 * 1000);
-    if (start.getTime() < minStart.getTime()) {
-      start = minStart;
-    }
-
-    const startTime = start.toISOString();
-    const endTime = end.toISOString();
-
     try {
-      const res = await fetch(
-        `/api/ghl/slots?start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`
-      );
-      const json = await res.json();
+      const res = await fetch('/api/ghl/availability');
+      const json = (await res.json()) as AvailabilityResponse & { error?: string };
 
       if (!res.ok) {
         throw new Error(json.error || t('errorLoadingSlots'));
       }
 
-      setSlots(json.collection || []);
+      setDates(json.dates || []);
+      setSlotsByDate(json.slotsByDate || {});
+      setSlotDurationMinutes(json.meta?.slotDurationMinutes ?? null);
+      if (typeof json.maxDaysAhead === 'number') setMaxDaysAhead(json.maxDaysAhead);
+
+      const first = json.dates?.[0] ?? null;
+      setSelectedDateKey(first);
     } catch (e) {
       setError(e instanceof Error ? e.message : t('genericError'));
+      setDates([]);
+      setSlotsByDate({});
+      setSelectedDateKey(null);
     } finally {
       setLoading(false);
     }
   }, [t]);
 
   useEffect(() => {
-    if (selectedDate) {
-      fetchSlots(selectedDate);
-    } else if (dates.length > 0) {
-      setSelectedDate(dates[0]);
-    }
-  }, [selectedDate, dates.length, fetchSlots]);
+    fetchAvailability();
+  }, [fetchAvailability]);
+
+  const slots = selectedDateKey ? slotsByDate[selectedDateKey] ?? [] : [];
 
   const handleNext = () => {
     if (!selectedSlot) return;
     setStoredBookingDateTime(selectedSlot);
     onComplete(selectedSlot);
   };
+
+  const subtitleMinutes = slotDurationMinutes ?? 20;
 
   return (
     <motion.div
@@ -200,38 +181,47 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
             <div>
               <h3 className="text-white font-semibold text-lg">{t('heading')}</h3>
               <p className="text-gray-400 text-xs">
-                {t('subtitle', { minutes: 20, days: MAX_DAYS_AHEAD })}
+                {t('subtitle', { minutes: subtitleMinutes, days: maxDaysAhead })}
               </p>
             </div>
           </div>
 
           <div>
             <p className="text-sm text-gray-400 font-medium mb-2">{t('chooseDate')}</p>
-            <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
-              {dates.map((d) => {
-                const selParts = selectedDate && getDatePartsInTz(selectedDate, TIMEZONE);
-                const dParts = getDatePartsInTz(d, TIMEZONE);
-                const isSelected =
-                  !!selParts &&
-                  selParts.year === dParts.year &&
-                  selParts.month === dParts.month &&
-                  selParts.day === dParts.day;
-                return (
-                  <button
-                    key={d.toISOString()}
-                    onClick={() => setSelectedDate(d)}
-                    className={cn(
-                      'px-2 py-0.5 rounded-lg text-sm font-semibold transition-all',
-                      isSelected
-                        ? 'bg-[#6a49ff] text-white'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
-                    )}
-                  >
-                    {formatDateLabel(d, locale, todayLabel, tomorrowLabel)}
-                  </button>
-                );
-              })}
-            </div>
+            {loading ? (
+              <div className="flex justify-center py-6">
+                <Loader2 className="w-8 h-8 animate-spin text-[#41AE96]" />
+              </div>
+            ) : error ? (
+              <p className="text-red-400 text-sm py-2 text-center">{error}</p>
+            ) : dates.length === 0 ? (
+              <p className="text-gray-500 text-sm py-4 text-center">{t('noAvailability')}</p>
+            ) : (
+              <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+                {dates.map((key) => {
+                  const d = dateFromCalendarKey(key);
+                  const isSelected = selectedDateKey === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDateKey(key);
+                        setSelectedSlot(null);
+                      }}
+                      className={cn(
+                        'px-2 py-0.5 rounded-lg text-sm font-semibold transition-all',
+                        isSelected
+                          ? 'bg-[#6a49ff] text-white'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                      )}
+                    >
+                      {formatDateLabel(d, locale, todayLabel, tomorrowLabel)}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <div>
@@ -242,11 +232,11 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
                   <Loader2 className="w-8 h-8 animate-spin text-[#41AE96]" />
                 </div>
               ) : error ? (
-                <p className="text-red-400 text-sm py-4 text-center">{error}</p>
+                <p className="text-gray-500 text-sm py-4 text-center">{t('pickDateAfterError')}</p>
+              ) : dates.length === 0 ? (
+                <p className="text-gray-500 text-sm py-4 text-center">{t('noAvailabilityHint')}</p>
               ) : slots.length === 0 ? (
-                <p className="text-gray-500 text-sm py-4 text-center">
-                  {t('noSlots')}
-                </p>
+                <p className="text-gray-500 text-sm py-4 text-center">{t('noSlots')}</p>
               ) : (
                 <div className="space-y-2">
                   {slots.map((slot) => {
@@ -254,6 +244,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
                     return (
                       <motion.button
                         key={slot.start_time}
+                        type="button"
                         onClick={() => setSelectedSlot(slot.start_time)}
                         whileHover={{ scale: 1.02, x: 4 }}
                         whileTap={{ scale: 0.98 }}
@@ -282,6 +273,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
           </div>
 
           <motion.button
+            type="button"
             onClick={handleNext}
             disabled={!selectedSlot}
             whileHover={
@@ -295,7 +287,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
             }
             whileTap={selectedSlot ? { scale: 0.98 } : {}}
             className={cn(
-                'w-full flex items-center justify-center gap-3 bg-linear-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
+              'w-full flex items-center justify-center gap-3 bg-linear-to-r from-[#6a49ff] to-[#5839e6] text-white px-8 py-3 rounded-full font-semibold text-base transition-all shadow-xl shadow-[#6a49ff]/20 hover:shadow-[#6a49ff]/40 group mt-4',
               !selectedSlot && 'opacity-50 cursor-not-allowed'
             )}
           >
