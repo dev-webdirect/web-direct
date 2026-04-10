@@ -122,7 +122,7 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
   }
 
   // 4. Create GHL appointment (only for full mode with a selectedDateTime)
-  /*
+  
   if (mode === 'full' && selectedDateTime) {
     const ghlApiKey    = process.env.GHL_API_KEY?.trim();
     const ghlCalendarId = process.env.GHL_CALENDAR_ID?.trim();
@@ -194,7 +194,7 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
         console.error('[booking/submit] GHL booking error:', error);
       }
     }
-  }*/
+  }
 }
 
 function buildWebsiteGenerationPromptJson(intake: BookingIntakeData): string {
