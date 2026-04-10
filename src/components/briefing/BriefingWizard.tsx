@@ -16,6 +16,8 @@ import {
 } from '@/src/lib/briefing/schema';
 import { briefingDefaultValues } from '@/src/lib/briefing/defaults';
 import { cn } from '@/src/lib/utils';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { useLocale } from 'next-intl';
 
 const TONE_OF_VOICE_OPTIONS = [
   { value: 'professional' as const, label: 'Professional' },
@@ -58,6 +60,11 @@ export function BriefingWizard({ accessToken }: Props) {
   const [done, setDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
+  const locale = useLocale();
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const captchaEnabled = Boolean(turnstileSiteKey);
   /** Stops autosave immediately on successful submit (avoids a stale interval tick re-writing localStorage). */
   const draftPersistenceEnabledRef = useRef(true);
 
@@ -145,17 +152,40 @@ export function BriefingWizard({ accessToken }: Props) {
     setStep((s) => Math.max(s - 1, 0));
   };
 
+  const handleTurnstileSuccess = useCallback((t: string) => {
+    setTurnstileToken(t);
+    setApiError(null);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+
   const onValid = async (data: BriefingFormValues) => {
     setApiError(null);
+    if (captchaEnabled && !turnstileToken) {
+      setApiError('Please complete the security check before submitting.');
+      return;
+    }
     setSubmitting(true);
     try {
+      const payload =
+        captchaEnabled && turnstileToken
+          ? { ...data, turnstileToken }
+          : data;
+
       const res = await fetch('/api/briefing', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-Briefing-Token': accessToken,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
       const json = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.status === 403) {
@@ -163,6 +193,8 @@ export function BriefingWizard({ accessToken }: Props) {
         return;
       }
       if (!res.ok) {
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
         setApiError(
           typeof json.error === 'string'
             ? json.error
@@ -869,6 +901,23 @@ export function BriefingWizard({ accessToken }: Props) {
                   <input type="number" min="0" max="99" {...register('revisions', { valueAsNumber: true })} className={inputClass} />
                   <FieldError message={errors.revisions?.message} />
                 </div>
+                {captchaEnabled && turnstileSiteKey ? (
+                  <div className="flex flex-col items-center gap-2 pt-2">
+                    <Turnstile
+                      ref={turnstileRef}
+                      siteKey={turnstileSiteKey}
+                      onSuccess={handleTurnstileSuccess}
+                      onExpire={handleTurnstileExpire}
+                      onError={handleTurnstileError}
+                      options={{
+                        theme: 'dark',
+                        language: locale === 'nl' ? 'nl' : 'en',
+                        size: 'normal',
+                        action: 'briefing',
+                      }}
+                    />
+                  </div>
+                ) : null}
               </div>
             )}
           </motion.div>
@@ -894,7 +943,7 @@ export function BriefingWizard({ accessToken }: Props) {
           ) : (
             <button
               type="button"
-              disabled={submitting}
+              disabled={submitting || (captchaEnabled && !turnstileToken)}
               onClick={handleSubmit(onValid)}
               className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-[#41AE96] to-[#2d8a73] font-semibold text-white disabled:opacity-60"
             >

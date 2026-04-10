@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { briefingFormSchema } from '@/src/lib/briefing/schema';
 import { validateBriefingToken } from '@/src/lib/briefing/tokens';
 import { briefingTaskName, briefingToClickUpDescription } from '@/src/lib/briefing/format-clickup';
+import { getRequestClientIp, verifyTurnstileToken } from '@/src/lib/turnstile';
 
 export async function POST(request: NextRequest) {
   const token =
@@ -19,7 +20,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const parsed = briefingFormSchema.safeParse(body);
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  const raw = body as Record<string, unknown>;
+  const turnstileToken = typeof raw.turnstileToken === 'string' ? raw.turnstileToken : undefined;
+  const { turnstileToken: _omit, ...formFields } = raw;
+
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  if (turnstileSecret) {
+    if (!turnstileToken?.trim()) {
+      return NextResponse.json(
+        { error: 'Please complete the security check, then try again.' },
+        { status: 400 }
+      );
+    }
+    const remoteip = getRequestClientIp(request);
+    const captchaOk = await verifyTurnstileToken(turnstileToken, remoteip);
+    if (!captchaOk) {
+      return NextResponse.json(
+        { error: 'Security check failed. Please try again.' },
+        { status: 400 }
+      );
+    }
+  }
+
+  const parsed = briefingFormSchema.safeParse(formFields);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Validation failed', issues: parsed.error.flatten() },

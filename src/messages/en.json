@@ -205,7 +205,8 @@
       "errors": {
         "nameRequired": "Name is required",
         "emailRequired": "Email is required",
-        "emailInvalid": "Please enter a valid email address"
+        "emailInvalid": "Please enter a valid email address",
+        "captchaRequired": "Please complete the security check first."
       },
       "cta": {
         "submitting": "Sending...",

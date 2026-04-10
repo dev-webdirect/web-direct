@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { BookingIntakeData } from '@/src/components/BookingIntakeStep';
 import type { BookingFormData } from '@/src/components/BookingFormStep';
+import { getRequestClientIp, verifyTurnstileToken } from '@/src/lib/turnstile';
 
 const GHL_BASE = 'https://services.leadconnectorhq.com';
 
@@ -9,6 +10,7 @@ interface SubmitRequestBody {
   selectedDateTime?: string | null;
   intakeData: BookingIntakeData | null;
   formData: BookingFormData;
+  turnstileToken?: string;
 }
 
 async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
@@ -416,6 +418,25 @@ export async function POST(request: NextRequest) {
       { error: `Missing required fields: ${missing.join(', ')}`, missing },
       { status: 400 }
     );
+  }
+
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  if (turnstileSecret) {
+    if (!body.turnstileToken || typeof body.turnstileToken !== 'string') {
+      return NextResponse.json(
+        { error: 'Beveiligingscontrole ontbreekt. Vernieuw de pagina en probeer opnieuw.' },
+        { status: 400 }
+      );
+    }
+    const remoteip = getRequestClientIp(request);
+
+    const captchaOk = await verifyTurnstileToken(body.turnstileToken, remoteip);
+    if (!captchaOk) {
+      return NextResponse.json(
+        { error: 'Beveiligingscontrole mislukt. Probeer het opnieuw.' },
+        { status: 403 }
+      );
+    }
   }
 
   const origin = request.nextUrl?.origin || request.headers.get('origin') || '';

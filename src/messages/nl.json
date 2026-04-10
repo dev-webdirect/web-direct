@@ -205,7 +205,8 @@
       "errors": {
         "nameRequired": "Naam is verplicht",
         "emailRequired": "E-mail is verplicht",
-        "emailInvalid": "Voer een geldig e-mailadres in"
+        "emailInvalid": "Voer een geldig e-mailadres in",
+        "captchaRequired": "Rond eerst de beveiligingscontrole af."
       },
       "cta": {
         "submitting": "Versturen...",

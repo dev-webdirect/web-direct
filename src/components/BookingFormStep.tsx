@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, Phone, Building2, MessageSquare, ArrowRight, Loader2, ChevronLeft } from 'lucide-react';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { User, Mail, Phone, ArrowRight, Loader2, ChevronLeft } from 'lucide-react';
 import type { BookingIntakeData } from './BookingIntakeStep';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 export interface BookingFormData {
   name: string;
@@ -52,11 +53,31 @@ export const BookingFormStep = ({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  
+
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const t = useTranslations('booking.form');
+  const locale = useLocale();
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const captchaEnabled = Boolean(turnstileSiteKey);
+
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+    setSubmitError(null);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -72,6 +93,10 @@ export const BookingFormStep = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    if (captchaEnabled && !turnstileToken) {
+      setSubmitError(t('errors.captchaRequired'));
+      return;
+    }
     const formData: BookingFormData = { name, email, phone };
     storeBookingFormData(formData);
     setSubmitting(true);
@@ -86,10 +111,15 @@ export const BookingFormStep = ({
           selectedDateTime: selectedDateTime || undefined,
           intakeData,
           formData,
+          ...(captchaEnabled && turnstileToken
+            ? { turnstileToken }
+            : {}),
         }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
         throw new Error(json.error || 'Versturen mislukt');
       }
       if (!selectedDateTime) {
@@ -183,13 +213,31 @@ export const BookingFormStep = ({
               />
             </div>
 
+            {captchaEnabled && turnstileSiteKey ? (
+              <div className="flex flex-col items-center gap-2 pt-1">
+                <Turnstile
+                  ref={turnstileRef}
+                  siteKey={turnstileSiteKey}
+                  onSuccess={handleTurnstileSuccess}
+                  onExpire={handleTurnstileExpire}
+                  onError={handleTurnstileError}
+                  options={{
+                    theme: 'dark',
+                    language: locale === 'nl' ? 'nl' : 'en',
+                    size: 'normal',
+                    action: 'booking',
+                  }}
+                />
+              </div>
+            ) : null}
+
             {submitError && (
               <p className="text-sm text-red-400 text-center">{submitError}</p>
             )}
 
             <motion.button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || (captchaEnabled && !turnstileToken)}
               whileHover={
                 !submitting
                   ? {
@@ -216,9 +264,7 @@ export const BookingFormStep = ({
             </motion.button>
           </form>
 
-          <p className="text-center text-xs text-gray-500 pt-2">
-            Je gegevens worden alleen gebruikt om je afspraak te bevestigen
-          </p>
+          <p className="text-center text-xs text-gray-500 pt-2">{t('footnote')}</p>
         </div>
       </div>
     </motion.div>
