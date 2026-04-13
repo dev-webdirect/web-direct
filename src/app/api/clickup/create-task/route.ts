@@ -44,12 +44,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Calculate deadline: 1 day before meeting, end of day (23:59:59)
     const meetingDate = new Date(meetingStartTime);
-    const deadlineDate = new Date(meetingDate);
-    deadlineDate.setDate(deadlineDate.getDate() - 1);
-    deadlineDate.setHours(23, 59, 59, 999);
-    const dueDateMs = deadlineDate.getTime();
+    const dueDateMs = meetingDate.getTime();
 
     const res = await fetch(`https://api.clickup.com/api/v2/list/${clickupListId}/task`, {
       method: 'POST',

@@ -40,19 +40,29 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
           'X-Title': 'WebDirect Booking',
         },
         body: JSON.stringify({
-          model: 'anthropic/claude-3.5-sonnet',
+          model: 'openai/gpt-4o-mini',
           messages: [
             {
               role: 'system',
-              content: 'Je bent een expert in het maken van website specificaties en prompts voor webdesign. Maak een duidelijke, actiegerichte prompt/specificatie voor het genereren van een website op basis van de gegeven informatie. De prompt moet geschikt zijn om direct gebruikt te worden voor het maken van een website design.',
+              content: [
+                'You are a Magic Path prompt engineer. Your ONLY job is to output a single, ready-to-paste prompt that Magic Path can use to generate a complete website.',
+                '',
+                'Rules:',
+                '- Output ONLY the prompt text. No explanations, no headers, no markdown formatting, no code blocks.',
+                '- Write in English.',
+                '- The prompt must describe the website in one flowing paragraph (max 200 words) covering: business name, what they do, target audience, desired style/colors, pages needed, primary CTA, and any constraints.',
+                '- Be specific and actionable. Use concrete language like "Create a modern single-page website for [company] that..." instead of vague specs.',
+                '- Include color preferences if provided, otherwise pick a fitting palette suggestion based on the industry.',
+                '- End with the primary call-to-action the site should drive visitors toward.',
+              ].join('\n'),
             },
             {
               role: 'user',
               content: promptPayload,
             },
           ],
-          temperature: 0.7,
-          max_tokens: 900,
+          temperature: 0.6,
+          max_tokens: 500,
         }),
       });
 
@@ -85,15 +95,12 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
     try {
       const taskPayload: Record<string, unknown> = {
         name: `${name} - ${email}`,
-        description: taskDescription,
+        markdown_description: taskDescription,
       };
 
       if (selectedDateTime) {
         const meetingDate = new Date(selectedDateTime);
-        const deadlineDate = new Date(meetingDate);
-        deadlineDate.setDate(deadlineDate.getDate() - 1);
-        deadlineDate.setHours(23, 59, 59, 999);
-        taskPayload.due_date = deadlineDate.getTime();
+        taskPayload.due_date = meetingDate.getTime();
       }
 
       console.log('[booking/submit] ClickUp task: creating with description length:', taskDescription.length);
@@ -199,31 +206,19 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
   }
 }
 
-function buildWebsiteGenerationPromptJson(intake: BookingIntakeData): string {
-  const prompt = {
-    company: intake.companyName,
-    goal: intake.mainGoal,
-    action: intake.primaryAction,
-    services: intake.servicesDescription,
-    audience: intake.primaryAudience,
-    style: intake.style,
-    colors: intake.colorHex?.trim() || 'Niet opgegeven',
-  };
-  return JSON.stringify(prompt, null, 2);
-}
-
 function buildSubtaskDescription(
   intake: BookingIntakeData | null,
   form: BookingFormData,
   selectedDateTime: string | null,
   generatedPrompt: string
 ): string {
-  let description = '';
+  const sections: string[] = [];
 
+  // ── Afspraak ──────────────────────────────────────────
   if (selectedDateTime) {
     try {
-      const meetingDate = new Date(selectedDateTime);
-      const formattedDate = meetingDate.toLocaleDateString('nl-NL', {
+      const formattedDate = new Date(selectedDateTime).toLocaleDateString('nl-NL', {
+        timeZone: 'Europe/Amsterdam',
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -231,107 +226,88 @@ function buildSubtaskDescription(
         hour: '2-digit',
         minute: '2-digit',
       });
-      description += `📅 **Afspraak:** ${formattedDate}\n\n`;
+      sections.push(`**Afspraak:** ${formattedDate}`);
     } catch {
-      description += `📅 **Afspraak:** ${selectedDateTime}\n\n`;
+      sections.push(`**Afspraak:** ${selectedDateTime}`);
     }
   } else {
-    description += '📋 **Type:** Intake-only (geen afspraak via website)\n\n';
+    sections.push('**Type:** Intake-only (geen afspraak via website)');
   }
 
-  // Personal Information Section
-  description += '---\n';
-  description += '## 👤 Persoonlijke gegevens\n\n';
-  description += `**Naam:** ${form.name}\n`;
-  description += `**E-mail:** ${form.email}\n`;
-  if (form.phone) {
-    description += `**Telefoon:** ${form.phone}\n`;
-  }
-  description += '\n';
+  // ── Persoonlijke gegevens ─────────────────────────────
+  const personalLines: string[] = [
+    '## Persoonlijke gegevens\n',
+    `**Naam:** ${form.name}`,
+    `**E-mail:** ${form.email}`,
+  ];
+  if (form.phone) personalLines.push(`**Telefoon:** ${form.phone}`);
+  sections.push(personalLines.join('\n'));
 
   if (intake) {
-    // Project Information Section
-    description += '---\n';
-    description += '## 🏢 Project informatie\n\n';
-    description += `**Bedrijfsnaam:** ${intake.companyName}\n`;
-    
+    // ── Project informatie ────────────────────────────────
+    const projectLines: string[] = [
+      '## Project informatie\n',
+      `**Bedrijfsnaam:** ${intake.companyName}`,
+    ];
     if (intake.projectType === 'existing' && intake.currentWebsiteUrl) {
-      description += `**Project type:** Bestaande website updaten/vervangen\n`;
-      description += `**Huidige website:** ${intake.currentWebsiteUrl}\n`;
+      projectLines.push('**Project type:** Bestaande website updaten/vervangen');
+      projectLines.push(`**Huidige website:** ${intake.currentWebsiteUrl}`);
     } else {
-      description += `**Project type:** Nieuwe website\n`;
+      projectLines.push('**Project type:** Nieuwe website');
     }
-    
-    description += `**Hoofddoel:** ${intake.mainGoal}\n`;
-    description += `**Belangrijkste actie bezoeker:** ${intake.primaryAction}\n`;
-    description += `**Wat centraal staat:** ${intake.focusCentral}\n`;
-    description += `**Doelgroep:** ${intake.primaryAudience}\n`;
-    description += `**Stijl:** ${intake.style}\n`;
-    
+    projectLines.push(`**Hoofddoel:** ${intake.mainGoal}`);
+    projectLines.push(`**Belangrijkste actie bezoeker:** ${intake.primaryAction}`);
+    projectLines.push(`**Wat centraal staat:** ${intake.focusCentral}`);
+    projectLines.push(`**Doelgroep:** ${intake.primaryAudience}`);
+    projectLines.push(`**Stijl:** ${intake.style}`);
     if (intake.colorHex) {
-      description += `**Kleuren (Hex):** ${intake.colorHex.trim()}\n`;
+      projectLines.push(`**Kleuren (Hex):** ${intake.colorHex.trim()}`);
     }
-    
-    description += '\n';
+    sections.push(projectLines.join('\n'));
 
-    // Services & Offer Section
-    description += '---\n';
-    description += '## 💼 Diensten & Aanbod\n\n';
-    description += `**Diensten/producten:**\n${intake.servicesDescription}\n\n`;
-    
+    // ── Diensten & Aanbod ─────────────────────────────────
+    const serviceLines: string[] = [
+      '## Diensten & Aanbod\n',
+      `**Diensten/producten:**\n${intake.servicesDescription}`,
+    ];
     if (intake.offerExplanation) {
-      description += `**Toelichting aanbod:**\n${intake.offerExplanation}\n\n`;
+      serviceLines.push(`\n**Toelichting aanbod:**\n${intake.offerExplanation}`);
     }
-    
-    // References Section
+    sections.push(serviceLines.join('\n'));
+
+    // ── Referenties & Notities ────────────────────────────
     if (intake.favoriteWebsites || intake.competitors || intake.doNotMention) {
-      description += '---\n';
-      description += '## 🔗 Referenties & Notities\n\n';
-      
-      if (intake.favoriteWebsites) {
-        description += `**Favoriete websites:**\n${intake.favoriteWebsites}\n\n`;
-      }
-      
-      if (intake.competitors) {
-        description += `**Concurrenten:**\n${intake.competitors}\n\n`;
-      }
-      
-      if (intake.doNotMention) {
-        description += `**Vermijd te benoemen:**\n${intake.doNotMention}\n\n`;
-      }
+      const refLines: string[] = ['## Referenties & Notities\n'];
+      if (intake.favoriteWebsites) refLines.push(`**Favoriete websites:**\n${intake.favoriteWebsites}`);
+      if (intake.competitors) refLines.push(`\n**Concurrenten:**\n${intake.competitors}`);
+      if (intake.doNotMention) refLines.push(`\n**Vermijd te benoemen:**\n${intake.doNotMention}`);
+      sections.push(refLines.join('\n'));
     }
 
-    // Logo files info
+    // ── Logo bestanden ────────────────────────────────────
     if (intake.logoFiles && intake.logoFiles.length > 0) {
-      description += '---\n';
-      description += '## 🖼️ Logo bestanden\n\n';
-      description += `**Aantal bestanden:** ${intake.logoFiles.length}\n`;
+      const logoLines: string[] = [
+        '## Logo bestanden\n',
+        `**Aantal bestanden:** ${intake.logoFiles.length}`,
+      ];
       intake.logoFiles.forEach((file, index) => {
-        description += `${index + 1}. ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)\n`;
+        logoLines.push(`${index + 1}. ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
       });
-      description += '\n';
+      sections.push(logoLines.join('\n'));
     }
   }
 
-  // Website Generation Prompt
-  description += '---\n';
-  description += '## ✨ Website Generation Prompt\n\n';
-  description += 'Deze prompt is gegenereerd op basis van alle ingevulde informatie en kan gebruikt worden voor het genereren van de website:\n\n';
-  if (intake) {
-    description += '```json\n';
-    description += buildWebsiteGenerationPromptJson(intake);
-    description += '\n```\n';
-    if (generatedPrompt) {
-      description += '\n**Aanvullende gegenereerde specificatie (AI):**\n\n';
-      description += '```\n';
-      description += generatedPrompt;
-      description += '\n```\n';
-    }
-  } else {
-    description += 'Geen intake-gegevens beschikbaar. Gebruik de bovenstaande persoonlijke gegevens en afspraak.\n';
+  // ── Magic Path Prompt ────────────────────────────────────
+  if (generatedPrompt) {
+    const promptLines: string[] = [
+      '## Magic Path Prompt\n',
+      'Onderstaande prompt is klaar om te plakken in Magic Path:\n',
+      generatedPrompt,
+    ];
+    sections.push(promptLines.join('\n'));
   }
 
-  return description;
+  return sections.join('\n\n---\n\n');
 }
 
 function buildPromptPayload(intake: BookingIntakeData, form: BookingFormData): string {
