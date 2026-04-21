@@ -100,7 +100,12 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
 
       if (selectedDateTime) {
         const meetingDate = new Date(selectedDateTime);
-        taskPayload.due_date = meetingDate.getTime();
+        const dueMs = meetingDate.getTime();
+        if (!Number.isNaN(dueMs)) {
+          const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+          taskPayload.due_date = dueMs;
+          taskPayload.start_date = dueMs - twentyFourHoursMs;
+        }
       }
 
       console.log('[booking/submit] ClickUp task: creating with description length:', taskDescription.length);
@@ -136,6 +141,8 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
     const ghlApiKey    = process.env.GHL_API_KEY?.trim();
     const ghlCalendarId = process.env.GHL_CALENDAR_ID?.trim();
     const ghlLocationId = process.env.GHL_LOCATION_ID?.trim();
+    const ghlOpportunityPipelineId = process.env.GHL_OPPORTUNITY_PIPELINE_ID?.trim();
+    const ghlOpportunityStageId = process.env.GHL_OPPORTUNITY_STAGE_ID?.trim();
 
     if (ghlApiKey && ghlCalendarId && ghlLocationId) {
       const ghlHeaders = {
@@ -171,7 +178,43 @@ async function runBackgroundTasks(payload: SubmitRequestBody, origin: string) {
           const contactId = contactData?.contact?.id;
 
           if (contactId) {
-            // 4b. Create the appointment
+            // 4b. Create opportunity (optional: requires pipeline + stage env)
+            if (ghlOpportunityPipelineId && ghlOpportunityStageId) {
+              try {
+                const opportunityRes = await fetch(`${GHL_BASE}/opportunities/`, {
+                  method: 'POST',
+                  headers: ghlHeaders,
+                  body: JSON.stringify({
+                    locationId: ghlLocationId,
+                    contactId,
+                    pipelineId: ghlOpportunityPipelineId,
+                    pipelineStageId: ghlOpportunityStageId,
+                    name: `WebDirect – ${name}`,
+                    status: 'open',
+                    source: 'Website booking',
+                  }),
+                });
+
+                if (!opportunityRes.ok) {
+                  const errText = await opportunityRes.text();
+                  console.error(
+                    '[booking/submit] GHL opportunity creation failed:',
+                    opportunityRes.status,
+                    errText
+                  );
+                } else {
+                  console.log('[booking/submit] GHL opportunity created for', email);
+                }
+              } catch (oppErr) {
+                console.error('[booking/submit] GHL opportunity error:', oppErr);
+              }
+            } else {
+              console.log(
+                '[booking/submit] GHL opportunity: skipped (missing GHL_OPPORTUNITY_PIPELINE_ID or GHL_OPPORTUNITY_STAGE_ID)'
+              );
+            }
+
+            // 4c. Create the appointment
             const startTime = new Date(selectedDateTime);
             const endTime   = new Date(startTime.getTime() + 30 * 60 * 1000);
 

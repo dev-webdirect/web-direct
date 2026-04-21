@@ -46,6 +46,15 @@ export async function POST(request: NextRequest) {
   try {
     const meetingDate = new Date(meetingStartTime);
     const dueDateMs = meetingDate.getTime();
+    if (Number.isNaN(dueDateMs)) {
+      return NextResponse.json(
+        { error: 'Invalid meetingStartTime' },
+        { status: 400 }
+      );
+    }
+
+    const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+    const startDateMs = dueDateMs - twentyFourHoursMs;
 
     const res = await fetch(`https://api.clickup.com/api/v2/list/${clickupListId}/task`, {
       method: 'POST',
@@ -55,6 +64,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         name: `${name} - ${email}`,
+        start_date: startDateMs,
         due_date: dueDateMs,
         //status: 'IN DESIGN',
       }),
