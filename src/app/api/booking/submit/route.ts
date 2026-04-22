@@ -318,6 +318,18 @@ function buildSubtaskDescription(
     }
     sections.push(serviceLines.join('\n'));
 
+    // ── Gesprek context ───────────────────────────────────
+    if (intake.talkedToTeamMember || intake.bookingReason) {
+      const contextLines: string[] = ['## Gesprek context\n'];
+      if (intake.talkedToTeamMember?.trim()) {
+        contextLines.push(`**Gesproken met:** ${intake.talkedToTeamMember.trim()}`);
+      }
+      if (intake.bookingReason?.trim()) {
+        contextLines.push(`**Belangrijkste reden afspraak:** ${intake.bookingReason.trim()}`);
+      }
+      sections.push(contextLines.join('\n'));
+    }
+
     // ── Referenties & Notities ────────────────────────────
     if (intake.favoriteWebsites || intake.competitors || intake.doNotMention) {
       const refLines: string[] = ['## Referenties & Notities\n'];
@@ -379,6 +391,14 @@ function buildPromptPayload(intake: BookingIntakeData, form: BookingFormData): s
   
   if (intake.colorHex) {
     payload += `\nColors (use these hex codes in the website): ${intake.colorHex.trim()}\n`;
+  }
+
+  if (intake.talkedToTeamMember?.trim()) {
+    payload += `Gesproken met teamlid: ${intake.talkedToTeamMember.trim()}\n`;
+  }
+
+  if (intake.bookingReason?.trim()) {
+    payload += `Belangrijkste reden voor afspraak: ${intake.bookingReason.trim()}\n`;
   }
 
   if (intake.favoriteWebsites) {

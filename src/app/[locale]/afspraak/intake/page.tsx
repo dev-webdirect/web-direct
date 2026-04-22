@@ -7,7 +7,7 @@ import { BookingFormStep } from '@/src/components/BookingFormStep';
 import { BookingProgressBar } from '@/src/components/BookingProgressBar';
 import type { BookingIntakeData } from '@/src/components/BookingIntakeStep';
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 export default function IntakePage() {
   const [step, setStep] = useState<1 | 2>(1);

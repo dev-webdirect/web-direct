@@ -23,6 +23,8 @@ export interface BookingIntakeData {
   favoriteWebsites?: string;
   competitors?: string;
   doNotMention?: string;
+  talkedToTeamMember: string;
+  bookingReason: string;
 }
 
 const INTAKE_STORAGE_KEY = 'webdirect_booking_intake';
@@ -80,13 +82,14 @@ const STYLE_VALUES = [
   'other',
 ] as const;
 
-export const INTAKE_SECTION_COUNT = 4;
+export const INTAKE_SECTION_COUNT = 5;
 
-const SECTION_TITLES_KEYS: [string, string, string, string] = [
+const SECTION_TITLES_KEYS: [string, string, string, string, string] = [
   "sections.companyProject",
   "sections.goalsOffer",
   "sections.styleDesign",
   "sections.other",
+  "sections.conversationReason",
 ];
 
 interface BookingIntakeStepProps {
@@ -222,6 +225,8 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
   // Section 4: Budget & Overig
   const [competitors, setCompetitors] = useState('');
   const [doNotMention, setDoNotMention] = useState('');
+  const [talkedToTeamMember, setTalkedToTeamMember] = useState('');
+  const [bookingReason, setBookingReason] = useState('');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -319,6 +324,9 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
     } else if (idx === 2) {
       if (!primaryAudience) newErrors.primaryAudience = t("errors.primaryAudienceRequired");
       if (!style) newErrors.style = t("errors.styleRequired");
+    } else if (idx === 4) {
+      if (!talkedToTeamMember.trim()) newErrors.talkedToTeamMember = t("errors.talkedToTeamMemberRequired");
+      if (!bookingReason.trim()) newErrors.bookingReason = t("errors.bookingReasonRequired");
     }
 
     setErrors(newErrors);
@@ -359,6 +367,8 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
         favoriteWebsites: favoriteWebsites.trim() || undefined,
         competitors: competitors.trim() || undefined,
         doNotMention: doNotMention.trim() || undefined,
+        talkedToTeamMember: talkedToTeamMember.trim(),
+        bookingReason: bookingReason.trim(),
       };
       storeBookingIntakeData(data);
       onComplete(data);
@@ -666,6 +676,41 @@ export const BookingIntakeStep = ({ onComplete, onBack, onSectionChange }: Booki
                       rows={2}
                       className={cn(inputClass, 'resize-none')}
                     />
+                  </div>
+                </motion.div>
+              )}
+
+              {sectionIndex === 4 && (
+                <motion.div
+                  key="section-4"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-5"
+                >
+                  <div data-field="talkedToTeamMember">
+                    <label className={labelClass}>{t("fields.talkedToTeamMember.label")} *</label>
+                    <input
+                      type="text"
+                      value={talkedToTeamMember}
+                      onChange={(e) => setTalkedToTeamMember(e.target.value)}
+                      placeholder={t("fields.talkedToTeamMember.placeholder")}
+                      className={inputClass}
+                    />
+                    {errors.talkedToTeamMember && <p className="mt-1 text-sm text-red-400">{errors.talkedToTeamMember}</p>}
+                  </div>
+
+                  <div data-field="bookingReason">
+                    <label className={labelClass}>{t("fields.bookingReason.label")} *</label>
+                    <input
+                      type="text"
+                      value={bookingReason}
+                      onChange={(e) => setBookingReason(e.target.value)}
+                      placeholder={t("fields.bookingReason.placeholder")}
+                      className={inputClass}
+                    />
+                    {errors.bookingReason && <p className="mt-1 text-sm text-red-400">{errors.bookingReason}</p>}
                   </div>
                 </motion.div>
               )}

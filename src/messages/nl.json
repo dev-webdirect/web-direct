@@ -43,7 +43,6 @@
     },
     "date": {
       "stepLabel": "Stap 1 van 3",
-      "subtitle": "{minutes} minuten sessie • Max. {days} dagen vooruit • Volgt je online agenda",
       "heading": "Kies datum en tijd",
       "today": "Vandaag",
       "tomorrow": "Morgen",
@@ -63,7 +62,8 @@
         "companyProject": "Bedrijf & Project",
         "goalsOffer": "Doelen & Aanbod",
         "styleDesign": "Stijl & Design",
-        "other": "Overig"
+        "other": "Overig",
+        "conversationReason": "Gesprek & reden"
       },
       "back": "Terug",
       "previous": "Vorige",
@@ -125,6 +125,14 @@
         "doNotMention": {
           "label": "Dingen die wel/niet benoemd moeten worden (optioneel)",
           "placeholder": "..."
+        },
+        "talkedToTeamMember": {
+          "label": "Met wie van ons team heb je gesproken?",
+          "placeholder": "Naam van teamlid"
+        },
+        "bookingReason": {
+          "label": "Wat is voor jou de belangrijkste reden om een afspraak met ons in te plannen?",
+          "placeholder": "Belangrijkste reden voor de afspraak"
         }
       },
       "errors": {
@@ -136,6 +144,8 @@
         "focusCentralRequired": "Wat moet centraal staan is verplicht",
         "primaryAudienceRequired": "Doelgroep is verplicht",
         "styleRequired": "Stijl is verplicht",
+        "talkedToTeamMemberRequired": "Deze vraag is verplicht",
+        "bookingReasonRequired": "Deze vraag is verplicht",
         "logo": {
           "tooManyFiles": "Maximum 10 bestanden toegestaan",
           "tooLarge": "{name} is te groot (max {maxMb} MB)",
@@ -185,8 +195,8 @@
     "form": {
       "back": "Terug",
       "stepLabel": {
-        "full": "Stap 6 van 6",
-        "intake": "Stap 5 van 5"
+        "full": "Stap 7 van 7",
+        "intake": "Stap 6 van 6"
       },
       "fields": {
         "name": {

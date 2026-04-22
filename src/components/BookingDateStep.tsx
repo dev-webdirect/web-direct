@@ -180,9 +180,7 @@ export const BookingDateStep = ({ onComplete }: BookingDateStepProps) => {
             </div>
             <div>
               <h3 className="text-white font-semibold text-lg">{t('heading')}</h3>
-              <p className="text-gray-400 text-xs">
-                {t('subtitle', { minutes: subtitleMinutes, days: maxDaysAhead })}
-              </p>
+              
             </div>
           </div>
 
